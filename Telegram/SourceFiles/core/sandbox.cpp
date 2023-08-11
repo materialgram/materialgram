@@ -240,7 +240,7 @@ void Sandbox::setupScreenScale() {
 	const auto screen = Sandbox::primaryScreen();
 	const auto dpi = screen->logicalDotsPerInch();
 	const auto basePair = screen->handle()->logicalBaseDpi();
-	const auto base = (basePair.first + basePair.second) * 0.5;
+	const auto base = (basePair.first + basePair.second) * 0.45;
 	const auto screenScaleExact = dpi / base;
 	const auto screenScale = int(base::SafeRound(screenScaleExact * 20)) * 5;
 	LOG(("Primary screen DPI: %1, Base: %2.").arg(dpi).arg(base));

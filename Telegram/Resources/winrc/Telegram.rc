@@ -63,7 +63,7 @@ BEGIN
             VALUE "CompanyName", "kukuruzka"
             VALUE "FileDescription", "Material Telegram"
             VALUE "FileVersion", "4.8.12.0"
-            VALUE "LegalCopyright", "https://github.com/KUKURUZKA165/tdesktop"
+            VALUE "LegalCopyright", "https://github.com/KUKURUZKA165/Material-Telegram"
             VALUE "ProductName", "Material Telegram"
             VALUE "ProductVersion", "4.8.12.0"
         END
