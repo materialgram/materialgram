@@ -15,8 +15,8 @@
     <file alias="art/slot_2_idle.tgs">../../art/slot_2_idle.tgs</file>
     <file alias="art/slot_back.tgs">../../art/slot_back.tgs</file>
     <file alias="art/slot_pull.tgs">../../art/slot_pull.tgs</file>
-    <file alias="day-blue.tdesktop-theme">../../day-blue.tdesktop-theme</file>
-    <file alias="night.tdesktop-theme">../../night.tdesktop-theme</file>
+    <file alias="Google Day.tdesktop-theme">../../Google Day.tdesktop-theme</file>
+    <file alias="Google Dark.tdesktop-theme">../../Google Dark.tdesktop-theme</file>
     <file alias="night-green.tdesktop-theme">../../night-green.tdesktop-theme</file>
     <file alias="day-custom-base.tdesktop-theme">../../day-custom-base.tdesktop-theme</file>
     <file alias="night-custom-base.tdesktop-theme">../../night-custom-base.tdesktop-theme</file>

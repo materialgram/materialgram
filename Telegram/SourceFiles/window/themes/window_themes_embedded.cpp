@@ -18,8 +18,8 @@ namespace Theme {
 namespace {
 
 constexpr auto kMaxAccentColors = 3;
-constexpr auto kDayBaseFile = ":/gui/day-custom-base.tdesktop-theme"_cs;
-constexpr auto kNightBaseFile = ":/gui/night-custom-base.tdesktop-theme"_cs;
+constexpr auto kDayBaseFile = ":/gui/Google Day.tdesktop-theme"_cs;
+constexpr auto kNightBaseFile = ":/gui/Google Dark.tdesktop-theme"_cs;
 
 const auto kColorizeIgnoredKeys = base::flat_set<QLatin1String>{ {
 	qstr("boxTextFgGood"),
@@ -214,6 +214,30 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 	};
 	return {
 		EmbeddedScheme{
+			EmbeddedType::DayBlue,
+			qColor("ffffff"),
+			qColor("d2e3fc"),
+			qColor("f1f3f4"),
+			qColor("f1f3f4"),
+			qColor("1a73e8"),
+			tr::lng_settings_theme_day,
+			":/gui/Google Day.tdesktop-theme",
+			qColor("4285f4")
+		},
+		
+		EmbeddedScheme{
+			EmbeddedType::Night,
+			qColor("151618"),
+			qColor("35373a"),
+			qColor("242528"),
+			qColor("242528"),
+			qColor("8ab4f8"),
+			tr::lng_settings_theme_tinted,
+			":/gui/Google Dark.tdesktop-theme",
+			qColor("8ab4f8")
+		},
+		
+		EmbeddedScheme{
 			EmbeddedType::Default,
 			qColor("9bd494"),
 			qColor("eaffdc"),
@@ -223,28 +247,6 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 			tr::lng_settings_theme_classic,
 			QString(),
 			qColor("40a7e3")
-		},
-		EmbeddedScheme{
-			EmbeddedType::DayBlue,
-			qColor("7ec4ea"),
-			qColor("d7f0ff"),
-			qColor("ffffff"),
-			qColor("d7f0ff"),
-			qColor("ffffff"),
-			tr::lng_settings_theme_day,
-			":/gui/day-blue.tdesktop-theme",
-			qColor("40a7e3")
-		},
-		EmbeddedScheme{
-			EmbeddedType::Night,
-			qColor("485761"),
-			qColor("5ca7d4"),
-			qColor("6b808d"),
-			qColor("6b808d"),
-			qColor("5ca7d4"),
-			tr::lng_settings_theme_tinted,
-			":/gui/night.tdesktop-theme",
-			qColor("5288c1")
 		},
 		EmbeddedScheme{
 			EmbeddedType::NightGreen,
@@ -267,14 +269,14 @@ std::vector<QColor> DefaultAccentColors(EmbeddedType type) {
 	switch (type) {
 	case EmbeddedType::DayBlue:
 		return {
-			qColor("45bce7"),
-			qColor("52b440"),
-			qColor("d46c99"),
-			qColor("df8a49"),
-			qColor("9978c8"),
-			qColor("c55245"),
-			qColor("687b98"),
-			qColor("dea922"),
+			qColor("b9cf7a"),
+			qColor("5ad9d2"),
+			qColor("bec2ff"),
+			qColor("ffaaf3"),
+			qColor("fab983"),
+			qColor("ffb1bf"),
+			qColor("8bd888"),
+			qColor("ffb3a5"),
 		};
 	case EmbeddedType::Default:
 		return {
@@ -289,14 +291,14 @@ std::vector<QColor> DefaultAccentColors(EmbeddedType type) {
 		};
 	case EmbeddedType::Night:
 		return {
-			qColor("58bfe8"),
-			qColor("466f42"),
-			qColor("aa6084"),
-			qColor("a46d3c"),
-			qColor("917bbd"),
-			qColor("ab5149"),
-			qColor("697b97"),
-			qColor("9b834b"),
+			qColor("b9cf7a"),
+			qColor("5ad9d2"),
+			qColor("bec2ff"),
+			qColor("ffaaf3"),
+			qColor("fab983"),
+			qColor("ffb1bf"),
+			qColor("8bd888"),
+			qColor("ffb3a5"),
 		};
 	case EmbeddedType::NightGreen:
 		return {
@@ -321,7 +323,7 @@ Fn<void(style::palette&)> PreparePaletteCallback(
 		const auto &embedded = EmbeddedThemes();
 		const auto i = ranges::find(
 			embedded,
-			dark ? EmbeddedType::Night : EmbeddedType::Default,
+			dark ? EmbeddedType::Night : EmbeddedType::DayBlue,
 			&EmbeddedScheme::type);
 		Assert(i != end(embedded));
 		const auto colorizer = accent
@@ -393,9 +395,9 @@ bool AccentColors::setFromSerialized(const QByteArray &serialized) {
 		const auto color = Serialize::readColor(stream);
 		const auto uncheckedType = static_cast<EmbeddedType>(type);
 		switch (uncheckedType) {
-		case EmbeddedType::Default:
 		case EmbeddedType::DayBlue:
 		case EmbeddedType::Night:
+		case EmbeddedType::Default:
 		case EmbeddedType::NightGreen:
 			data.emplace(uncheckedType, color);
 			break;
