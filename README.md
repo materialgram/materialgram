@@ -1,11 +1,23 @@
+![preview](docs/assets/icon.png)
 # [Material Telegram][telegram_desktop] – Telegram Desktop fork
 
 This is the source code and the build instructions for the [Material Telegram][telegram] client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
 
-![preview](docs/assets/preview.png)
-### 🛑 Icons are still in progress
-
 The source code is published under GPLv3 with OpenSSL exception, the license is available [here][license].
+
+## 🛑 Icons are still in progress
+![preview](docs/assets/preview.png)
+![preview](docs/assets/themes.png)
+![preview](docs/assets/bubbles.png)
+
+## Changelog and plans:
+- [x] Replace font with Google Sans
+- [x] Add "Google Dark" theme to settings
+- [x] Change default scale to 110%
+- [ ] Set this theme by default
+- [ ] Finish icons
+- [ ] Update interface elements (for example, the style of switches)
+- [ ] Add some useful functional features like a jpeg quality slider when sending a photo
 
 ## Third-party
 * Qt 6 ([LGPL](http://doc.qt.io/qt-6/lgpl.html)) and Qt 5.15 ([LGPL](http://doc.qt.io/qt-5/lgpl.html)) slightly patched
@@ -39,7 +51,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 
 [//]: # (LINKS)
 [telegram]: https://telegram.org
-[telegram_desktop]: https://desktop.telegram.org
+[telegram_desktop]: https://github.com/KUKURUZKA165/Material-Telegram
 [telegram_api]: https://core.telegram.org
 [telegram_proto]: https://core.telegram.org/mtproto
 [license]: LICENSE
