@@ -20,7 +20,7 @@ You will require **api_id** and **api_hash** to access the Telegram API servers.
 
 ## Install third party software
 
-* Download **Python 3.10** installer from [https://www.python.org/downloads/](https://www.python.org/downloads/) and install it with adding to PATH.
+* Download **Python 3.10** installer from [https://www.python.org/downloads/](https://www.python.org/downloads/) and install it with adding to PATH. **Python 3.11** and above may not work!
 * Download **CMake 3.21 or later** installer from [https://cmake.org/download/](https://cmake.org/download/) and install it.
 * Download **Git** installer from [https://git-scm.com/download/win](https://git-scm.com/download/win) and install it.
 
@@ -28,18 +28,18 @@ You will require **api_id** and **api_hash** to access the Telegram API servers.
 
 Open **x64 Native Tools Command Prompt for VS 2022.bat**, go to ***BuildPath*** and run
 
-    git clone --recursive https://github.com/telegramdesktop/tdesktop.git
-    tdesktop\Telegram\build\prepare\win.bat
+    git clone --recursive https://github.com/KUKURUZKA165/Material-Telegram.git
+    Material-Telegram\Telegram\build\prepare\win.bat
 
 ## Build the project
 
-Go to ***BuildPath*\\tdesktop\\Telegram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
+Go to ***BuildPath*\\Material-Telegram\\Telegram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
 
     configure.bat x64 -D TDESKTOP_API_ID=YOUR_API_ID -D TDESKTOP_API_HASH=YOUR_API_HASH
 
-* Open ***BuildPath*\\tdesktop\\out\\Telegram.sln** in Visual Studio 2022
+* Open ***BuildPath*\\Material-Telegram\\out\\Telegram.sln** in Visual Studio 2022
 * Select Telegram project and press Build > Build Telegram (Debug and Release configurations)
-* The result Telegram.exe will be located in **D:\TBuild\tdesktop\out\Debug** (and **Release**)
+* The result Telegram.exe will be located in **D:\TBuild\Material-Telegram\out\Debug** (and **Release**)
 
 ### Qt Visual Studio Tools
 
