@@ -18,6 +18,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - [ ] Finish icons
 - [ ] Update interface elements (for example, the style of switches)
 - [ ] Add some useful functional features like a jpeg quality slider when sending a photo
+- [ ] Show seconds in message bubbles
 
 ## Third-party
 * Qt 6 ([LGPL](http://doc.qt.io/qt-6/lgpl.html)) and Qt 5.15 ([LGPL](http://doc.qt.io/qt-5/lgpl.html)) slightly patched
