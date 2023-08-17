@@ -204,7 +204,7 @@ NotStartedWindow::NotStartedWindow()
 : _label(this)
 , _log(this)
 , _close(this) {
-	_label.setText(u"Could not start Telegram Desktop!\nYou can see complete log below:"_q);
+	_label.setText(u"Could not start Material Telegram!\nYou can see complete log below:"_q);
 
 	_log.setPlainText(Logs::full());
 
@@ -346,9 +346,9 @@ LastCrashedWindow::LastCrashedWindow(
 		[=] { networkSettings(); });
 
 	if (_sendingState == SendingNoReport) {
-		_label.setText(u"Last time Telegram Desktop was not closed properly."_q);
+		_label.setText(u"Last time Material Telegram was not closed properly."_q);
 	} else {
-		_label.setText(u"Last time Telegram Desktop crashed :("_q);
+		_label.setText(u"Last time Material Telegram crashed :("_q);
 	}
 
 	if (_updaterData) {
@@ -439,9 +439,9 @@ LastCrashedWindow::LastCrashedWindow(
 	});
 	_saveReport.setText(u"SAVE TO FILE"_q);
 	connect(&_saveReport, &QPushButton::clicked, [=] { saveReport(); });
-	_getApp.setText(u"GET THE LATEST OFFICIAL VERSION OF TELEGRAM DESKTOP"_q);
+	_getApp.setText(u"GET THE LATEST OFFICIAL VERSION OF MATERIAL TELEGRAM"_q);
 	connect(&_getApp, &QPushButton::clicked, [=] {
-		QDesktopServices::openUrl(u"https://desktop.telegram.org"_q);
+		QDesktopServices::openUrl(u"https://github.com/kukuruzka165/Material-Telegram"_q);
 	});
 
 	_send.setText(u"SEND CRASH REPORT"_q);
@@ -867,7 +867,7 @@ void LastCrashedWindow::updateControls() {
 		h += _networkSettings.height() + padding;
 	}
 
-	QSize s(2 * padding + QFontMetrics(_label.font()).horizontalAdvance(u"Last time Telegram Desktop was not closed properly."_q) + padding + _networkSettings.width(), h);
+	QSize s(2 * padding + QFontMetrics(_label.font()).horizontalAdvance(u"Last time Material Telegram was not closed properly."_q) + padding + _networkSettings.width(), h);
 	if (s == size()) {
 		resizeEvent(0);
 	} else {
