@@ -20,8 +20,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // used in Updater.cpp and Setup.iss for Windows
 constexpr auto AppId = "{53F49750-6209-4FBF-9CA8-7A333C87D1ED}"_cs;
 constexpr auto AppNameOld = "Telegram Win (Unofficial)"_cs;
-constexpr auto AppName = "Material Telegram"_cs;
-constexpr auto AppFile = "Material Telegram"_cs;
+constexpr auto AppName = "materialgram"_cs;
+constexpr auto AppFile = "materialgram"_cs;
 constexpr auto AppVersion = 4009011;
 constexpr auto AppVersionStr = "4.9.1.1";
 constexpr auto AppBetaVersion = false;

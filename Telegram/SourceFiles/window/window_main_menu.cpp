@@ -463,8 +463,8 @@ MainMenu::MainMenu(
 	parentResized();
 
 	_telegram->setMarkedText(Ui::Text::Link(
-		u"Material Telegram"_q,
-		u"https://github.com/kukuruzka165/Material-Telegram"_q));
+		u"materialgram"_q,
+		u"https://github.com/kukuruzka165/materialgram"_q));
 	_telegram->setLinksTrusted();
 	_version->setMarkedText(
 		Ui::Text::Link(

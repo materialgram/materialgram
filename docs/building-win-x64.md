@@ -28,18 +28,18 @@ You will require **api_id** and **api_hash** to access the Telegram API servers.
 
 Open **x64 Native Tools Command Prompt for VS 2022.bat**, go to ***BuildPath*** and run
 
-    git clone --recursive https://github.com/KUKURUZKA165/Material-Telegram.git
-    Material-Telegram\Telegram\build\prepare\win.bat
+    git clone --recursive https://github.com/kukuruzka165/materialgram.git
+    materialgram\Telegram\build\prepare\win.bat
 
 ## Build the project
 
-Go to ***BuildPath*\\Material-Telegram\\Telegram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
+Go to ***BuildPath*\\materialgram\\Telegram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
 
     configure.bat x64 -D TDESKTOP_API_ID=YOUR_API_ID -D TDESKTOP_API_HASH=YOUR_API_HASH
 
-* Open ***BuildPath*\\Material-Telegram\\out\\Telegram.sln** in Visual Studio 2022
+* Open ***BuildPath*\\materialgram\\out\\Telegram.sln** in Visual Studio 2022
 * Select Telegram project and press Build > Build Telegram (Debug and Release configurations)
-* The result Telegram.exe will be located in **D:\TBuild\Material-Telegram\out\Debug** (and **Release**)
+* The result Telegram.exe will be located in **D:\TBuild\materialgram\out\Debug** (and **Release**)
 
 ### Qt Visual Studio Tools
 

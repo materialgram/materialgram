@@ -1,7 +1,7 @@
 ![preview](docs/assets/icon.png)
-# [Material Telegram][telegram_desktop] – Telegram Desktop fork
+# [materialgram][telegram_desktop] – Telegram Desktop fork
 
-This is the source code and the build instructions for the [Material Telegram][telegram] client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
+This is the source code and the build instructions for the [materialgram][telegram] client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
 
 The source code is published under GPLv3 with OpenSSL exception, the license is available [here][license].
 
@@ -52,7 +52,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 
 [//]: # (LINKS)
 [telegram]: https://telegram.org
-[telegram_desktop]: https://github.com/KUKURUZKA165/Material-Telegram
+[telegram_desktop]: https://github.com/kukuruzka165/materialgram
 [telegram_api]: https://core.telegram.org
 [telegram_proto]: https://core.telegram.org/mtproto
 [license]: LICENSE

@@ -12,27 +12,27 @@ You will require **api_id** and **api_hash** to access the Telegram API servers.
 
 Install [poetry](https://python-poetry.org), go to ***BuildPath*** and run
 
-    git clone --recursive https://github.com/KUKURUZKA165/Material-Telegram.git
-    ./Material-Telegram/Telegram/build/prepare/linux.sh
+    git clone --recursive https://github.com/kukuruzka165/materialgram.git
+    ./materialgram/Telegram/build/prepare/linux.sh
 
 ### Building the project
 
-Go to ***BuildPath*/Material-Telegram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
+Go to ***BuildPath*/materialgram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
 
     docker run --rm -it \
-        -v $PWD:/usr/src/Material-Telegram \
-        Material-Telegram:centos_env \
-        /usr/src/Material-Telegram/Telegram/build/docker/centos_env/build.sh \
+        -v $PWD:/usr/src/materialgram \
+        materialgram:centos_env \
+        /usr/src/materialgram/Telegram/build/docker/centos_env/build.sh \
         -D TDESKTOP_API_ID=YOUR_API_ID \
         -D TDESKTOP_API_HASH=YOUR_API_HASH
 
 Or, to create a debug build, run (also using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
 
     docker run --rm -it \
-        -v $PWD:/usr/src/Material-Telegram \
+        -v $PWD:/usr/src/materialgram \
         -e DEBUG=1 \
-        Material-Telegram:centos_env \
-        /usr/src/Material-Telegram/Telegram/build/docker/centos_env/build.sh \
+        materialgram:centos_env \
+        /usr/src/materialgram/Telegram/build/docker/centos_env/build.sh \
         -D TDESKTOP_API_ID=YOUR_API_ID \
         -D TDESKTOP_API_HASH=YOUR_API_HASH
 

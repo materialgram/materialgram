@@ -1081,7 +1081,7 @@ bool Application::openInternalUrl(const QString &url, QVariant context) {
 }
 
 QString Application::changelogLink() const {
-	const auto base = u"https://github.com/kukuruzka165/Material-Telegram/commits"_q;
+	const auto base = u"https://github.com/kukuruzka165/materialgram/commits"_q;
 	const auto languages = {
 		"id",
 		"de",

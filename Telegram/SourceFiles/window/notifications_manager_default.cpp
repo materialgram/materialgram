@@ -983,7 +983,7 @@ void Notification::updateNotifyDisplay() {
 				: TextWithEntities{ name };
 		};
 		auto title = options.hideNameAndPhoto
-			? TextWithEntities{ u"Material Telegram"_q }
+			? TextWithEntities{ u"materialgram"_q }
 			: reminder
 			? tr::lng_notification_reminder(tr::now, Ui::Text::WithEntities)
 			: topicWithChat();

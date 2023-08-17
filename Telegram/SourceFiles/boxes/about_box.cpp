@@ -44,7 +44,7 @@ rpl::producer<TextWithEntities> Text2() {
 		lt_github_link,
 		rpl::single(Ui::Text::Link(
 			"GitHub",
-			"https://github.com/telegramdesktop/tdesktop")),
+			"https://github.com/kukuruzka165/materialgram")),
 		Ui::Text::WithEntities);
 }
 
@@ -65,7 +65,7 @@ AboutBox::AboutBox(QWidget *parent)
 }
 
 void AboutBox::prepare() {
-	setTitle(rpl::single(u"Material Telegram"_q));
+	setTitle(rpl::single(u"materialgram"_q));
 
 	addButton(tr::lng_close(), [this] { closeBox(); });
 
@@ -114,7 +114,7 @@ void AboutBox::showVersionHistory() {
 		getDelegate()->show(
 			Ui::MakeInformBox(
 				"The link to the current private alpha "
-				"version of Material Telegram was copied to the clipboard."),
+				"version of materialgram was copied to the clipboard."),
 			Ui::LayerOption::CloseOther);
 	} else {
 		File::OpenUrl(Core::App().changelogLink());

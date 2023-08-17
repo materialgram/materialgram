@@ -52,10 +52,10 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "kukuruzka"
-            VALUE "FileDescription", "Material Telegram Updater"
+            VALUE "FileDescription", "materialgram Updater"
             VALUE "FileVersion", "4.9.1.1"
-            VALUE "LegalCopyright", "github.com/kukuruzka165/Material-Telegram"
-            VALUE "ProductName", "Material Telegram"
+            VALUE "LegalCopyright", "github.com/kukuruzka165/materialgram"
+            VALUE "ProductName", "materialgram"
             VALUE "ProductVersion", "4.9.1.1"
         END
     END

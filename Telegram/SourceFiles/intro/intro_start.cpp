@@ -24,7 +24,7 @@ StartWidget::StartWidget(
 	not_null<Data*> data)
 : Step(parent, account, data, true) {
 	setMouseTracking(true);
-	setTitleText(rpl::single(u"Material Telegram"_q));
+	setTitleText(rpl::single(u"materialgram"_q));
 	setDescriptionText(tr::lng_intro_about());
 	show();
 }
