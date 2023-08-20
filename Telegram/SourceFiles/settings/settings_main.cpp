@@ -598,6 +598,24 @@ void SetupHelp(
 
 	AddButton(
 		container,
+		tr::lng_settings_channel(),
+		st::settingsButton,
+		{ &st::menuIconMaterialgram }
+	)->setClickedCallback([=] {
+		UrlClickHandler::Open("https://t.me/materialgram");
+	});
+
+	AddButton(
+		container,
+		tr::lng_settings_github(),
+		st::settingsButton,
+		{ &st::menuIconGitHub }
+	)->setClickedCallback([=] {
+		UrlClickHandler::Open("https://github.com/kukuruzka165/materialgram/releases");
+	});
+
+	AddButton(
+		container,
 		tr::lng_settings_features(),
 		st::settingsButton,
 		{ &st::menuIconEmojiObjects }
