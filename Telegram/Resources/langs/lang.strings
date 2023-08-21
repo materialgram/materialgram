@@ -316,6 +316,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_edit_caption_voice" = "Sorry, you can't edit your message while you're having an unsent voice message.";
 
 "lng_intro_about" = "Welcome to the official Telegram Desktop app.\nIt's fast and secure.";
+"materialgram_intro_about" = "Thank you for downloading. You can get new releases in the @materialgram channel or on GitHub\nAnd don't forget to choose the theme you like in the settings";
 "lng_start_msgs" = "Start messaging";
 
 "lng_intro_next" = "Next";
@@ -947,8 +948,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_faq_button" = "Go to FAQ";
 "lng_settings_ask_ok" = "Ask a Volunteer";
 "lng_settings_faq" = "Telegram FAQ";
-"lng_settings_channel" = "@materialgram";
-"lng_settings_github" = "GitHub Releases";
+"materialgram_settings_channel" = "@materialgram";
+"materialgram_settings_github" = "GitHub Releases";
 "lng_settings_features" = "Telegram Features";
 "lng_settings_logout" = "Log Out";
 "lng_sure_logout" = "Are you sure you want to log out?";

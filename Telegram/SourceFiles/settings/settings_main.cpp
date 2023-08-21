@@ -598,7 +598,7 @@ void SetupHelp(
 
 	AddButton(
 		container,
-		tr::lng_settings_channel(),
+		tr::materialgram_settings_channel(),
 		st::settingsButton,
 		{ &st::menuIconMaterialgram }
 	)->setClickedCallback([=] {
@@ -607,7 +607,7 @@ void SetupHelp(
 
 	AddButton(
 		container,
-		tr::lng_settings_github(),
+		tr::materialgram_settings_github(),
 		st::settingsButton,
 		{ &st::menuIconGitHub }
 	)->setClickedCallback([=] {

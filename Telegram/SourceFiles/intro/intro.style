@@ -15,12 +15,7 @@ introCoverMaxWidth: 880px;
 introCoverIconsMinSkip: 120px;
 introCoverLeft: icon {{ "intro_left", introCoverIconsFg }};
 introCoverRight: icon {{ "intro_right", introCoverIconsFg }};
-introCoverIcon: icon {
-	{ "intro_plane_trace", introCoverPlaneTrace },
-	{ "intro_plane_inner", introCoverPlaneInner },
-	{ "intro_plane_outer", introCoverPlaneOuter },
-	{ "intro_plane_top", introCoverPlaneTop },
-};
+introCoverIcon: icon {{ "intro_plane_top", introCoverPlaneTop }};
 introCoverIconLeft: 50px;
 introCoverIconTop: 46px;
 
