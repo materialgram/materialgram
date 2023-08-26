@@ -5,20 +5,20 @@ This is the source code and the build instructions for the [materialgram][telegr
 
 The source code is published under GPLv3 with OpenSSL exception, the license is available [here][license].
 
-## 🛑 Icons are still in progress
 ![preview](docs/assets/preview.png)
 ![preview](docs/assets/themes.png)
 ![preview](docs/assets/bubbles.png)
 
 ## Changelog and plans:
-- [x] Replace font with Google Sans
+- [x] Replace font with **Google Sans** (except for Arabic characters that use the **Vazir** font)
 - [x] Add "Google Dark" theme to settings
-- [x] Change default scale to 110%
 - [ ] Set this theme by default
-- [ ] Finish icons
+- [x] Change default interface scale to **110%**
+- [x] Replace all icons with Material ones
+- [x] Replace all .lottie animations
+- [x] Replace the sounds
 - [ ] Update interface elements (for example, the style of switches)
-- [ ] Add some useful functional features like a jpeg quality slider when sending a photo
-- [ ] Show seconds in message bubbles
+- [ ] Add some useful features like a compression slider when sending a photo
 
 ## Third-party
 * Qt 6 ([LGPL](http://doc.qt.io/qt-6/lgpl.html)) and Qt 5.15 ([LGPL](http://doc.qt.io/qt-5/lgpl.html)) slightly patched
