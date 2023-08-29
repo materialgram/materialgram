@@ -197,7 +197,7 @@ struct PreparedFileThumbnail {
 	auto result = QByteArray();
 	QBuffer buffer(&result);
 	QImageWriter writer(&buffer, "JPEG");
-	writer.setQuality(87);
+	writer.setQuality(94);
 	writer.setProgressiveScanWrite(true);
 	writer.write(full);
 	buffer.close();
