@@ -632,10 +632,6 @@ storiesEmojiPan: EmojiPan(defaultEmojiPan) {
 		menuSpoiler: icon {{ "menu/spoiler_on", storiesComposeWhiteText }};
 		menuSpoilerOff: icon {{ "menu/spoiler_off", storiesComposeWhiteText }};
 
-		stripBubble: icon{
-			{ "chat/reactions_bubble_shadow", windowShadowFg },
-			{ "chat/reactions_bubble", storiesComposeBg },
-		};
 		stripPremiumLocked: icon{
 			{ "chat/reactions_premium_bg", storiesComposeBgRipple },
 			{ "chat/reactions_premium_star", storiesComposeGrayIcon },
