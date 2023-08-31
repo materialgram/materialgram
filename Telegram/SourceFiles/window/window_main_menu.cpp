@@ -234,7 +234,7 @@ public:
 protected:
 	void paintEvent(QPaintEvent *e) override;
 
-	static constexpr auto kText = "100%";
+	static constexpr auto kText = "110%";
 
 };
 
