@@ -421,7 +421,8 @@ void Selector::paintCollapsed(QPainter &p) {
 }
 
 void Selector::paintExpanding(Painter &p, float64 progress) {
-	const auto rects = paintExpandingBg(p, progress);
+	const auto rects = updateExpandingRects(progress);
+	paintExpandingBg(p, rects);
 	progress /= kFullDuration;
 	if (_footer) {
 		_footer->paintExpanding(
@@ -440,8 +441,7 @@ void Selector::paintExpanding(Painter &p, float64 progress) {
 	paintFadingExpandIcon(p, progress);
 }
 
-auto Selector::paintExpandingBg(QPainter &p, float64 progress)
--> ExpandingRects {
+Selector::ExpandingRects Selector::updateExpandingRects(float64 progress) {
 	progress = (progress >= kExpandDuration)
 		? 1.
 		: (progress / kExpandDuration);
@@ -460,22 +460,6 @@ auto Selector::paintExpandingBg(QPainter &p, float64 progress)
 		(height() - _outer.y() - _outer.height()),
 		expanding);
 	const auto outer = _outer.marginsAdded({ 0, expandUp, 0, expandDown });
-	if (_useTransparency) {
-		const auto pattern = _cachedRound.validateFrame(frame, 1., radius);
-		const auto fill = _cachedRound.FillWithImage(p, outer, pattern);
-		if (!fill.isEmpty()) {
-			p.fillRect(fill, _st.bg);
-		}
-	} else {
-		const auto inner = outer.marginsRemoved(marginsForShadow());
-		p.fillRect(inner, _st.bg);
-		p.fillRect(
-			inner.x(),
-			inner.y() + inner.height(),
-			inner.width(),
-			st::lineWidth,
-			st::defaultPopupMenu.shadow.fallback);
-	}
 	const auto categories = anim::interpolate(
 		0,
 		extendTopForCategories(),
@@ -492,7 +476,24 @@ auto Selector::paintExpandingBg(QPainter &p, float64 progress)
 		.radius = radius,
 		.expanding = expanding,
 		.finalBottom = height() - margins.bottom(),
+		.frame = frame,
+		.outer = outer,
 	};
+}
+
+void Selector::paintExpandingBg(QPainter &p, const ExpandingRects &rects) {
+	if (_useTransparency) {
+		const auto pattern = _cachedRound.validateFrame(
+			rects.frame,
+			1.,
+			rects.radius);
+		const auto fill = _cachedRound.FillWithImage(p, rects.outer, pattern);
+		if (!fill.isEmpty()) {
+			p.fillRect(fill, _st.bg);
+		}
+	} else {
+		paintNonTransparentExpandRect(p, rects.outer - marginsForShadow());
+	}
 }
 
 void Selector::paintFadingExpandIcon(QPainter &p, float64 progress) {
@@ -511,6 +512,18 @@ void Selector::paintFadingExpandIcon(QPainter &p, float64 progress) {
 	p.setOpacity(1.);
 }
 
+void Selector::paintNonTransparentExpandRect(
+		QPainter &p,
+		const QRect &inner) const {
+	p.fillRect(inner, _st.bg);
+	p.fillRect(
+		inner.x(),
+		inner.y() + inner.height(),
+		inner.width(),
+		st::lineWidth,
+		st::defaultPopupMenu.shadow.fallback);
+}
+
 void Selector::paintExpanded(QPainter &p) {
 	if (!_expandFinished) {
 		finishExpand();
@@ -518,14 +531,7 @@ void Selector::paintExpanded(QPainter &p) {
 	if (_useTransparency) {
 		p.drawImage(0, 0, _paintBuffer);
 	} else {
-		const auto inner = rect().marginsRemoved(marginsForShadow());
-		p.fillRect(inner, _st.bg);
-		p.fillRect(
-			inner.x(),
-			inner.y() + inner.height(),
-			inner.width(),
-			st::lineWidth,
-			st::defaultPopupMenu.shadow.fallback);
+		paintNonTransparentExpandRect(p, rect() - marginsForShadow());
 	}
 }
 
@@ -533,6 +539,7 @@ void Selector::finishExpand() {
 	Expects(!_expandFinished);
 
 	_expandFinished = true;
+	updateExpandingRects(kExpandDuration);
 	if (_useTransparency) {
 		auto q = QPainter(&_paintBuffer);
 		q.setCompositionMode(QPainter::CompositionMode_Source);
