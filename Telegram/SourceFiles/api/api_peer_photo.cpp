@@ -43,7 +43,7 @@ constexpr auto kSharedMediaLimit = 100;
 
 	QByteArray jpeg;
 	QBuffer jpegBuffer(&jpeg);
-	image.save(&jpegBuffer, "JPG", 87);
+	image.save(&jpegBuffer, "JPG", 100);
 
 	const auto scaled = [&](int size) {
 		return image.scaled(

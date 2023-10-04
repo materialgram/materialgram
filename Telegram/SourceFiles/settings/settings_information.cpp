@@ -972,7 +972,7 @@ AccountsEvents SetupAccounts(
 void UpdatePhotoLocally(not_null<UserData*> user, const QImage &image) {
 	auto bytes = QByteArray();
 	auto buffer = QBuffer(&bytes);
-	image.save(&buffer, "JPG", 87);
+	image.save(&buffer, "JPG", 94);
 	user->setUserpic(
 		base::RandomValue<PhotoId>(),
 		ImageLocation(
