@@ -18,7 +18,8 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - [ ] Replace all .lottie animations
 - [x] Replace the sounds
 - [ ] Update interface elements (for example, the style of switches)
-- [ ] Add some useful features like a compression slider when sending a photo
+- [x] Increase photo quality when sending
+- [x] Reduce some timeouts
 
 ## Build instructions
 * Windows [(64-bit)][win64]
