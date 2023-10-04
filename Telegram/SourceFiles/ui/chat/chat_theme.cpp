@@ -31,7 +31,7 @@ constexpr auto kMaxContrastValue = 21.;
 constexpr auto kMinAcceptableContrast = 1.14;// 4.5;
 
 [[nodiscard]] QColor DefaultBackgroundColor() {
-	return QColor(213, 223, 233);
+	return QColor(255, 255, 255);
 }
 
 [[nodiscard]] int ComputeRealRotation(const CacheBackgroundRequest &request) {
