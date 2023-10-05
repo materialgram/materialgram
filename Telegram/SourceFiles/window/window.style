@@ -10,10 +10,10 @@ using "ui/widgets/widgets.style";
 using "chat_helpers/chat_helpers.style";
 using "boxes/boxes.style"; // UserpicButton
 
-windowMinWidth: 380px;
-windowMinHeight: 480px;
-windowDefaultWidth: 800px;
-windowDefaultHeight: 600px;
+windowMinWidth: 256px;
+windowMinHeight: 256px;
+windowDefaultWidth: 900px;
+windowDefaultHeight: 625px;
 windowBigDefaultWidth: 1024px;
 windowBigDefaultHeight: 768px;
 
