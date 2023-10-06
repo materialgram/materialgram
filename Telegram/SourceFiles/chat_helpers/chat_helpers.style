@@ -741,7 +741,6 @@ reactPanelEmojiPan: EmojiPan(userpicBuilderEmojiPan) {
 emojiScroll: ScrollArea(defaultSolidScroll) {
 	deltat: 3px;
 	deltab: 3px;
-	round: -1px;
 	width: 7px;
 	deltax: 2px;
 	hiding: 0;
