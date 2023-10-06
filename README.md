@@ -7,21 +7,22 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 
 ![preview](docs/assets/preview.png)
 ![preview](docs/assets/themes.png)
-![preview](docs/assets/bubbles.png)
 
 ## Changelog and plans:
+- [x] Add "Google Day" and "Google Dark" themes to settings
 - [x] Replace font with **Google Sans** (except for Arabic characters that use the **Vazir** font)
-- [x] Add "Google Dark" theme to settings
-- [ ] Set this theme by default
-- [x] Change default interface scale to **110%**
 - [x] Replace all icons with Material ones
 - [ ] Replace all .lottie animations
 - [x] Replace the sounds
-- [ ] Update interface elements (for example, the style of switches)
-- [x] Increase photo quality when sending
-- [x] Reduce some timeouts
+- [x] Change the style of toggle
+- [x] Change the style of scrollbar
+- [x] Remove message bubble tails
+- [x] Reduce image compression
+- [x] Reduce minimum window size
+- [x] Reduce some annoying timeouts
+- [x] Increase upload speed
 
-## Build instructions
+## Build instructions (tested only on Windows)
 * Windows [(64-bit)][win64]
 * [macOS][mac]
 * [GNU/Linux using Docker][linux]
