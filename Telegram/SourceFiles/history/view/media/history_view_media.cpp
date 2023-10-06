@@ -366,7 +366,7 @@ Ui::BubbleRounding Media::adjustedBubbleRounding(RectParts square) const {
 	auto result = bubbleRounding();
 	using Corner = Ui::BubbleCornerRounding;
 	const auto adjust = [&](bool round, Corner already, RectPart corner) {
-		return (already == Corner::Tail || !round || (square & corner))
+		return (already == Corner::None || !round || (square & corner))
 			? Corner::None
 			: already;
 	};

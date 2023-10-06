@@ -196,18 +196,6 @@ ChatStyle::ChatStyle() {
 		st::outReplyTextPalette,
 		st::outReplyTextPaletteSelected);
 	make(
-		&MessageStyle::tailLeft,
-		st::historyBubbleTailInLeft,
-		st::historyBubbleTailInLeftSelected,
-		st::historyBubbleTailOutLeft,
-		st::historyBubbleTailOutLeftSelected);
-	make(
-		&MessageStyle::tailRight,
-		st::historyBubbleTailInRight,
-		st::historyBubbleTailInRightSelected,
-		st::historyBubbleTailOutRight,
-		st::historyBubbleTailOutRightSelected);
-	make(
 		&MessageStyle::historyRepliesIcon,
 		st::historyRepliesInIcon,
 		st::historyRepliesInSelectedIcon,

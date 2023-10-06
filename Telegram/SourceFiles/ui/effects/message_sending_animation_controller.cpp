@@ -306,21 +306,12 @@ void Content::createBubble() {
 	}
 	const auto innerGeometry = currentView->innerGeometry();
 
-	const auto tailWidth = st::historyBubbleTailOutLeft.width();
-	_bubble.offsetFromContent = QPoint(
-		currentView->hasOutLayout() ? 0 : tailWidth,
-		innerGeometry.y());
-
 	const auto scaleOffset = QPoint(0, innerGeometry.y());
 	const auto paintOffsetLeft = innerGeometry.x()
 		- _bubble.offsetFromContent.x();
 
 	const auto hasCommentsButton = currentView->data()->repliesAreComments()
 		|| currentView->data()->externalReply();
-	_bubble.widget->resize(innerGeometry.size()
-		+ QSize(
-			currentView->hasOutLayout() ? tailWidth : 0,
-			hasCommentsButton ? innerGeometry.y() : 0));
 	_bubble.widget->show();
 
 	_bubble.widget->stackUnder(this);

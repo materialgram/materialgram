@@ -14,7 +14,6 @@ class ChatStyle;
 
 enum class BubbleCornerRounding : uchar {
 	None,
-	Tail,
 	Small,
 	Large,
 };

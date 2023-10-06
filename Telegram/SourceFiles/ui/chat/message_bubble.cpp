@@ -31,10 +31,10 @@ void PaintBubbleGeneric(
 	const auto topRight = args.rounding.topRight;
 	const auto bottomWithTailLeft = args.rounding.bottomLeft;
 	const auto bottomWithTailRight = args.rounding.bottomRight;
-	const auto bottomLeft = (bottomWithTailLeft == Corner::Tail)
+	const auto bottomLeft = (bottomWithTailLeft == Corner::Large)
 		? Corner::Large
 		: bottomWithTailLeft;
-	const auto bottomRight = (bottomWithTailRight == Corner::Tail)
+	const auto bottomRight = (bottomWithTailRight == Corner::Large)
 		? Corner::Large
 		: bottomWithTailRight;
 	const auto rect = args.geometry;

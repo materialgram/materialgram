@@ -358,14 +358,6 @@ bubbleRadiusLarge: 16px;
 
 historyPhotoLeft: 14px;
 historyPhotoBubbleMinWidth: 200px;
-historyBubbleTailInLeft: icon {{ "bubble_tail", msgInBg }};
-historyBubbleTailInLeftSelected: icon {{ "bubble_tail", msgInBgSelected }};
-historyBubbleTailOutLeft: icon {{ "bubble_tail", msgOutBg }};
-historyBubbleTailOutLeftSelected: icon {{ "bubble_tail", msgOutBgSelected }};
-historyBubbleTailInRight: icon {{ "bubble_tail-flip_horizontal", msgInBg }};
-historyBubbleTailInRightSelected: icon {{ "bubble_tail-flip_horizontal", msgInBgSelected }};
-historyBubbleTailOutRight: icon {{ "bubble_tail-flip_horizontal", msgOutBg }};
-historyBubbleTailOutRightSelected: icon {{ "bubble_tail-flip_horizontal", msgOutBgSelected }};
 
 historyPeerUserpicFont: semiboldFont;
 
