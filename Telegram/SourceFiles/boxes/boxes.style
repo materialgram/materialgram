@@ -382,7 +382,7 @@ backgroundPadding: 10px;
 backgroundSize: size(108px, 193px);
 backgroundScroll: ScrollArea(boxScroll) {
 	deltax: 3px;
-	width: 10px;
+	width: 9px;
 	deltat: 10px;
 	deltab: 10px;
 }
@@ -435,8 +435,7 @@ calendarDaysFg: boxTitleAdditionalFg;
 calendarScroll: ScrollArea(defaultSolidScroll) {
 	deltat: 3px;
 	deltab: 3px;
-	round: 1px;
-	width: 8px;
+	width: 9px;
 	deltax: 3px;
 	hiding: 1000;
 }

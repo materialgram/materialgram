@@ -206,8 +206,7 @@ membersInnerDropdown: InnerDropdown(defaultInnerDropdown) {
 	scroll: ScrollArea(defaultSolidScroll) {
 		deltat: 0px;
 		deltab: 0px;
-		round: 1px;
-		width: 8px;
+		width: 9px;
 		deltax: 3px;
 	}
 	scrollMargin: margins(0px, 5px, 0px, 5px);

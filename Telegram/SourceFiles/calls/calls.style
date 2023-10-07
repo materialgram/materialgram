@@ -411,7 +411,6 @@ callPanelDuration: 150;
 
 callPanelSignalBars: CallSignalBars {
 	width: 2px;
-	radius: 1px;
 	skip: 2px;
 	min: 4px;
 	max: 10px;
@@ -1327,7 +1326,7 @@ groupCallTooltip: Tooltip(defaultTooltip) {
 groupCallNiceTooltip: ImportantTooltip(defaultImportantTooltip) {
 	bg: importantTooltipBg;
 	padding: margins(10px, 3px, 10px, 5px);
-	radius: 4px;
+	radius: 10px;
 	arrow: 4px;
 }
 groupCallNiceTooltipLabel: defaultImportantTooltipLabel;

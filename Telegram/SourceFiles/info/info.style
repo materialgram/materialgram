@@ -895,8 +895,7 @@ shortInfoLabeledPadding: margins(24px, 16px, 24px, 0px);
 shortInfoScroll: ScrollArea(defaultScrollArea) {
 	deltat: 3px;
 	deltab: 0px;
-	round: 1px;
-	width: 8px;
+	width: 9px;
 	deltax: 3px;
 
 	duration: 150;
