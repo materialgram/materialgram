@@ -101,11 +101,9 @@ mediaviewVolumeToggle: IconButton(mediaviewControlsButton) {
 mediaviewVolumeSkip: 3px;
 
 mediaviewLeft: icon {
-	{ "mediaview/next_shadow-flip_horizontal", windowShadowFg }
 	{ "mediaview/next-flip_horizontal", mediaviewControlFg }
 };
 mediaviewRight: icon {
-	{ "mediaview/next_shadow", windowShadowFg }
 	{ "mediaview/next", mediaviewControlFg }
 };
 mediaviewSave: icon {{ "mediaview/download", mediaviewControlFg }};
@@ -245,19 +243,15 @@ mediaviewDefaultWidth: 800px;
 mediaviewDefaultHeight: 600px;
 
 mediaviewTitleMinimize: icon{
-	{ "mediaview/title_viewer_shadow_minimize", windowShadowFg },
 	{ "mediaview/title_viewer_button_minimize", mediaviewControlFg },
 };
 mediaviewTitleMaximize: icon{
-	{ "mediaview/title_viewer_shadow_maximize", windowShadowFg },
 	{ "mediaview/title_viewer_button_maximize", mediaviewControlFg },
 };
 mediaviewTitleRestore: icon{
-	{ "mediaview/title_viewer_shadow_restore", windowShadowFg },
 	{ "mediaview/title_viewer_button_restore", mediaviewControlFg },
 };
 mediaviewTitleClose: icon{
-	{ "mediaview/title_viewer_shadow_close", windowShadowFg },
 	{ "mediaview/title_viewer_button_close", mediaviewControlFg },
 };
 mediaviewTitleButton: IconButton(windowTitleButton) {
@@ -295,7 +289,6 @@ mediaviewTitle: WindowTitle(defaultWindowTitle) {
 }
 
 mediaviewTitleButtonMac: icon{
-	{ "mediaview/title_button_shadow_mac", windowShadowFg },
 	{ "mediaview/title_button_mac", mediaviewControlFg },
 };
 mediaviewTitleMinimizeMac: icon {{ "mediaview/title_button_minimize_mac", mediaviewBg }};

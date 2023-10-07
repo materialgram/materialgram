@@ -428,42 +428,34 @@ callBarSignalBars: CallSignalBars(callPanelSignalBars) {
 
 callTitleButton: windowTitleButton;
 callTitleMinimizeIcon: icon {
-	{ "title_shadow_minimize", windowShadowFg },
 	{ "title_button_minimize", callNameFg },
 };
 callTitleMinimizeIconOver: icon {
 	{ windowTitleButtonSize, callBgButton },
 	{ windowTitleButtonSize, callMuteRipple },
-	{ "title_shadow_minimize", windowShadowFg },
 	{ "title_button_minimize", callNameFg },
 };
 callTitleMaximizeIcon: icon {
-	{ "title_shadow_maximize", windowShadowFg },
 	{ "title_button_maximize", callNameFg },
 };
 callTitleMaximizeIconOver: icon {
 	{ windowTitleButtonSize, callBgButton },
 	{ windowTitleButtonSize, callMuteRipple },
-	{ "title_shadow_maximize", windowShadowFg },
 	{ "title_button_maximize", callNameFg },
 };
 callTitleRestoreIcon: icon {
-	{ "title_shadow_restore", windowShadowFg },
 	{ "title_button_restore", callNameFg },
 };
 callTitleRestoreIconOver: icon {
 	{ windowTitleButtonSize, callBgButton },
 	{ windowTitleButtonSize, callMuteRipple },
-	{ "title_shadow_restore", windowShadowFg },
 	{ "title_button_restore", callNameFg },
 };
 callTitleCloseIcon: icon {
-	{ "title_shadow_close", windowShadowFg },
 	{ "title_button_close", callNameFg },
 };
 callTitleCloseIconOver: icon {
 	{ windowTitleButtonSize, titleButtonCloseBgOver },
-	{ "title_shadow_close", windowShadowFg },
 	{ "title_button_close", titleButtonCloseFgOver },
 };
 callTitle: WindowTitle(defaultWindowTitle) {
