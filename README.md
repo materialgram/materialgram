@@ -21,6 +21,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - [x] Reduce minimum window size
 - [x] Reduce some annoying timeouts
 - [x] Increase upload speed
+- [x] Improve spoiler animation
 
 ## Build instructions (tested only on Windows)
 * Windows [(64-bit)][win64]
