@@ -875,8 +875,8 @@ historyToDown: TwoIconButton {
 	iconAboveOver: historyToDownAboveOver;
 	iconPosition: point(0px, historyToDownPaddingTop);
 
-	rippleAreaPosition: point(5px, 15px);
-	rippleAreaSize: 42px;
+	rippleAreaPosition: point(9px, 19px);
+	rippleAreaSize: 34px;
 	ripple: RippleAnimation(defaultRippleAnimation) {
 		color: historyToDownBgRipple;
 	}
