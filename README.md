@@ -1,4 +1,4 @@
-![preview](docs/assets/icon.png)
+<img src="./docs/assets/icon.png" width="128">
 # [materialgram][telegram_desktop] – Telegram Desktop fork
 
 This is the source code and the build instructions for the **materialgram** client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol
