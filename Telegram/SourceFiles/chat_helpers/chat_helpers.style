@@ -835,7 +835,7 @@ historyReplyCancel: IconButton {
 	iconOver: historyReplyCancelIconOver;
 	iconPosition: point(-1px, -1px);
 
-	rippleAreaPosition: point(4px, 4px);
+	rippleAreaPosition: point(4px, 5px);
 	rippleAreaSize: 40px;
 	ripple: RippleAnimation(defaultRippleAnimation) {
 		color: windowBgOver;

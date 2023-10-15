@@ -25,12 +25,12 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - [x] Improve spoiler animation
 
 ## Build instructions (tested only on Windows)
-* Windows [(64-bit)][win64]
+* [(Windows 64-bit)][win64]
 * [macOS][mac]
 * [GNU/Linux using Docker][linux]
 
 ## Third-party
-* **Qt 6** ([LGPL](http://doc.qt.io/qt-6/lgpl.html)) and Qt 5.15 ([LGPL](http://doc.qt.io/qt-5/lgpl.html)) slightly patched
+* **Qt 6** ([LGPL](http://doc.qt.io/qt-6/lgpl.html)) and **Qt 5.15** ([LGPL](http://doc.qt.io/qt-5/lgpl.html)) slightly patched
 * **OpenSSL 1.1.1 and 1.0.1** ([OpenSSL License](https://www.openssl.org/source/license.html))
 * **WebRTC** ([New BSD License](https://github.com/desktop-app/tg_owt/blob/master/LICENSE))
 * **zlib 1.2.11** ([zlib License](http://www.zlib.net/zlib_license.html))
