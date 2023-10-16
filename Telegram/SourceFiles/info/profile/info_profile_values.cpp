@@ -87,6 +87,102 @@ void StripExternalLinks(TextWithEntities &text) {
 
 } // namespace
 
+QString findRegistrationTime(long long userId) {
+	struct UserData {
+		long long id;
+		long long registrationTime;
+	};
+	std::vector<UserData> userData = {
+		{1000000, 1380326400}, // other source
+		{2768409, 1383264000},
+		{7679610, 1388448000},
+		// {7679610, 1389744000}, other source
+		// {10000000, 1413331200}, other source
+		{11538514, 1391212000},
+		{15835244, 1392940000},
+		{23646077, 1393459000},
+		{38015510, 1393632000},
+		{44634663, 1399334000},
+		{46145305, 1400198000},
+		{54845238, 1411257000},
+		{63263518, 1414454000},
+		{101260938, 1425600000},
+		{101323197, 1426204000},
+		{111220210, 1429574000},
+		{103258382, 1432771000},
+		{103151531, 1433376000},
+		{116812045, 1437696000},
+		{122600695, 1437782000},
+		{109393468, 1439078000},
+		{112594714, 1439683000},
+		{124872445, 1439856000},
+		{130029930, 1441324000},
+		{125828524, 1444003000},
+		{133909606, 1444176000},
+		{157242073, 1446768000},
+		{143445125, 1448928000},
+		{148670295, 1452211000},
+		// {150000000, 1434326400}, other source
+		{152079341, 1453420000},
+		{171295414, 1457481000},
+		{181783990, 1460246000},
+		// {200000000, 1451606400}, other source
+		{222021233, 1465344000},
+		{225034354, 1466208000},
+		// {234480941, 1464825600}, other source
+		{278941742, 1473465000},
+		{285253072, 1476835000},
+		{294851037, 1479600000},
+		{297621225, 1481846000},
+		{328594461, 1482969000},
+		{337808429, 1487707000},
+		{341546272, 1487782000},
+		{352940995, 1487894000},
+		{369669043, 1490918000}, // other source
+		// {369669043, 1492214400}, other source
+		// {391882013, 1509926400}, other source
+		{400169472, 1501459000}, // other source
+		{616816630, 1529625600}, // other source
+		{727572658, 1543708800}, // other source
+		// {755000000, 1548028800}, other source
+		{782000000, 1546300800}, // other source
+		{805158066, 1563208000},
+		// {1919230638, 1598028800}, other source
+		{1974255900, 1634000000},
+		// {2018845111, 1608028800}, other source
+		{3318845111, 1618028800}, // other source
+		{4317845111, 1620028800}, // other source
+		{5336336790, 1646368100}, // other source
+		{5396587273, 1648014800}, // other source
+		{6020888206, 1675534800},
+		{6020888206, 1676198350},
+		{6554264430, 1695654800}
+	};
+	std::sort(userData.begin(), userData.end(), [](const UserData& a, const UserData& b) {
+		return a.id < b.id;
+		});
+	for (size_t i = 1; i < userData.size(); ++i) {
+		if (userId >= userData[i - 1].id && userId <= userData[i].id) {
+			double t = static_cast<double>(userId - userData[i - 1].id) / (userData[i].id - userData[i - 1].id);
+
+			return QString("~ ") + base::unixtime::parse(userData[i - 1].registrationTime + t * 
+				(userData[i].registrationTime - userData[i - 1].registrationTime))
+				.toString(QLocale::system().dateFormat(QLocale::ShortFormat));
+		}
+	}
+	if (userId <= 1000000) {
+		return QString("< 28.09.2013");
+	}
+	else {
+		return QString("> 25.09.2023");
+	}
+}
+
+rpl::producer<TextWithEntities> RegistrationValue(not_null<PeerData*> peer) {
+	auto userId = peer->id.to<UserId>().bare;
+	return rpl::single(findRegistrationTime(userId)) | Ui::Text::ToWithEntities();
+}
+
 rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
 	return peer->session().changes().peerFlagsValue(
 		peer,
