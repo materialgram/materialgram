@@ -146,7 +146,8 @@ QString findRegistrationTime(long long userId) {
 		{727572658, 1543708800}, // other source
 		// {755000000, 1548028800}, other source
 		{782000000, 1546300800}, // other source
-		{805158066, 1563208000},
+		// {805158066, 1563208000},
+		{925078064, 1563290000},
 		// {1919230638, 1598028800}, other source
 		{1974255900, 1634000000},
 		// {2018845111, 1608028800}, other source
@@ -155,7 +156,7 @@ QString findRegistrationTime(long long userId) {
 		{5336336790, 1646368100}, // other source
 		{5396587273, 1648014800}, // other source
 		{6020888206, 1675534800},
-		{6020888206, 1676198350},
+		{6057123350, 1676198350},
 		{6554264430, 1695654800}
 	};
 	std::sort(userData.begin(), userData.end(), [](const UserData& a, const UserData& b) {
