@@ -13,7 +13,7 @@ def replaceline(path, linecontains, replacewith):
             else:
                 file.write(line)
 
-major, minor, patch, materialver = input("Enter your major verion: "), input("Minor: "), input("Patch: "), input("Material Telegram version: ")
+major, minor, patch, materialver = input("Enter your major version: "), input("Minor: "), input("Patch: "), input("materialgram version: ")
 ver = major + "." + minor + "." + patch + "." + materialver
 print(ver)
 with open("version", 'xt') as versionfile:
