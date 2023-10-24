@@ -266,7 +266,7 @@ void Folder::paintUserpic(
 		const style::color *overrideBg,
 		const style::color *overrideFg) const {
 	p.setPen(Qt::NoPen);
-	p.setBrush(overrideBg ? *overrideBg : st::historyPeerArchiveUserpicBg);
+	p.setBrush(overrideBg ? *overrideBg : st::sideBarBg);
 	{
 		PainterHighQualityEnabler hq(p);
 		p.drawEllipse(x, y, size, size);
