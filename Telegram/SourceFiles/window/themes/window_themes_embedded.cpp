@@ -90,6 +90,13 @@ const auto kColorizeIgnoredKeys = base::flat_set<QLatin1String>{ {
 	qstr("premiumButtonBg3"),
 	qstr("premiumIconBg1"),
 	qstr("premiumIconBg2"),
+
+	qstr("windowBoldFg"),
+	qstr("windowBoldFgOver"),
+	qstr("botKbColor"),
+	qstr("introTitleFg"),
+	qstr("dialogsNameFg"),
+	qstr("dialogsNameFgOver")
 } };
 
 style::colorizer::Color cColor(std::string_view hex) {
