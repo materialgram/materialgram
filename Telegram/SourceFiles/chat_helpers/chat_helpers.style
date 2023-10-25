@@ -852,16 +852,16 @@ historyPinnedBotButton: RoundButton(defaultActiveButton) {
 historyPinnedBotButtonMaxWidth: 150px;
 
 historyToDownPosition: point(12px, 10px);
-historyToDownAbove: icon {{ "history_down_arrow", sideBarBg }};
-historyToDownAboveOver: icon {{ "history_down_arrow", sideBarBg }};
+historyToDownAbove: icon {{ "history_down_arrow", windowBgActive }};
+historyToDownAboveOver: icon {{ "history_down_arrow", windowBgActive }};
 historyToDownPaddingTop: 10px;
 historyToDownBelow: icon {
 	{ "history_down_shadow", historyToDownShadow },
-	{ "history_down_circle", windowBgActive },
+	{ "history_down_circle", sideBarBg },
 };
 historyToDownBelowOver: icon {
 	{ "history_down_shadow", historyToDownShadow },
-	{ "history_down_circle", windowBgActive },
+	{ "history_down_circle", sideBarBg },
 };
 historyToDown: TwoIconButton {
 	width: 52px;
@@ -885,8 +885,8 @@ historyToDownBadgeSize: 22px;
 historyToDownShownAfter: 480px;
 historyToDownDuration: 150;
 
-dialogsToUpAbove: icon {{ "history_down_arrow-flip_vertical", sideBarBg, point(0px, 1px) }};
-dialogsToUpAboveOver: icon {{ "history_down_arrow-flip_vertical", sideBarBg, point(0px, 1px) }};
+dialogsToUpAbove: icon {{ "history_down_arrow-flip_vertical", windowBgActive, point(0px, 1px) }};
+dialogsToUpAboveOver: icon {{ "history_down_arrow-flip_vertical", windowBgActive, point(0px, 1px) }};
 
 dialogsToUp: TwoIconButton(historyToDown) {
 	iconAbove: dialogsToUpAbove;
@@ -894,12 +894,12 @@ dialogsToUp: TwoIconButton(historyToDown) {
 }
 
 historyUnreadMentions: TwoIconButton(historyToDown) {
-	iconAbove: icon {{ "history_unread_mention", sideBarBg }};
-	iconAboveOver: icon {{ "history_unread_mention", sideBarBg }};
+	iconAbove: icon {{ "history_unread_mention", windowBgActive }};
+	iconAboveOver: icon {{ "history_unread_mention", windowBgActive }};
 }
 historyUnreadReactions: TwoIconButton(historyToDown) {
-	iconAbove: icon {{ "history_unread_reaction", sideBarBg }};
-	iconAboveOver: icon {{ "history_unread_reaction", sideBarBg }};
+	iconAbove: icon {{ "history_unread_reaction", windowBgActive }};
+	iconAboveOver: icon {{ "history_unread_reaction", windowBgActive }};
 }
 historyUnreadThingsSkip: 4px;
 
@@ -1072,13 +1072,13 @@ historyRecordLockIconArcHeight: 4px;
 historyRecordStopIconWidth: 12px;
 
 historyRecordLockTopShadow: icon {{ "voice_lock/record_lock_top_shadow", historyToDownShadow }};
-historyRecordLockTop: icon {{ "voice_lock/record_lock_top", windowBgActive }};
+historyRecordLockTop: icon {{ "voice_lock/record_lock_top", sideBarBg }};
 historyRecordLockBottomShadow: icon {{ "voice_lock/record_lock_bottom_shadow", historyToDownShadow }};
-historyRecordLockBottom: icon {{ "voice_lock/record_lock_bottom", windowBgActive }};
+historyRecordLockBottom: icon {{ "voice_lock/record_lock_bottom", sideBarBg }};
 historyRecordLockBodyShadow: icon {{ "voice_lock/record_lock_body_shadow", historyToDownShadow }};
-historyRecordLockBody: icon {{ "voice_lock/record_lock_body", windowBgActive }};
+historyRecordLockBody: icon {{ "voice_lock/record_lock_body", sideBarBg }};
 historyRecordLockMargin: margins(4px, 4px, 4px, 4px);
-historyRecordLockArrow: icon {{ "voice_lock/voice_arrow", sideBarBg }};
+historyRecordLockArrow: icon {{ "voice_lock/voice_arrow", windowBgActive }};
 historyRecordLockRippleMargin: margins(6px, 6px, 6px, 6px);
 
 historyRecordDelete: IconButton(historyAttach) {
@@ -1112,7 +1112,7 @@ defaultRecordBarLock: RecordBarLock {
 	shadowBottom: historyRecordLockBottomShadow;
 	shadowBody: historyRecordLockBodyShadow;
 	arrow: historyRecordLockArrow;
-	fg: sideBarBg;
+	fg: windowBgActive;
 }
 defaultRecordBar: RecordBar {
 	bg: historyComposeAreaBg;
