@@ -96,7 +96,8 @@ const auto kColorizeIgnoredKeys = base::flat_set<QLatin1String>{ {
 	qstr("botKbColor"),
 	qstr("introTitleFg"),
 	qstr("dialogsNameFg"),
-	qstr("dialogsNameFgOver")
+	qstr("dialogsNameFgOver"),
+	qstr("boxTitleFg")
 } };
 
 style::colorizer::Color cColor(std::string_view hex) {
