@@ -536,6 +536,11 @@ void StickerSetBox::updateButtons() {
 					? tr::lng_stickers_copied_emoji(tr::now)
 					: tr::lng_stickers_copied(tr::now));
 		};
+		const auto author = [=] {
+			QGuiApplication::clipboard()->setText(
+				QString::number(_inner->setId() >> 32));
+			showToast(tr::lng_code_copied(tr::now));
+			};
 		if (_inner->notInstalled()) {
 			if (!_session->premium()
 				&& _session->premiumPossible()
@@ -582,6 +587,10 @@ void StickerSetBox::updateButtons() {
 							: tr::lng_stickers_share_pack)(tr::now),
 						[=] { share(); closeBox(); },
 						&st::menuIconShare);
+					(*menu)->addAction(
+						tr::lng_channel_admin_status_creator(tr::now),
+						[=] { author(); closeBox(); },
+						&st::menuIconProfile);
 					(*menu)->popup(QCursor::pos());
 					return true;
 				});
@@ -630,6 +639,10 @@ void StickerSetBox::updateButtons() {
 								: tr::lng_stickers_archive_pack(tr::now)),
 							archive,
 							&st::menuIconArchive);
+						(*menu)->addAction(
+							tr::lng_channel_admin_status_creator(tr::now),
+							[=] { author(); closeBox(); },
+							&st::menuIconProfile);
 					}
 					(*menu)->popup(QCursor::pos());
 					return true;
