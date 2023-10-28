@@ -876,7 +876,7 @@ historyToDown: TwoIconButton {
 	rippleAreaPosition: point(9px, 19px);
 	rippleAreaSize: 34px;
 	ripple: RippleAnimation(defaultRippleAnimation) {
-		color: mediaviewPlaybackIconRipple;
+		color: sideBarBgRipple;
 	}
 }
 historyToDownBadgeFont: semiboldFont;
