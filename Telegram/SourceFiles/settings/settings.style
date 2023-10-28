@@ -12,7 +12,7 @@ using "boxes/boxes.style";
 
 settingsButton: SettingsButton(infoProfileButton) {
 	style: boxTextStyle;
-	padding: margins(60px, 10px, 22px, 10px);
+	padding: margins(60px, 11px, 22px, 9px);
 	iconLeft: 20px;
 }
 settingsButtonLight: SettingsButton(settingsButton) {
