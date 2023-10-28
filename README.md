@@ -13,16 +13,14 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - [x] Add "Google Day" and "Google Dark" themes to settings
 - [x] Replace font with **Google Sans** (except for Arabic characters that use the **Vazir** font)
 - [x] Replace all icons with Material ones
-- [ ] Replace all .lottie animations
 - [x] Replace the sounds
-- [x] Change the style of toggle
-- [x] Change the style of scrollbar
 - [x] Remove message bubble tails
 - [x] Reduce image compression
 - [x] Reduce minimum window size
 - [x] Reduce some annoying timeouts
 - [x] Increase upload speed
 - [x] Improve spoiler animation
+- [x] Show the approximate date of account creation in the profile
 
 ## Build instructions (tested only on Windows)
 * [(Windows 64-bit)][win64]
