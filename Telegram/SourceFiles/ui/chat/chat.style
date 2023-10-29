@@ -29,7 +29,7 @@ msgShadow: 2px;
 
 historyReplyTop: 2px;
 historyReplyBottom: 2px;
-historyReplyPreview: 32px;
+historyReplyPreview: 30px;
 historyReplyPreviewMargin: margins(7px, 4px, 4px, 4px);
 historyReplyPadding: margins(11px, 2px, 6px, 2px);
 
