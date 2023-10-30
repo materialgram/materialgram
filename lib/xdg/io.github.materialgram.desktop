@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=materialgram
+Comment=Unofficial desktop version of Telegram with Material Design
+TryExec=materialgram
+Exec=materialgram -- %u
+Icon=materialgram
+Terminal=false
+StartupWMClass=materialgram
+Type=Application
+Categories=Chat;Network;InstantMessaging;Qt;
+MimeType=x-scheme-handler/tg;
+Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;materialgram
+Actions=quit;
+DBusActivatable=true
+SingleMainWindow=true
+X-GNOME-UsesNotifications=true
+X-GNOME-SingleWindow=true
+
+[Desktop Action quit]
+Exec=materialgram -quit
+Name=Quit materialgram
+Icon=application-exit
