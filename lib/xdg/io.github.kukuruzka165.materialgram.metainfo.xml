@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component type="desktop">
-    <id>io.github.materialgram.desktop</id>
+    <id>io.github.kukuruzka165.materialgram.desktop</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0</project_license>
     <name>materialgram</name>
@@ -72,7 +72,7 @@
         <content_attribute id="money-gambling">none</content_attribute>
         <content_attribute id="money-advertising">moderate</content_attribute>
     </content_rating>
-    <launchable type="desktop-id">io.github.materialgram.desktop</launchable>
+    <launchable type="desktop-id">io.github.kukuruzka165.materialgram.desktop</launchable>
     <provides>
         <binary>materialgram</binary>
     </provides>
