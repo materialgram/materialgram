@@ -198,7 +198,7 @@ bool GenerateDesktopFile(
 	DEBUG_LOG(("App Info: placing .desktop file to %1").arg(targetPath));
 	if (!QDir(targetPath).exists()) QDir().mkpath(targetPath);
 
-	const auto sourceFile = u":/misc/materialgram.desktop"_q;
+	const auto sourceFile = u":/misc/io.github.materialgram.desktop"_q;
 	const auto targetFile = targetPath
 		+ QGuiApplication::desktopFileName()
 		+ u".desktop"_q;
@@ -297,7 +297,7 @@ bool GenerateDesktopFile(
 
 	if (!Core::UpdaterDisabled()) {
 		DEBUG_LOG(("App Info: removing old .desktop files"));
-		QFile::remove(u"%1materialgram.desktop"_q.arg(targetPath));
+		QFile::remove(u"%1io.github.materialgram.desktop"_q.arg(targetPath));
 
 		const auto appimagePath = u"file://%1%2"_q.arg(
 			cExeDir(),
@@ -622,10 +622,10 @@ void start() {
 					md5Hash.data());
 			}
 
-			return u"materialgram.desktop._%1"_q.arg(md5Hash.constData());
+			return u"io.github.materialgram.desktop._%1"_q.arg(md5Hash.constData());
 		}
 
-		return u"materialgram.desktop"_q;
+		return u"io.github.materialgram.desktop"_q;
 	}());
 
 	LOG(("App ID: %1").arg(QGuiApplication::desktopFileName()));
