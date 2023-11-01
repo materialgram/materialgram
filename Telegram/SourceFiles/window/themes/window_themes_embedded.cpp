@@ -136,7 +136,7 @@ style::colorizer ColorizerFrom(
 		result.lightnessMax = 160;
 		break;
 	case EmbeddedType::Night:
-		result.lightnessMin = 64;
+		result.lightnessMin = 115;
 		break;
 	case EmbeddedType::NightGreen:
 		result.keepContrast = base::flat_map<QLatin1String, Pair>{ {
