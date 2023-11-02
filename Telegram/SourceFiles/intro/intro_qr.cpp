@@ -53,7 +53,7 @@ namespace {
 }
 
 [[nodiscard]] QColor QrActiveColor() {
-	return QColor(0x40, 0xA7, 0xE3); // Default windowBgActive.
+	return QColor(26, 115, 232); // windowBgActive.
 }
 
 [[nodiscard]] not_null<Ui::RpWidget*> PrepareQrWidget(
