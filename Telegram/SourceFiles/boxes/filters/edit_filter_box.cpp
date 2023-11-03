@@ -667,7 +667,7 @@ void EditFilterBox(
 		content,
 		tr::lng_filters_add_chats(),
 		st::settingsButtonActive,
-		{ &st::settingsIconAdd, IconType::Round, &st::windowBgActive });
+		{ &st::settingsIconAdd, IconType::Round, &st::sideBarBg });
 
 	const auto include = SetupChatsPreview(
 		content,
@@ -694,7 +694,7 @@ void EditFilterBox(
 		excludeInner,
 		tr::lng_filters_remove_chats(),
 		st::settingsButtonActive,
-		{ &st::settingsIconRemove, IconType::Round, &st::windowBgActive });
+		{ &st::settingsIconRemove, IconType::Round, &st::sideBarBg });
 
 	const auto exclude = SetupChatsPreview(
 		excludeInner,
@@ -753,7 +753,7 @@ void EditFilterBox(
 		state->hasLinks.value(),
 		tr::lng_group_invite_add(),
 		st::settingsButtonActive,
-		{ &st::settingsIconAdd, IconType::Round, &st::windowBgActive });
+		{ &st::settingsIconAdd, IconType::Round, &st::sideBarBg });
 
 	SetupFilterLinks(
 		content,

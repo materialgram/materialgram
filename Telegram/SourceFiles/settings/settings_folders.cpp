@@ -544,7 +544,7 @@ void FilterRowButton::paintEvent(QPaintEvent *e) {
 		container,
 		tr::lng_filters_create(),
 		st::settingsButtonActive,
-		{ &st::settingsIconAdd, IconType::Round, &st::windowBgActive }
+		{ &st::settingsIconAdd, IconType::Round, &st::sideBarBg }
 	)->setClickedCallback([=] {
 		if (showLimitReached()) {
 			return;

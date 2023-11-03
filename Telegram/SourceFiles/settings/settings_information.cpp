@@ -785,7 +785,7 @@ not_null<Ui::SlideWrap<Ui::SettingsButton>*> AccountsList::setupAdd() {
 				{
 					&st::settingsIconAdd,
 					IconType::Round,
-					&st::windowBgActive
+					&st::sideBarBg
 				})))->setDuration(0);
 	const auto button = result->entity();
 

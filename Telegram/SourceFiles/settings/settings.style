@@ -111,8 +111,8 @@ settingsPremiumNewBadgePadding: margins(4px, 1px, 4px, 1px);
 settingsTTLChatsOff: icon {{ "settings/ttl/autodelete_off", windowSubTextFg }};
 settingsTTLChatsOn: icon {{ "settings/ttl/autodelete_on", windowActiveTextFg }};
 
-settingsIconAdd: icon {{ "settings/add", windowFgActive }};
-settingsIconRemove: icon {{ "settings/remove", windowFgActive }};
+settingsIconAdd: icon {{ "settings/add", windowBgActive }};
+settingsIconRemove: icon {{ "settings/remove", windowBgActive }};
 settingsFolderShareIcon: icon {{ "settings/folder_links", lightButtonFg }};
 
 settingsCheckbox: Checkbox(defaultBoxCheckbox) {
