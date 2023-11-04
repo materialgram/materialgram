@@ -1,10 +1,10 @@
 <div align="center">
-<img src="./docs/assets/icon.png" width="128" align="center">
+<img src="./docs/assets/icon.png" width="140" align="center">
 
 ![Hits](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fkukuruzka165%2Fmaterialgram.json%3Fcolor%3Dlightgray)
-![Channel](https://img.shields.io/badge/channel-blue?logo=telegram&link=https%3A%2F%2Ft.me%2Fmaterialgram&labelColor=gray)
-![Group](https://img.shields.io/badge/chat-blue?logo=telegram&link=https%3A%2F%2Ft.me%2Fmaterialgram_chat&labelColor=gray)
-![GitHub all releases](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)
+[![Telegram Channel](https://img.shields.io/badge/channel-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram)
+[![Telegram Group](https://img.shields.io/badge/chat-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram_chat)
+[![GitHub all releases](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)](https://github.com/kukuruzka165/materialgram/releases/latest)
 
 # [materialgram][telegram_desktop] – Telegram Desktop fork
 This is the source code and the build instructions for the **materialgram** client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol
@@ -28,7 +28,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - [x] Show the approximate date of account creation in the profile
 
 ## Build instructions (tested only on Windows)
-* [(Windows 64-bit)][win64]
+* [Windows 64-bit][win64]
 * [macOS][mac]
 * [GNU/Linux using Docker][linux]
 
