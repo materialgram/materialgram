@@ -449,12 +449,10 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 			}),
 			QString(),
 			st::infoProfileLabeledUsernamePadding);
-		if (!user->isBot()) {
-			addInfoOneLine(
-				tr::lng_passport_birth_date(),
-				RegistrationValue(user),
-				tr::lng_context_copy_text(tr::now));
-		}
+		addInfoOneLine(
+			tr::lng_passport_birth_date(),
+			RegistrationValue(user),
+			tr::lng_context_copy_text(tr::now));
 		const auto callback = UsernamesLinkCallback(
 			_peer,
 			controller->uiShow(),
