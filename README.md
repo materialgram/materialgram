@@ -1,4 +1,13 @@
-<img src="./docs/assets/icon.png" width="128">
+<div align="center">
+
+<img src="./docs/assets/icon.png" width="128" align="center">
+
+![Hits](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fkukuruzka165%2Fmaterialgram.json%3Fcolor%3Dlightgray)
+![Channel](https://img.shields.io/badge/channel-blue?logo=telegram&link=https%3A%2F%2Ft.me%2Fmaterialgram&labelColor=gray)
+![Group](https://img.shields.io/badge/chat-blue?logo=telegram&link=https%3A%2F%2Ft.me%2Fmaterialgram_chat&labelColor=gray)
+![GitHub all releases](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)
+
+</div>
 
 # [materialgram][telegram_desktop] – Telegram Desktop fork
 
