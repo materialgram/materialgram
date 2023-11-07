@@ -1,14 +1,14 @@
 <div align="center">
-<img src="./docs/assets/icon.png" width="140" align="center">
+<img src="./docs/assets/icon.png" width="150" align="center">
 
+# [materialgram](https://github.com/kukuruzka165/materialgram)
 ![Hits](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fkukuruzka165%2Fmaterialgram.json%3Fcolor%3Dlightgray)
 [![Telegram Channel](https://img.shields.io/badge/channel-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram)
 [![Telegram Group](https://img.shields.io/badge/chat-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram_chat)
-[![GitHub Releases](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)](https://github.com/kukuruzka165/materialgram/releases/latest)
-[![aur](https://repology.org/badge/version-for-repo/aur/materialgram.svg)](https://repology.org/project/materialgram/versions)
+[![AUR](https://img.shields.io/badge/AUR%20package-blue?logo=archlinux&labelColor=gray)](https://aur.archlinux.org/packages?K=materialgram)
+[![GitHub Downloads](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)](https://github.com/kukuruzka165/materialgram/releases/latest)
 
-# [materialgram][telegram_desktop]
-**materialgram** — fork of [**Telegram Desktop**](https://github.com/telegramdesktop/tdesktop) with Material Design and more improvements. This is the source code and the build instructions for the **materialgram** client, based on [**Telegram Desktop**](https://github.com/telegramdesktop/tdesktop) which is based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
+[**Telegram Desktop**](https://github.com/telegramdesktop/tdesktop) fork with Material Design and other improvements, which is based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
 
 The source code is published under GPLv3 with OpenSSL exception, the license is available [here][license]
 ![preview](docs/assets/preview.png)
@@ -16,17 +16,16 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 </div>
 
 ## Features
-- Material You and Google themes available in settings
+- Included own Material You theme with colorizer ([Day](https://t.me/addtheme/materialgram_day), [Dark](https://t.me/addtheme/materialgram_dark))
 - **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
 - Material icons instead of default ones
-- Various Google sounds instead of default ones
+- Replaced all sounds
 - Reduced image compression
 - Reduced minimum window size
 - Reduced timeouts
 - Increased upload speed
 - Improved spoiler animation
-- The approximate date of account creation in the profile
-- ...and more
+- Show the approximate date of account creation in the profile
 
 ## Build instructions
 * [Windows 64-bit][win64]
@@ -58,7 +57,6 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 * **Hunspell** ([LGPL](https://github.com/hunspell/hunspell/blob/master/COPYING.LESSER))
 
 [//]: # (LINKS)
-[telegram_desktop]: https://github.com/kukuruzka165/materialgram
 [telegram_api]: https://core.telegram.org
 [telegram_proto]: https://core.telegram.org/mtproto
 [license]: LICENSE
