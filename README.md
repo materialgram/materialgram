@@ -16,7 +16,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 </div>
 
 ## Features
-- Material You theme as default
+- Material You and Google themes available in settings
 - **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
 - Material icons instead of default ones
 - Various Google sounds instead of default ones
