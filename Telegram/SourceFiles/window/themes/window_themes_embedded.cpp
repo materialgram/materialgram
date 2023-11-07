@@ -89,15 +89,7 @@ const auto kColorizeIgnoredKeys = base::flat_set<QLatin1String>{ {
 	qstr("premiumButtonBg2"),
 	qstr("premiumButtonBg3"),
 	qstr("premiumIconBg1"),
-	qstr("premiumIconBg2"),
-
-	qstr("windowBoldFg"),
-	qstr("windowBoldFgOver"),
-	qstr("botKbColor"),
-	qstr("introTitleFg"),
-	qstr("dialogsNameFg"),
-	qstr("dialogsNameFgOver"),
-	qstr("boxTitleFg")
+	qstr("premiumIconBg2")
 } };
 
 style::colorizer::Color cColor(std::string_view hex) {
@@ -119,7 +111,7 @@ style::colorizer ColorizerFrom(
 
 	auto result = style::colorizer();
 	result.ignoreKeys = kColorizeIgnoredKeys;
-	result.hueThreshold = 15;
+	result.hueThreshold = 35;
 	scheme.accentColor.getHsv(
 		&result.was.hue,
 		&result.was.saturation,
@@ -209,26 +201,26 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 	return {
 		EmbeddedScheme{
 			EmbeddedType::DayBlue,
-			qColor("ffffff"),
-			qColor("d2e3fc"),
-			qColor("f1f3f4"),
-			qColor("f1f3f4"),
-			qColor("1a73e8"),
+			qColor("fffcf5"),
+			qColor("dfe6c4"),
+			qColor("f3f3e7"),
+			qColor("f3f3e7"),
+			qColor("b9cf7a"),
 			tr::lng_settings_theme_day,
 			":/gui/Google Day.tdesktop-theme",
-			qColor("4285f4")
+			qColor("b9cf7a")
 		},
 		
 		EmbeddedScheme{
 			EmbeddedType::Night,
-			qColor("151618"),
-			qColor("35373a"),
-			qColor("242528"),
-			qColor("242528"),
-			qColor("8ab4f8"),
+			qColor("1b1c17"),
+			qColor("45483d"),
+			qColor("30312b"),
+			qColor("30312b"),
+			qColor("b9cf7a"),
 			tr::lng_settings_theme_tinted,
 			":/gui/Google Dark.tdesktop-theme",
-			qColor("8ab4f8")
+			qColor("b9cf7a")
 		},
 		
 		EmbeddedScheme{
@@ -263,7 +255,7 @@ std::vector<QColor> DefaultAccentColors(EmbeddedType type) {
 	switch (type) {
 	case EmbeddedType::DayBlue:
 		return {
-			qColor("b9cf7a"),
+			qColor("8ab4f8"),
 			qColor("5ad9d2"),
 			qColor("bec2ff"),
 			qColor("ffaaf3"),
@@ -285,7 +277,7 @@ std::vector<QColor> DefaultAccentColors(EmbeddedType type) {
 		};
 	case EmbeddedType::Night:
 		return {
-			qColor("b9cf7a"),
+			qColor("8ab4f8"),
 			qColor("5ad9d2"),
 			qColor("bec2ff"),
 			qColor("ffaaf3"),
