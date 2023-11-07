@@ -237,6 +237,11 @@ void CreateGiveawayBox(
 		randomWrap->toggle(type == GiveawayType::Random, anim::type::instant);
 	}, randomWrap->lifetime());
 
+	randomWrap->toggleOn(
+		state->typeValue.value(
+		) | rpl::map(rpl::mappers::_1 == GiveawayType::Random),
+		anim::type::instant);
+
 	const auto sliderContainer = randomWrap->entity()->add(
 		object_ptr<Ui::VerticalLayout>(randomWrap));
 	const auto fillSliderContainer = [=] {
@@ -274,8 +279,20 @@ void CreateGiveawayBox(
 
 		const auto &padding = st::giveawayGiftCodeSliderPadding;
 		Settings::AddSkip(sliderContainer, padding.top());
+
+		class Slider : public Ui::MediaSlider {
+		public:
+			using Ui::MediaSlider::MediaSlider;
+
+		protected:
+			void wheelEvent(QWheelEvent *e) override {
+				e->ignore();
+			}
+
+		};
+
 		const auto slider = sliderContainer->add(
-			object_ptr<Ui::MediaSlider>(sliderContainer, st::settingsScale),
+			object_ptr<Slider>(sliderContainer, st::settingsScale),
 			st::boxRowPadding);
 		Settings::AddSkip(sliderContainer, padding.bottom());
 		slider->resize(slider->width(), st::settingsScale.seekSize.height());
@@ -574,18 +591,19 @@ void CreateGiveawayBox(
 		box->setStyle(stButton);
 		auto button = object_ptr<Ui::RoundButton>(
 			box,
-			state->toAwardAmountChanged.events_starting_with(
-				rpl::empty_value()
-			) | rpl::map([=] {
-				return (typeGroup->value() == GiveawayType::SpecificUsers)
-					? tr::lng_giveaway_award()
-					: tr::lng_giveaway_start();
-			}) | rpl::flatten_latest(),
+			rpl::conditional(
+				state->typeValue.value(
+				) | rpl::map(rpl::mappers::_1 == GiveawayType::Random),
+				tr::lng_giveaway_start(),
+				tr::lng_giveaway_award()),
 			st::giveawayGiftCodeStartButton);
 		button->setTextTransform(Ui::RoundButton::TextTransform::NoTransform);
-		button->resizeToWidth(box->width()
-			- stButton.buttonPadding.left()
-			- stButton.buttonPadding.right());
+		state->typeValue.value(
+		) | rpl::start_with_next([=, raw = button.data()] {
+			raw->resizeToWidth(box->width()
+				- stButton.buttonPadding.left()
+				- stButton.buttonPadding.right());
+		}, button->lifetime());
 		button->setClickedCallback([=] {
 			if (state->confirmButtonBusy) {
 				return;

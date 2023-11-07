@@ -24,7 +24,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "settings/settings_common.h"
 #include "statistics/widgets/chart_header_widget.h"
 #include "ui/boxes/boost_box.h"
-#include "ui/controls/invite_link_buttons.h"
 #include "ui/controls/invite_link_label.h"
 #include "ui/rect.h"
 #include "ui/widgets/buttons.h"
@@ -181,8 +180,35 @@ void FillShareLink(
 	) | rpl::start_with_next(copyLink, label->lifetime());
 	const auto copyShareWrap = content->add(
 		object_ptr<Ui::VerticalLayout>(content));
-	Ui::AddCopyShareLinkButtons(copyShareWrap, copyLink, shareLink);
-	copyShareWrap->widgetAt(0)->showChildren();
+	{
+		const auto wrap = content->add(
+			object_ptr<Ui::FixedHeightWidget>(
+				content,
+				st::inviteLinkButton.height),
+			st::inviteLinkButtonsPadding);
+		const auto copy = CreateChild<Ui::RoundButton>(
+			wrap,
+			tr::lng_group_invite_context_copy(),
+			st::inviteLinkCopy);
+		copy->setTextTransform(Ui::RoundButton::TextTransform::NoTransform);
+		copy->setClickedCallback(copyLink);
+		const auto share = CreateChild<Ui::RoundButton>(
+			wrap,
+			tr::lng_group_invite_context_share(),
+			st::inviteLinkShare);
+		share->setTextTransform(Ui::RoundButton::TextTransform::NoTransform);
+		share->setClickedCallback(shareLink);
+
+		wrap->widthValue(
+		) | rpl::start_with_next([=](int width) {
+			const auto buttonWidth = (width - st::inviteLinkButtonsSkip) / 2;
+			copy->setFullWidth(buttonWidth);
+			share->setFullWidth(buttonWidth);
+			copy->moveToLeft(0, 0, width);
+			share->moveToRight(0, 0, width);
+		}, wrap->lifetime());
+		wrap->showChildren();
+	}
 	::Settings::AddSkip(content, st::boostsLinkFieldPadding.bottom());
 }
 
@@ -289,9 +315,23 @@ void InnerWidget::fill() {
 				ResolveGiftCode(_controller, boost.giftCodeLink.slug);
 			} else if (boost.userId) {
 				const auto user = _peer->owner().user(boost.userId);
-				crl::on_main(this, [=] {
-					_controller->showPeerInfo(user);
-				});
+				if (boost.isGift || boost.isGiveaway) {
+					constexpr auto kMonthsDivider = int(30 * 86400);
+					const auto date = TimeId(boost.date.toSecsSinceEpoch());
+					const auto months = (boost.expiresAt - date)
+						/ kMonthsDivider;
+					const auto d = Api::GiftCode{
+						.from = _peer->id,
+						.to = user->id,
+						.date = date,
+						.months = int(months),
+					};
+					_show->showBox(Box(GiftCodePendingBox, _controller, d));
+				} else {
+					crl::on_main(this, [=] {
+						_controller->showPeerInfo(user);
+					});
+				}
 			} else if (!boost.isUnclaimed) {
 				_show->showToast(tr::lng_boosts_list_pending_about(tr::now));
 			}
@@ -326,10 +366,25 @@ void InnerWidget::fill() {
 				inner,
 				object_ptr<Ui::SettingsSlider>(
 					inner,
-					st::defaultTabsSlider)));
+					st::defaultTabsSlider)),
+			st::boxRowPadding);
 		slider->toggle(!hasOneTab, anim::type::instant);
+
 		slider->entity()->addSection(boostsTabText);
 		slider->entity()->addSection(giftsTabText);
+
+		{
+			const auto &st = st::defaultTabsSlider;
+			const auto sliderWidth = st.labelStyle.font->width(boostsTabText)
+				+ st.labelStyle.font->width(giftsTabText)
+				+ rect::m::sum::h(st::boxRowPadding);
+			fakeShowed->events() | rpl::take(1) | rpl::map_to(-1) | rpl::then(
+				slider->entity()->widthValue()
+			) | rpl::distinct_until_changed(
+			) | rpl::start_with_next([=](int) {
+				slider->entity()->resizeToWidth(sliderWidth);
+			}, slider->lifetime());
+		}
 
 		const auto boostsWrap = inner->add(
 			object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
@@ -339,10 +394,9 @@ void InnerWidget::fill() {
 			object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
 				inner,
 				object_ptr<Ui::VerticalLayout>(inner)));
-		boostsWrap->toggle(hasOneTab ? true : hasBoosts, anim::type::instant);
-		giftsWrap->toggle(hasOneTab ? false : hasGifts, anim::type::instant);
 
-		slider->entity()->sectionActivated(
+		rpl::single(hasGifts ? 1 : 0) | rpl::then(
+			slider->entity()->sectionActivated()
 		) | rpl::start_with_next([=](int index) {
 			boostsWrap->toggle(!index, anim::type::instant);
 			giftsWrap->toggle(index, anim::type::instant);
@@ -367,6 +421,7 @@ void InnerWidget::fill() {
 	}
 
 	::Settings::AddSkip(inner);
+	::Settings::AddSkip(inner);
 	AddHeader(inner, tr::lng_boosts_link_title);
 	::Settings::AddSkip(inner, st::boostsLinkSkip);
 	FillShareLink(inner, _show, status.link, _peer);
@@ -376,7 +431,7 @@ void InnerWidget::fill() {
 	FillGetBoostsButton(inner, _controller, _show, _peer);
 
 	resizeToWidth(width());
-	crl::on_main([=]{ fakeShowed->fire({}); });
+	crl::on_main(this, [=]{ fakeShowed->fire({}); });
 }
 
 void InnerWidget::saveState(not_null<Memento*> memento) {
