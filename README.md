@@ -4,30 +4,31 @@
 ![Hits](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fkukuruzka165%2Fmaterialgram.json%3Fcolor%3Dlightgray)
 [![Telegram Channel](https://img.shields.io/badge/channel-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram)
 [![Telegram Group](https://img.shields.io/badge/chat-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram_chat)
-[![GitHub all releases](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)](https://github.com/kukuruzka165/materialgram/releases/latest)
+[![GitHub Releases](https://img.shields.io/github/downloads/kukuruzka165/materialgram/total?logo=github)](https://github.com/kukuruzka165/materialgram/releases/latest)
+[![aur](https://repology.org/badge/version-for-repo/aur/materialgram.svg)](https://repology.org/project/materialgram/versions)
 
-# [materialgram][telegram_desktop] – Telegram Desktop fork
-This is the source code and the build instructions for the **materialgram** client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol
+# [materialgram][telegram_desktop]
+**materialgram** — fork of [**Telegram Desktop**](https://github.com/telegramdesktop/tdesktop) with Material Design and more improvements. This is the source code and the build instructions for the **materialgram** client, based on [**Telegram Desktop**](https://github.com/telegramdesktop/tdesktop) which is based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
 
 The source code is published under GPLv3 with OpenSSL exception, the license is available [here][license]
 ![preview](docs/assets/preview.png)
 ![preview](docs/assets/themes.png)
 </div>
 
-## Changelog and plans:
-- [x] Add "Google Day" and "Google Dark" themes to settings
-- [x] Replace font with **Google Sans** (except for Arabic characters that use the **Vazir** font)
-- [x] Replace all icons with Material ones
-- [x] Replace the sounds
-- [x] Remove message bubble tails
-- [x] Reduce image compression
-- [x] Reduce minimum window size
-- [x] Reduce some annoying timeouts
-- [x] Increase upload speed
-- [x] Improve spoiler animation
-- [x] Show the approximate date of account creation in the profile
+## Features
+- Material You theme as default
+- **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
+- Material icons instead of default ones
+- Various Google sounds instead of default ones
+- Reduced image compression
+- Reduced minimum window size
+- Reduced timeouts
+- Increased upload speed
+- Improved spoiler animation
+- The approximate date of account creation in the profile
+- ...and more
 
-## Build instructions (tested only on Windows)
+## Build instructions
 * [Windows 64-bit][win64]
 * [macOS][mac]
 * [GNU/Linux using Docker][linux]
