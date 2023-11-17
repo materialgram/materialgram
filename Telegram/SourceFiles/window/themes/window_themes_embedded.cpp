@@ -8,6 +8,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "window/themes/window_themes_embedded.h"
 
 #include "window/themes/window_theme.h"
+#include "lang/lang_keys.h"
 #include "storage/serialize_common.h"
 #include "core/application.h"
 #include "core/core_settings.h"
@@ -198,6 +199,9 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 	const auto qColor = [](auto hex) {
 		return style::ColorFromHex(hex);
 	};
+	const auto name = [](auto key) {
+		return rpl::deferred([=] { return key(); });
+		};
 	return {
 		EmbeddedScheme{
 			EmbeddedType::DayBlue,
@@ -206,7 +210,7 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 			qColor("f3f3e7"),
 			qColor("f3f3e7"),
 			qColor("b9cf7a"),
-			tr::lng_settings_theme_day,
+			name(tr::lng_settings_theme_day),
 			":/gui/Google Day.tdesktop-theme",
 			qColor("b9cf7a")
 		},
@@ -218,7 +222,7 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 			qColor("30312b"),
 			qColor("30312b"),
 			qColor("b9cf7a"),
-			tr::lng_settings_theme_tinted,
+			name(tr::lng_settings_theme_tinted),
 			":/gui/Google Dark.tdesktop-theme",
 			qColor("b9cf7a")
 		},
@@ -230,7 +234,7 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 			qColor("ffffff"),
 			qColor("eaffdc"),
 			qColor("ffffff"),
-			tr::lng_settings_theme_classic,
+			name(tr::lng_settings_theme_classic),
 			QString(),
 			qColor("40a7e3")
 		},
@@ -241,7 +245,7 @@ std::vector<EmbeddedScheme> EmbeddedThemes() {
 			qColor("6b808d"),
 			qColor("6b808d"),
 			qColor("75bfb5"),
-			tr::lng_settings_theme_night,
+			name(tr::lng_settings_theme_night),
 			":/gui/night-green.tdesktop-theme",
 			qColor("3fc1b0")
 		},
