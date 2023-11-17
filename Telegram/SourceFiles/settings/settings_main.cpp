@@ -605,7 +605,7 @@ void SetupHelp(
 		UrlClickHandler::Open("https://t.me/materialgram");
 	});
 
-	AddButton(
+	AddButtonWithIcon(
 		container,
 		tr::materialgram_settings_github(),
 		st::settingsButton,
@@ -614,7 +614,7 @@ void SetupHelp(
 		UrlClickHandler::Open("https://github.com/kukuruzka165/materialgram/releases");
 	});
 
-	AddButton(
+	AddButtonWithIcon(
 		container,
 		tr::lng_settings_features(),
 		st::settingsButton,
