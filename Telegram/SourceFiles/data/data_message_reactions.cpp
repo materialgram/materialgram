@@ -34,7 +34,7 @@ namespace Data {
 namespace {
 
 constexpr auto kRefreshFullListEach = 60 * 60 * crl::time(1000);
-constexpr auto kPollEach = 20 * crl::time(1000);
+constexpr auto kPollEach = 7.5 * crl::time(1000);
 constexpr auto kSizeForDownscale = 64;
 constexpr auto kRecentRequestTimeout = 10 * crl::time(1000);
 constexpr auto kRecentReactionsLimit = 40;
