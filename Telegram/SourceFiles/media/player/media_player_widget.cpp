@@ -92,16 +92,10 @@ Widget::Widget(
 		_playbackSlider->setValue(value);
 	});
 	_playbackSlider->setChangeProgressCallback([=](float64 value) {
-		if (_type != AudioMsgId::Type::Song) {
-			return; // Round video seek is not supported for now :(
-		}
 		_playbackProgress->setValue(value, false);
 		handleSeekProgress(value);
 	});
 	_playbackSlider->setChangeFinishedCallback([=](float64 value) {
-		if (_type != AudioMsgId::Type::Song) {
-			return; // Round video seek is not supported for now :(
-		}
 		_playbackProgress->setValue(value, false);
 		handleSeekFinished(value);
 	});
@@ -573,9 +567,6 @@ void Widget::updateControlsVisibility() {
 	_repeatToggle->setVisible(_type == AudioMsgId::Type::Song);
 	_orderToggle->setVisible(_type == AudioMsgId::Type::Song);
 	_speedToggle->setVisible(hasPlaybackSpeedControl());
-	if (!_shadow->isHidden()) {
-		_playbackSlider->setVisible(_type == AudioMsgId::Type::Song);
-	}
 	updateControlsGeometry();
 }
 
