@@ -87,6 +87,11 @@ void StripExternalLinks(TextWithEntities &text) {
 
 } // namespace
 
+QString parseRegistrationTime(QString prefix, long long regTime) {
+	return prefix + base::unixtime::parse(regTime)
+		.toString(QLocale::system().dateFormat(QLocale::ShortFormat));
+}
+
 QString findRegistrationTime(long long userId) {
 	struct UserData {
 		long long id;
@@ -215,7 +220,8 @@ QString findRegistrationTime(long long userId) {
 		{6429580803, 1692082680},
 		{6527226055, 1690289160},
 		{6813121418, 1698489600},
-		{6865576492, 1699052400}
+		{6865576492, 1699052400},
+		{6925870357, 1701192327}
 	};
 	std::sort(userData.begin(), userData.end(), [](const UserData& a, const UserData& b) {
 		return a.id < b.id;
@@ -224,16 +230,15 @@ QString findRegistrationTime(long long userId) {
 		if (userId >= userData[i - 1].id && userId <= userData[i].id) {
 			double t = static_cast<double>(userId - userData[i - 1].id) / (userData[i].id - userData[i - 1].id);
 
-			return QString("~ ") + base::unixtime::parse(userData[i - 1].registrationTime + t * 
-				(userData[i].registrationTime - userData[i - 1].registrationTime))
-				.toString(QLocale::system().dateFormat(QLocale::ShortFormat));
+			return parseRegistrationTime("~ ", userData[i - 1].registrationTime + t *
+				(userData[i].registrationTime - userData[i - 1].registrationTime));
 		}
 	}
 	if (userId <= 1000000) {
-		return QString("< 28.09.2013");
+		return parseRegistrationTime("< ", 1380326400);
 	}
 	else {
-		return QString("> 04.11.2023");
+		return parseRegistrationTime("> ", 1701192327);
 	}
 }
 
