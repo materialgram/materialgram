@@ -1,6 +1,6 @@
 {%- set GIT = "https://github.com" -%}
 {%- set GIT_FREEDESKTOP = GIT ~ "/gitlab-freedesktop-mirrors" -%}
-{%- set QT = "6.6.0" -%}
+{%- set QT = "6.6.1" -%}
 {%- set QT_TAG = "v" ~ QT -%}
 {%- set QT_PREFIX = "/usr/local/desktop-app/Qt-" ~ QT -%}
 {%- set OPENSSL_VER = "1_1_1" -%}
@@ -54,7 +54,7 @@ FROM builder AS patches
 RUN git init patches \
 	&& cd patches \
 	&& git remote add origin {{ GIT }}/desktop-app/patches.git \
-	&& git fetch --depth=1 origin 90a7f1b55da69c99699e6b6776268184c20387f8 \
+	&& git fetch --depth=1 origin a33b619f7309b561e601014f8d8eecc2db84e1c1 \
 	&& git reset --hard FETCH_HEAD \
 	&& rm -rf .git
 
@@ -687,7 +687,7 @@ RUN git clone -b OpenSSL_{{ OPENSSL_VER }}-stable --depth=1 {{ GIT }}/openssl/op
 FROM builder AS xkbcommon
 COPY --link --from=xcb {{ LibrariesPath }}/xcb-cache /
 
-RUN git clone -b xkbcommon-1.5.0 --depth=1 {{ GIT }}/xkbcommon/libxkbcommon.git \
+RUN git clone -b xkbcommon-1.6.0 --depth=1 {{ GIT }}/xkbcommon/libxkbcommon.git \
 	&& cd libxkbcommon \
 	&& meson build \
 		--buildtype=plain \
