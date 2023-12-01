@@ -19,12 +19,15 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Included own Material You theme with colorizer ([Day](https://t.me/addtheme/materialgram_day), [Dark](https://t.me/addtheme/materialgram_dark))
 - **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
 - Material icons instead of default ones
+- Added the ability to seek round videos
+- Removed message bubble tails and reverted old paddings
 - Replaced all sounds
 - Reduced image compression
 - Reduced minimum window size
 - Reduced timeouts
 - Increased upload speed
 - Improved spoiler animation
+- Use sentence case for buttons
 - Show the approximate date of account creation in the profile
 
 ## Build instructions
