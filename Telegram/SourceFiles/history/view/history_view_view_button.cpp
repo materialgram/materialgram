@@ -14,7 +14,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "lang/lang_keys.h"
 #include "ui/effects/ripple_animation.h"
 #include "ui/painter.h"
-#include "ui/text/text_utilities.h" // Ui::Text::ToUpper
 #include "window/window_session_controller.h"
 #include "styles/style_chat.h"
 
@@ -45,7 +44,7 @@ namespace {
 [[nodiscard]] QString MakeMediaButtonText(not_null<Data::Media*> media) {
 	const auto giveaway = media->giveaway();
 	Assert(giveaway != nullptr);
-	return Ui::Text::Upper(tr::lng_prizes_how_works(tr::now));
+	return tr::lng_prizes_how_works(tr::now);
 }
 
 } // namespace

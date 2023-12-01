@@ -193,7 +193,7 @@ template <typename Text, typename ToggleOn, typename Callback>
 		Ui::MultiSlideTracker &tracker) {
 	tracker.track(AddActionButton(
 		parent,
-		std::move(text) | Ui::Text::ToUpper(),
+		std::move(text),
 		std::move(toggleOn),
 		std::move(callback),
 		nullptr,

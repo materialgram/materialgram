@@ -89,7 +89,7 @@ std::vector<std::unique_ptr<Data::Media>> PrepareCollageMedia(
 
 [[nodiscard]] QString PageToPhrase(not_null<WebPageData*> webpage) {
 	const auto type = webpage->type;
-	return Ui::Text::Upper((type == WebPageType::Theme)
+	return (type == WebPageType::Theme)
 		? tr::lng_view_button_theme(tr::now)
 		: (type == WebPageType::Story)
 		? tr::lng_view_button_story(tr::now)
@@ -118,7 +118,7 @@ std::vector<std::unique_ptr<Data::Media>> PrepareCollageMedia(
 		? tr::lng_view_button_user(tr::now)
 		: (type == WebPageType::BotApp)
 		? tr::lng_view_button_bot_app(tr::now)
-		: QString());
+		: QString();
 }
 
 [[nodiscard]] bool HasButton(not_null<WebPageData*> webpage) {
@@ -193,7 +193,7 @@ QSize WebPage::countOptimalSize() {
 		_openButtonWidth = st::semiboldFont->width(_openButton);
 	} else if (_sponsoredData) {
 		if (!_sponsoredData->buttonText.isEmpty()) {
-			_openButton = Ui::Text::Upper(_sponsoredData->buttonText);
+			_openButton = _sponsoredData->buttonText;
 			_openButtonWidth = st::semiboldFont->width(_openButton);
 		}
 	}

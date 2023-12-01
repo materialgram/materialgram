@@ -7763,12 +7763,12 @@ void HistoryWidget::updateTopBarSelection() {
 		_reportMessages->setAttribute(transparent, false);
 		_reportMessages->setColorOverride(std::nullopt);
 	}
-	_reportMessages->setText(Ui::Text::Upper(selectedState.count
+	_reportMessages->setText(selectedState.count
 		? tr::lng_report_messages_count(
 			tr::now,
 			lt_count,
 			selectedState.count)
-		: tr::lng_report_messages_none(tr::now)));
+		: tr::lng_report_messages_none(tr::now));
 	updateControlsVisibility();
 	updateHistoryGeometry();
 	if (!controller()->isLayerShown()

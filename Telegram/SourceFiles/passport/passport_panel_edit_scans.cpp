@@ -225,7 +225,7 @@ Ui::SlideWrap<ScanButton> *EditScans::List::nonDeletedErrorRow() const {
 rpl::producer<QString> EditScans::List::uploadButtonText() const {
 	return (files.empty()
 		? tr::lng_passport_upload_scans
-		: tr::lng_passport_upload_more)() | Ui::Text::ToUpper();
+		: tr::lng_passport_upload_more)();
 }
 
 void EditScans::List::hideError() {
