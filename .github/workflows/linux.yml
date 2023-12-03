@@ -76,8 +76,8 @@ jobs:
 
           ./configure.sh \
           -D CMAKE_EXE_LINKER_FLAGS="-s" \
-          -D TDESKTOP_API_ID=2040 \
-          -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
+          -D TDESKTOP_API_ID=${{ secrets.API_ID }} \
+          -D TDESKTOP_API_HASH=${{ secrets.API_HASH}} \
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=True \
           -D CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
           $DEFINE
