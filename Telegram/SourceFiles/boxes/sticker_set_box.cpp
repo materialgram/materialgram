@@ -536,6 +536,16 @@ void StickerSetBox::updateButtons() {
 					? tr::lng_stickers_copied_emoji(tr::now)
 					: tr::lng_stickers_copied(tr::now));
 		};
+		const auto remove = [=] {
+			const auto session = &_show->session();
+			auto box = ChatHelpers::MakeConfirmRemoveSetBox(
+				session,
+				st::boxLabel,
+				_inner->setId());
+			if (box) {
+				_show->showBox(std::move(box));
+			}
+			};
 		const auto author = [=] {
 			QGuiApplication::clipboard()->setText(
 				QString::number(_inner->setId() >> 32));
@@ -598,28 +608,13 @@ void StickerSetBox::updateButtons() {
 		} else if (_inner->official()) {
 			addButton(tr::lng_about_done(), [=] { closeBox(); });
 		} else {
-			auto shareText = (type == Data::StickersType::Emoji)
-				? tr::lng_stickers_share_emoji()
-				: (type == Data::StickersType::Masks)
-				? tr::lng_stickers_share_masks()
-				: tr::lng_stickers_share_pack();
-			addButton(std::move(shareText), std::move(share));
+			addButton(tr::lng_stickers_remove_pack_confirm(), std::move(remove));
 			addButton(tr::lng_cancel(), [=] { closeBox(); });
 
 			if (!_inner->shortName().isEmpty()) {
 				const auto top = addTopButton(st::infoTopBarMenu);
 				const auto archive = [=] {
 					_inner->archiveStickers();
-				};
-				const auto remove = [=] {
-					const auto session = &_show->session();
-					auto box = ChatHelpers::MakeConfirmRemoveSetBox(
-						session,
-						st::boxLabel,
-						_inner->setId());
-					if (box) {
-						_show->showBox(std::move(box));
-					}
 				};
 				const auto menu =
 					std::make_shared<base::unique_qptr<Ui::PopupMenu>>();
@@ -639,6 +634,14 @@ void StickerSetBox::updateButtons() {
 								: tr::lng_stickers_archive_pack(tr::now)),
 							archive,
 							&st::menuIconArchive);
+						(*menu)->addAction(
+							((type == Data::StickersType::Emoji)
+								? tr::lng_stickers_share_emoji
+								: (type == Data::StickersType::Masks)
+								? tr::lng_stickers_share_masks
+								: tr::lng_stickers_share_pack)(tr::now),
+							[=] { share(); closeBox(); },
+							& st::menuIconShare);
 						(*menu)->addAction(
 							tr::lng_channel_admin_status_creator(tr::now),
 							[=] { author(); closeBox(); },
