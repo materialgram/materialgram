@@ -1663,7 +1663,7 @@ else()
 endif()
 
 if (build_macstore)
-    set(bundle_identifier "io.github.kukuruzka165.materialgram.desktop")
+    set(bundle_identifier "io.github.kukuruzka165.materialgram")
     set(bundle_entitlements "Telegram Lite.entitlements")
     set(output_name "materialgram")
     set_target_properties(Telegram PROPERTIES

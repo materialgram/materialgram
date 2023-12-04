@@ -622,7 +622,7 @@ void start() {
 					md5Hash.data());
 			}
 
-			return u"io.github.kukuruzka165.materialgram.desktop._%1"_q.arg(md5Hash.constData());
+			return u"io.github.kukuruzka165.materialgram._%1"_q.arg(md5Hash.constData());
 		}
 
 		return u"io.github.kukuruzka165.materialgram.desktop"_q;
