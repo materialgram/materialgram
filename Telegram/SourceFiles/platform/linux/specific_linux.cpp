@@ -297,7 +297,7 @@ bool GenerateDesktopFile(
 
 	if (!Core::UpdaterDisabled()) {
 		DEBUG_LOG(("App Info: removing old .desktop files"));
-		QFile::remove(u"%1io.github.kukuruzka165.materialgram.desktop"_q.arg(targetPath));
+		QFile::remove(u"%1io.github.kukuruzka165.materialgram"_q.arg(targetPath));
 
 		const auto appimagePath = u"file://%1%2"_q.arg(
 			cExeDir(),
@@ -625,7 +625,7 @@ void start() {
 			return u"io.github.kukuruzka165.materialgram._%1"_q.arg(md5Hash.constData());
 		}
 
-		return u"io.github.kukuruzka165.materialgram.desktop"_q;
+		return u"io.github.kukuruzka165.materialgram"_q;
 	}());
 
 	LOG(("App ID: %1").arg(QGuiApplication::desktopFileName()));
