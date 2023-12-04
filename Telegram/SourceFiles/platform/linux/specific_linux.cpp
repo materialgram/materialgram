@@ -297,7 +297,7 @@ bool GenerateDesktopFile(
 
 	if (!Core::UpdaterDisabled()) {
 		DEBUG_LOG(("App Info: removing old .desktop files"));
-		QFile::remove(u"%1io.github.kukuruzka165.materialgram"_q.arg(targetPath));
+		QFile::remove(u"%1materialgram.desktop"_q.arg(targetPath));
 
 		const auto appimagePath = u"file://%1%2"_q.arg(
 			cExeDir(),
@@ -318,7 +318,7 @@ bool GenerateDesktopFile(
 		hashMd5Hex(d.constData(), d.size(), md5Hash);
 
 		if (!Core::Launcher::Instance().customWorkingDir()) {
-			QFile::remove(u"%1org.telegram.desktop._%2.desktop"_q.arg(
+			QFile::remove(u"%1io.github.kukuruzka165.materialgram._%2.desktop"_q.arg(
 				targetPath,
 				md5Hash));
 
@@ -327,7 +327,7 @@ bool GenerateDesktopFile(
 			hashMd5Hex(exePath.constData(), exePath.size(), md5Hash);
 		}
 
-		QFile::remove(u"%1org.telegram.desktop.%2.desktop"_q.arg(
+		QFile::remove(u"%1io.github.kukuruzka165.materialgram.%2.desktop"_q.arg(
 			targetPath,
 			md5Hash));
 	}
@@ -386,7 +386,7 @@ bool GenerateServiceFile(bool silent = false) {
 		const auto d = QFile::encodeName(QDir(cWorkingDir()).absolutePath());
 		hashMd5Hex(d.constData(), d.size(), md5Hash);
 
-		QFile::remove(u"%1org.telegram.desktop._%2.service"_q.arg(
+		QFile::remove(u"%1io.github.kukuruzka165.materialgram._%2.service"_q.arg(
 			targetPath,
 			md5Hash));
 	}
