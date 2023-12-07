@@ -28,6 +28,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Increased upload speed
 - Improved spoiler animation
 - Use sentence case for buttons
+- Improved sticker pack menu. Button layout like on mobile + ability to copy the author's id
 - Show the approximate date of account creation in the profile
 
 ## Build instructions

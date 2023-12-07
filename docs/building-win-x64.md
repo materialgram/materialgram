@@ -8,13 +8,13 @@
 
 ## Prepare folder
 
-The build is done in **Visual Studio 2022** with **10.0.22000.0** SDK version.
+The build is done in **Visual Studio 2022** with **10.0.22000.0**(or higher) SDK version.
 
 Choose an empty folder for the future build, for example **D:\\TBuild**. It will be named ***BuildPath*** in the rest of this document. Create two folders there, ***BuildPath*\\ThirdParty** and ***BuildPath*\\Libraries**.
 
-All commands (if not stated otherwise) will be launched from **x64 Native Tools Command Prompt for VS 2022.bat** (should be in **Start Menu > Visual Studio 2022** menu folder). Pay attention not to use any other Command Prompt.
+### All commands (if not stated otherwise) will be launched from **x64 Native Tools Command Prompt for VS 2022.bat** (should be in **Start Menu > Visual Studio 2022** menu folder). Pay attention not to use any other Command Prompt.
 
-### Obtain your API credentials
+## Obtain your API credentials
 
 You will require **api_id** and **api_hash** to access the Telegram API servers. To learn how to obtain them [click here][api_credentials].
 
@@ -39,7 +39,7 @@ Go to ***BuildPath*\\materialgram\\Telegram** and run (using [your **api_id** an
 
 * Open ***BuildPath*\\materialgram\\out\\Telegram.sln** in Visual Studio 2022
 * Select Telegram project and press Build > Build Telegram (Debug and Release configurations)
-* The result Telegram.exe will be located in **D:\TBuild\materialgram\out\Debug** (and **Release**)
+* The result materialgram.exe will be located in **D:\TBuild\materialgram\out\Debug** (and **Release**)
 
 ### Qt Visual Studio Tools
 
