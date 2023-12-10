@@ -19,7 +19,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 namespace {
 
 constexpr auto kCustom = std::numeric_limits<int>::max();
-constexpr auto kOptions = { 60, 300, 3600, 18000, kCustom };
+constexpr auto kOptions = { 60, 300, 900, 1800, 3600, 18000, kCustom };
 constexpr auto kDefaultCustom = "10:00"_cs;
 
 auto TimeString(int seconds) {
