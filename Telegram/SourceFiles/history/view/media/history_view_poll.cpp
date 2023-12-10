@@ -16,7 +16,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/chat/message_bubble.h"
 #include "ui/chat/chat_style.h"
 #include "ui/text/text_options.h"
-#include "ui/text/text_utilities.h"
 #include "ui/text/format_values.h"
 #include "ui/effects/animations.h"
 #include "ui/effects/radial_animation.h"
@@ -845,8 +844,8 @@ void Poll::paintBottom(
 		p.setFont(st::semiboldFont);
 		p.setPen(link ? stm->msgFileThumbLinkFg : stm->msgDateFg);
 		const auto string = showVotes()
-			? tr::lng_polls_view_results(tr::now, Ui::Text::Upper)
-			: tr::lng_polls_submit_votes(tr::now, Ui::Text::Upper);
+			? tr::lng_polls_view_results(tr::now)
+			: tr::lng_polls_submit_votes(tr::now);
 		const auto stringw = st::semiboldFont->width(string);
 		p.drawTextLeft(
 			left + (paintw - stringw) / 2,

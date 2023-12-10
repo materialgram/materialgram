@@ -20,7 +20,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/wrap/vertical_layout.h"
 #include "ui/wrap/padding_wrap.h"
 #include "ui/wrap/slide_wrap.h"
-#include "ui/text/text_utilities.h"
 #include "boxes/peer_list_box.h"
 #include "main/main_session.h"
 #include "history/history.h"
@@ -527,8 +526,7 @@ ListController *CreateAnswerRows(
 				container,
 				tr::lng_polls_show_more(
 					lt_count_decimal,
-					controller->loadMoreCount() | rpl::map(_1 + 0.),
-					Ui::Text::Upper),
+					controller->loadMoreCount() | rpl::map(_1 + 0.)),
 				st::pollResultsShowMore)));
 	more->entity()->setClickedCallback([=] {
 		controller->allowLoadMore();
