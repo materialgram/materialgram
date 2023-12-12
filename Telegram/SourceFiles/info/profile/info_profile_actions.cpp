@@ -53,6 +53,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_session.h"
 #include "core/application.h"
 #include "core/click_handler_types.h"
+#include "core/core_settings.h"
 #include "apiwrap.h"
 #include "api/api_blocked_peers.h"
 #include "styles/style_info.h"
@@ -443,10 +444,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 			}),
 			QString(),
 			st::infoProfileLabeledUsernamePadding);
-		addInfoOneLine(
-			tr::lng_passport_birth_date(),
-			RegistrationValue(user),
-			tr::lng_context_copy_text(tr::now));
+		if (Core::App().settings().birthDateEnabled()) {
+			addInfoOneLine(
+				tr::lng_passport_birth_date(),
+				RegistrationValue(user),
+				tr::lng_context_copy_text(tr::now));
+		}
 		const auto callback = UsernamesLinkCallback(
 			_peer,
 			controller->uiShow(),

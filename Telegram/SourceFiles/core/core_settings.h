@@ -706,6 +706,15 @@ public:
 	[[nodiscard]] rpl::producer<bool> trayIconMonochromeChanges() const {
 		return _trayIconMonochrome.changes();
 	}
+	void setBirthDateEnabled(bool value) {
+		_birthDateEnabled = value;
+	}
+	[[nodiscard]] bool birthDateEnabled() const {
+		return _birthDateEnabled.current();
+	}
+	[[nodiscard]] rpl::producer<bool> birthDateEnabledChanges() const {
+		return _birthDateEnabled.changes();
+	}
 
 	void setCustomDeviceModel(const QString &model) {
 		_customDeviceModel = model;
@@ -923,6 +932,7 @@ private:
 	base::flags<Calls::Group::StickedTooltip> _hiddenGroupCallTooltips;
 	rpl::variable<bool> _closeToTaskbar = false;
 	rpl::variable<bool> _trayIconMonochrome = true;
+	rpl::variable<bool> _birthDateEnabled = false;
 	rpl::variable<QString> _customDeviceModel;
 	rpl::variable<Media::RepeatMode> _playerRepeatMode;
 	rpl::variable<Media::OrderMode> _playerOrderMode;

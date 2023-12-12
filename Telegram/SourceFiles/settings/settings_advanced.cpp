@@ -345,6 +345,28 @@ void SetupSpellchecker(
 #endif // !TDESKTOP_DISABLE_SPELLCHECK
 }
 
+void SetupMaterialgram(
+	not_null<Window::SessionController*> controller,
+	not_null<Ui::VerticalLayout*> container) {
+	const auto session = &controller->session();
+	const auto settings = &Core::App().settings();
+	const auto button = container->add(object_ptr<Button>(
+		container,
+		tr::lng_passport_birth_date(),
+		st::settingsButtonNoIcon
+	))->toggleOn(
+		rpl::single(settings->birthDateEnabled())
+	);
+
+	button->toggledValue(
+	) | rpl::filter([=](bool enabled) {
+		return (enabled != settings->birthDateEnabled());
+		}) | rpl::start_with_next([=](bool enabled) {
+			settings->setBirthDateEnabled(enabled);
+			Core::App().saveSettingsDelayed();
+			}, container->lifetime());
+}
+
 void SetupWindowTitleContent(
 		Window::SessionController *controller,
 		not_null<Ui::VerticalLayout*> container) {
@@ -1025,6 +1047,12 @@ void Advanced::setupContent(not_null<Window::SessionController*> controller) {
 		SetupSpellchecker(controller, content);
 		AddSkip(content);
 	}
+	
+	AddDivider(content);
+	AddSkip(content);
+	AddSubsectionTitle(content, rpl::single(u"materialgram"_q));
+	SetupMaterialgram(controller, content);
+	AddSkip(content);
 
 	if (cAutoUpdate()) {
 		addUpdate();

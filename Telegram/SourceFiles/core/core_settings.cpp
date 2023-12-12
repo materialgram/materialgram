@@ -344,7 +344,8 @@ QByteArray Settings::serialize() const {
 			stream << id;
 		}
 		stream
-			<< qint32(_trayIconMonochrome.current() ? 1 : 0);
+			<< qint32(_trayIconMonochrome.current() ? 1 : 0)
+			<< qint32(_birthDateEnabled.current() ? 1 : 0);
 	}
 	return result;
 }
@@ -453,6 +454,7 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	qint32 storiesClickTooltipHidden = _storiesClickTooltipHidden.current() ? 1 : 0;
 	base::flat_set<QString> recentEmojiSkip;
 	qint32 trayIconMonochrome = (_trayIconMonochrome.current() ? 1 : 0);
+	qint32 birthDateEnabled = (_birthDateEnabled.current() ? 1 : 0);
 
 	stream >> themesAccentColors;
 	if (!stream.atEnd()) {
@@ -709,6 +711,12 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 		// Let existing clients use the old value.
 		trayIconMonochrome = 0;
 	}
+	if (!stream.atEnd()) {
+		stream >> birthDateEnabled;
+	}
+	else {
+		birthDateEnabled = 1;
+	}
 	if (stream.status() != QDataStream::Ok) {
 		LOG(("App Error: "
 			"Bad data for Core::Settings::constructFromSerialized()"));
@@ -903,6 +911,7 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	_storiesClickTooltipHidden = (storiesClickTooltipHidden == 1);
 	_recentEmojiSkip = std::move(recentEmojiSkip);
 	_trayIconMonochrome = (trayIconMonochrome == 1);
+	_birthDateEnabled = (birthDateEnabled == 1);
 }
 
 QString Settings::getSoundPath(const QString &key) const {
