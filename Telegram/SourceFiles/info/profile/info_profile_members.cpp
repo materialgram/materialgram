@@ -32,6 +32,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/data_user.h"
 #include "styles/style_boxes.h"
 #include "styles/style_info.h"
+#include <history/admin_log/history_admin_log_section.h>
 
 namespace Info {
 namespace Profile {
@@ -145,6 +146,12 @@ void Members::setupHeader() {
 	//_searchField = _controller->searchFieldController()->createField(
 	//	parent,
 	//	st::infoMembersSearchField);
+	_admins = Ui::CreateChild<Ui::IconButton>(
+		_openMembers,
+		st::infoMembersAdmins);
+	_logHistory = Ui::CreateChild<Ui::IconButton>(
+		_openMembers,
+		st::infoMembersLog);
 	_search = Ui::CreateChild<Ui::IconButton>(
 		_openMembers,
 		st::infoMembersSearch);
@@ -207,6 +214,19 @@ void Members::setupButtons() {
 		this->addMember();
 	});
 
+	_admins->addClickHandler([this] {
+		ParticipantsBoxController::Start(
+			_controller,
+			_peer,
+			ParticipantsBoxController::Role::Admins);
+		});
+	const auto channel = _peer->asChannel();
+	_logHistory->showOn(rpl::single(
+		channel && (channel->hasAdminRights() || channel->amCreator())));
+	_logHistory->addClickHandler([this] {
+		_controller->showSection(
+			std::make_shared<AdminLog::SectionMemento>(_peer->asChannel()));
+		});
 	auto searchShown = MembersCountValue(_peer)
 		| rpl::map(_1 >= kEnableSearchMembersAfterCount)
 		| rpl::distinct_until_changed()
@@ -306,6 +326,18 @@ void Members::updateHeaderControlsGeometry(int newWidth) {
 		st::infoMembersButtonPosition.y(),
 		newWidth);
 	if (!_addMember->isHidden()) {
+		availableWidth -= st::infoMembersAdmins.width;
+	}
+	_admins->moveToLeft(
+		availableWidth - _admins->width(),
+		st::infoMembersButtonPosition.y(),
+		newWidth);
+	availableWidth -= st::infoMembersLog.width;
+	_logHistory->moveToLeft(
+		availableWidth - _logHistory->width(),
+		st::infoMembersButtonPosition.y(),
+		newWidth);
+	if (!_logHistory->isHidden()) {
 		availableWidth -= st::infoMembersSearch.width;
 	}
 	_search->moveToLeft(

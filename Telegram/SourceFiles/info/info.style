@@ -486,17 +486,21 @@ infoMembersButton: IconButton(defaultIconButton) {
 	width: 38px;
 	height: 38px;
 	iconPosition: point(-1px, -1px);
-	rippleAreaPosition: point(0px, 0px);
-	rippleAreaSize: 38px;
+	rippleAreaPosition: point(2px, 2px);
+	rippleAreaSize: 34px;
 	ripple: defaultRippleAnimation;
 }
 infoMembersAddMember: IconButton(infoMembersButton) {
 	icon: icon {{ "info/info_add_member", windowBoldFg }};
-	iconOver: icon {{ "info/info_add_member", windowBoldFg }};
 }
 infoMembersSearch: IconButton(infoMembersButton) {
-	icon: icon {{ "info/info_search", windowBoldFg }};
-	iconOver: icon {{ "info/info_search", windowBoldFg }};
+	icon: icon {{ "menu/search", windowBoldFg }};
+}
+infoMembersAdmins: IconButton(infoMembersButton) {
+	icon: icon {{ "menu/admin", windowBoldFg }};
+}
+infoMembersLog: IconButton(infoMembersButton) {
+	icon: icon {{ "menu/group_log", windowBoldFg }};
 }
 infoMembersSearchField: InputField(defaultMultiSelectSearchField) {
 }

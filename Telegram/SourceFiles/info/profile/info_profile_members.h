@@ -122,6 +122,8 @@ private:
 	Ui::SettingsButton *_openMembers = nullptr;
 	Ui::RpWidget *_titleWrap = nullptr;
 	Ui::FlatLabel *_title = nullptr;
+	Ui::IconButton* _admins = nullptr;
+	Ui::IconButton* _logHistory = nullptr;
 	Ui::IconButton *_addMember = nullptr;
 	//base::unique_qptr<Ui::InputField> _searchField;
 	Ui::IconButton *_search = nullptr;
