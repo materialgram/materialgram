@@ -28,16 +28,7 @@ jobs:
   linux:
     name: Rocky Linux 8
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/telegramdesktop/tdesktop/centos_env
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    defaults:
-      run:
-        shell: scl enable gcc-toolset-12 -- bash --noprofile --norc -eo pipefail {0}
-
+    
     strategy:
       matrix:
         defines:
@@ -58,12 +49,13 @@ jobs:
 
       - name: First set up.
         run: |
-          gcc --version
-          ln -s /usr/src/Libraries
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+          docker pull ghcr.io/telegramdesktop/tdesktop/centos_env
+          docker tag ghcr.io/telegramdesktop/tdesktop/centos_env tdesktop:centos_env
 
       - name: materialgram build.
         run: |
-          cd $REPO_NAME/Telegram
+          cd $REPO_NAME
 
           DEFINE=""
           if [ -n "${{ matrix.defines }}" ]; then
@@ -74,16 +66,18 @@ jobs:
             echo "ARTIFACT_NAME=materialgram" >> $GITHUB_ENV
           fi
 
-          ./configure.sh \
+          docker run --rm \
+          -v $PWD:/usr/src/tdesktop \
+          -e DEBUG=1 \
+          tdesktop:centos_env \
+          /usr/src/tdesktop/Telegram/build/docker/centos_env/build.sh \
           -D CMAKE_EXE_LINKER_FLAGS="-s" \
           -D TDESKTOP_API_ID=${{ secrets.API_ID }} \
           -D TDESKTOP_API_HASH=${{ secrets.API_HASH}} \
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=True \
           -D CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
           $DEFINE
-
-          cmake --build ../out --config Release --parallel
-
+          
       - name: Check.
         run: |
           filePath="$REPO_NAME/out/Release/materialgram"
