@@ -2,6 +2,10 @@
 <img src="./docs/assets/icon.png" width="150" align="center">
 
 # [materialgram](https://github.com/kukuruzka165/materialgram)
+<a href='https://flathub.org/apps/io.github.kukuruzka165.materialgram'>
+  <img width='175' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.svg'/>
+</a>
+
 ![Hits](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fkukuruzka165%2Fmaterialgram.json%3Fcolor%3Dlightgray)
 [![Telegram Channel](https://img.shields.io/badge/channel-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram)
 [![Telegram Group](https://img.shields.io/badge/chat-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram_chat)
@@ -20,6 +24,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
 - Material icons instead of default ones
 - Added the ability to seek round videos
+- Added admin menu and chat log buttons above the members list
 - Removed message bubble tails and reverted old paddings
 - Replaced all sounds
 - Reduced image compression
@@ -28,7 +33,8 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Increased upload speed
 - Improved spoiler animation
 - Use sentence case for buttons
-- Improved sticker pack menu. Button layout like on mobile + ability to copy the author's id
+- Improved sticker pack menu. Button layout like on mobile and ability to copy the author's id
+- Improved chat export. 10000 messages in one html document and faster file download
 - Show the approximate date of account creation in the profile
 
 ## Build instructions
