@@ -133,7 +133,7 @@ QSize Game::countOptimalSize() {
 	minHeight += padding.top() + padding.bottom();
 
 	if (!_gameTagWidth) {
-		_gameTagWidth = st::msgDateFont->width(tr::lng_game_tag(tr::now).toUpper());
+		_gameTagWidth = st::msgDateFont->width(tr::lng_game_tag(tr::now));
 	}
 	return { maxWidth, minHeight };
 }
@@ -310,7 +310,7 @@ void Game::draw(Painter &p, const PaintContext &context) const {
 
 		p.setFont(st::msgDateFont);
 		p.setPen(st->msgDateImgFg());
-		p.drawTextLeft(gameX + st::msgDateImgPadding.x(), gameY + st::msgDateImgPadding.y(), pixwidth, tr::lng_game_tag(tr::now).toUpper());
+		p.drawTextLeft(gameX + st::msgDateImgPadding.x(), gameY + st::msgDateImgPadding.y(), pixwidth, tr::lng_game_tag(tr::now));
 
 		p.translate(-attachLeft, -attachTop);
 	}

@@ -1338,7 +1338,7 @@ void RepliesWidget::refreshJoinGroupButton() {
 			? tr::lng_profile_join_channel(tr::now)
 			: (channel->requestToJoin() && !channel->amCreator())
 			? tr::lng_profile_apply_to_join_group(tr::now)
-			: tr::lng_profile_join_group(tr::now)).toUpper());
+			: tr::lng_profile_join_group(tr::now)));
 	}
 }
 

@@ -221,16 +221,16 @@ ContactStatus::Bar::Bar(
 	st::historyContactStatusButton)
 , _unarchive(
 	this,
-	tr::lng_new_contact_unarchive(tr::now).toUpper(),
+	tr::lng_new_contact_unarchive(tr::now),
 	st::historyContactStatusButton)
 , _unarchiveIcon(MakeIconButton(this, st::menuIconUnarchive))
 , _block(
 	this,
-	tr::lng_new_contact_block(tr::now).toUpper(),
+	tr::lng_new_contact_block(tr::now),
 	st::historyContactStatusBlock)
 , _share(
 	this,
-	tr::lng_new_contact_share(tr::now).toUpper(),
+	tr::lng_new_contact_share(tr::now),
 	st::historyContactStatusButton)
 , _report(
 	this,
@@ -301,11 +301,11 @@ void ContactStatus::Bar::showState(
 	}
 	_emojiStatusInfo->setVisible(has);
 	_add->setText((type == Type::Add)
-		? tr::lng_new_contact_add_name(tr::now, lt_user, _name).toUpper()
-		: tr::lng_new_contact_add(tr::now).toUpper());
+		? tr::lng_new_contact_add_name(tr::now, lt_user, _name)
+		: tr::lng_new_contact_add(tr::now));
 	_report->setText((type == Type::ReportSpam)
-		? tr::lng_report_spam_and_leave(tr::now).toUpper()
-		: tr::lng_report_spam(tr::now).toUpper());
+		? tr::lng_report_spam_and_leave(tr::now)
+		: tr::lng_report_spam(tr::now));
 	_requestChatInfo->setMarkedText(
 		(state.requestChatIsBroadcast
 			? tr::lng_new_contact_from_request_channel
