@@ -1,3 +1,13 @@
+4.13.1.1 (23.12.23)
+
+- Do not use uppercase anywhere
+- Official changelog:
+- Fix crash in chat history right click.
+- Fix user emoji status display in main menu, profile and settings.
+- Support setting channel wallpaper.
+- Support setting channel emoji status.
+- Allow gifting premium to several recipients at once.
+
 4.12.2.3 (16.12.23)
 
 - Do not use uppercase on buttons
