@@ -17,7 +17,7 @@ namespace Editor {
 namespace {
 
 constexpr auto kPrecision = 1000;
-constexpr auto kMinBrushSize = 0.1f;
+constexpr auto kMinBrushSize = 0.05f;
 constexpr auto kMouseSkip = 1.4;
 
 constexpr auto kMinInnerHeight = 0.2;
