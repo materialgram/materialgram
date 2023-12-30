@@ -46,9 +46,6 @@ constexpr auto kDocumentUploadPartSize3 = 512 * 1024;
 // 1024kb for large document ( <= 1500mb )
 constexpr auto kDocumentUploadPartSize4 = 1024 * 1024;
 
-// One part each quarter of second, if not uploaded faster.
-constexpr auto kUploadRequestInterval = crl::time(250);
-
 // How much time without upload causes additional session kill.
 constexpr auto kKillSessionTimeout = 15 * crl::time(1000);
 
@@ -152,7 +149,6 @@ const QString &Uploader::File::filename() const {
 
 Uploader::Uploader(not_null<ApiWrap*> api)
 : _api(api)
-, _nextTimer([=] { sendNext(); })
 , _stopSessionsTimer([=] { stopSessions(); }) {
 	const auto session = &_api->session();
 	photoReady(
@@ -619,7 +615,7 @@ void Uploader::sendNext() {
 
 		parts.erase(part);
 	}
-	_nextTimer.callOnce(kUploadRequestInterval);
+	sendNext();
 }
 
 void Uploader::cancel(const FullMsgId &msgId) {
