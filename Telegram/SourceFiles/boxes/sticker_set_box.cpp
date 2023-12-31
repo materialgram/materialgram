@@ -242,6 +242,7 @@ public:
 	[[nodiscard]] QString shortName() const;
 	[[nodiscard]] bool isEmojiSet() const;
 	[[nodiscard]] uint64 setId() const;
+	[[nodiscard]] int setCount() const;
 
 	void install();
 	[[nodiscard]] rpl::producer<uint64> setInstalled() const;
@@ -573,11 +574,13 @@ void StickerSetBox::updateButtons() {
 				addButton(std::move(button));
 			} else {
 				auto addText = (type == Data::StickersType::Emoji)
-					? tr::lng_stickers_add_emoji()
+					? tr::lng_stickers_add_emoji(tr::now)
 					: (type == Data::StickersType::Masks)
-					? tr::lng_stickers_add_masks()
-					: tr::lng_stickers_add_pack();
-				addButton(std::move(addText), [=] { addStickers(); });
+					? tr::lng_stickers_add_masks(tr::now)
+					: tr::lng_stickers_add_pack(tr::now);
+				addButton(rpl::single(addText + " (" + 
+					QString::number(_inner->setCount())
+					+ ")"), [=] { addStickers(); });
 				addButton(tr::lng_cancel(), [=] { closeBox(); });
 			}
 
@@ -1170,6 +1173,10 @@ bool StickerSetBox::Inner::isEmojiSet() const {
 
 uint64 StickerSetBox::Inner::setId() const {
 	return _setId;
+}
+
+int StickerSetBox::Inner::setCount() const {
+	return _setCount;
 }
 
 QSize StickerSetBox::Inner::boundingBoxSize() const {
