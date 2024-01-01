@@ -1196,7 +1196,7 @@ bool TopBarWidget::showSelectedState() const {
 
 void TopBarWidget::showSelected(SelectedState state) {
 	auto canDelete = (state.count > 0 && state.count == state.canDeleteCount);
-	auto canForward = (state.count > 0 && state.count == state.canForwardCount);
+	auto canForward = (state.count > 0 && state.count <= 100 && state.count == state.canForwardCount);
 	auto canSendNow = (state.count > 0 && state.count == state.canSendNowCount);
 	auto count = (!canDelete && !canForward && !canSendNow) ? 0 : state.count;
 	if (_selectedCount == count
