@@ -1975,7 +1975,7 @@ bool Message::hasFromPhoto() const {
 		} else if (const auto forwarded = item->Get<HistoryMessageForwarded>()) {
 			const auto peer = item->history()->peer;
 			if (peer->isSelf() || peer->isRepliesChat()) {
-				return true;
+				return !hasOutLayout();
 			}
 		}
 		return !item->out() && !item->history()->peer->isUser();
@@ -3203,7 +3203,8 @@ bool Message::hasOutLayout() const {
 		if (const auto forwarded = item->Get<HistoryMessageForwarded>()) {
 			return (context() == Context::SavedSublist)
 				&& (!forwarded->forwardOfForward()
-					? forwarded->originalSender->isSelf()
+					? (forwarded->originalSender
+						&& forwarded->originalSender->isSelf())
 					: ((forwarded->savedFromSender
 						&& forwarded->savedFromSender->isSelf())
 						|| forwarded->savedFromOutgoing));
