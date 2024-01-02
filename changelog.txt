@@ -1,3 +1,23 @@
+4.14.2.1 (02.01.24)
+
+- Official changelog:
+- Show original senders name in reply to forward information.
+- Use original senders color / emoji pattern in forwards.
+- Highlight active saved messages chat in list.
+- Fix chats list scrolling on X11 (Linux).
+
+4.14.1.1 (01.01.24)
+
+- Allow deleting more than 100 messages at once (experimental)
+- Reduced minimum brush thickness in the photo editor
+- Show the amount of stickers near "Add stickers" button
+- Removed upload part delay
+- Official changelog:
+- Improve jump-to-original button layout in "Saved Messages".
+- Show my own chat as "My Notes" in "Saved Messages".
+- In screen sharing source window select first screen by default.
+- Improved saved messages.
+
 4.13.1.1 (23.12.23)
 
 - Do not use uppercase anywhere
