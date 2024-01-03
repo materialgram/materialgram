@@ -74,7 +74,7 @@ private:
 	case SizeTag::Normal: return Ui::Emoji::GetSizeNormal();
 	case SizeTag::Large: return Ui::Emoji::GetSizeLarge();
 	case SizeTag::Isolated:
-		return (st::largeEmojiSize + 2 * st::largeEmojiOutline)
+		return (st::largeEmojiSize)
 			* style::DevicePixelRatio();
 	case SizeTag::SetIcon:
 		return int(style::ConvertScale(18 * 7 / 6., style::Scale()))

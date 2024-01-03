@@ -86,7 +86,7 @@ QSize UnwrappedMedia::countCurrentSize(int newWidth) {
 		const auto infoHeight = st::msgDateImgPadding.y() * 2
 			+ st::msgDateFont->height;
 		const auto minimal = std::min(
-			st::largeEmojiSize + 2 * st::largeEmojiOutline,
+			st::largeEmojiSize,
 			_contentSize.height());
 		accumulate_max(newHeight, minimal + st::msgDateImgDelta + infoHeight);
 	}

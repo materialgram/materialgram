@@ -52,11 +52,7 @@ constexpr auto kPremiumCachesCount = 8;
 
 [[nodiscard]] QSize SingleSize() {
 	const auto single = st::largeEmojiSize;
-	const auto outline = st::largeEmojiOutline;
-	return QSize(
-		2 * outline + single,
-		2 * outline + single
-	) * cIntRetinaFactor();
+	return QSize(single, single) * cIntRetinaFactor();
 }
 
 [[nodiscard]] const Lottie::ColorReplacements *ColorReplacements(int index) {

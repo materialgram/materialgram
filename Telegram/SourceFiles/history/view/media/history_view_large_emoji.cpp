@@ -76,7 +76,7 @@ QSize LargeEmoji::countOptimalSize() {
 		- ranges::count(_images, LargeEmojiMedia());
 
 	const auto single = LargeEmojiImage::Size() / cIntRetinaFactor();
-	const auto skip = st::largeEmojiSkip - 2 * st::largeEmojiOutline;
+	const auto skip = st::largeEmojiSkip;
 	const auto inner = count * single.width() + (count - 1) * skip;
 	const auto &padding = st::largeEmojiPadding;
 	_size = QSize(
@@ -94,7 +94,7 @@ void LargeEmoji::draw(
 	const auto &padding = st::largeEmojiPadding;
 	auto x = r.x() + (r.width() - _size.width()) / 2 + padding.left();
 	const auto y = r.y() + (r.height() - _size.height()) / 2 + padding.top();
-	const auto skip = st::largeEmojiSkip - 2 * st::largeEmojiOutline;
+	const auto skip = st::largeEmojiSkip;
 	const auto size = LargeEmojiImage::Size() / cIntRetinaFactor();
 	const auto selected = context.selected();
 	if (!selected) {
@@ -132,7 +132,7 @@ void LargeEmoji::paintCustom(
 		_hasHeavyPart = true;
 		_parent->history()->owner().registerHeavyViewPart(_parent);
 	}
-	const auto inner = st::largeEmojiSize + 2 * st::largeEmojiOutline;
+	const auto inner = st::largeEmojiSize;
 	const auto outer = Ui::Text::AdjustCustomEmojiSize(inner);
 	const auto skip = (inner - outer) / 2;
 	//const auto preview = context.imageStyle()->msgServiceBg->c;
