@@ -755,7 +755,6 @@ void Preview::validateBubbleCache() {
 	}
 	const auto radius = scaled(16); // st::bubbleRadiusLarge
 	_bubbleCorners = Ui::PrepareCornerPixmaps(radius, st::msgInBg);
-	_bubbleCorners.p[2] = {};
 	_bubbleShadowBottomRight
 		= Ui::PrepareCornerPixmaps(radius, st::msgInShadow).p[3];
 }
