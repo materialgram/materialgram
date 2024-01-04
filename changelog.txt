@@ -1,3 +1,12 @@
+4.14.3.1 (04.01.24)
+
+- Remove large emoji outline
+- Official changelog:
+- Allow sending single-time voice messages.
+- Fix payments card validation.
+- Fix crash when trying to join channels above the limit.
+- Add "Quit Telegram" to the Taskbar context menu. (Windows)
+
 4.14.2.1 (02.01.24)
 
 - Official changelog:
