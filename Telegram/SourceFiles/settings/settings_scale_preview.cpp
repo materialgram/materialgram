@@ -704,13 +704,6 @@ void Preview::paintReply(Painter &p, QRect clip) {
 			outline,
 			_replyRect.height());
 		p.drawRoundedRect(_replyRect, radius, radius);
-		p.setOpacity(Ui::kDefaultBgOpacity);
-		p.setClipRect(
-			_replyRect.x() + outline,
-			_replyRect.y(),
-			_replyRect.width() - outline,
-			_replyRect.height());
-		p.drawRoundedRect(_replyRect, radius, radius);
 	}
 	p.setOpacity(1.);
 	p.setClipping(false);

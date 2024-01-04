@@ -880,13 +880,6 @@ void Generator::paintBubble(const Bubble &bubble) {
 			_p->setOpacity(Ui::kDefaultOutline1Opacity);
 			_p->setClipRect(rbar.x(), rbar.y(), outline, rbar.height());
 			_p->drawRoundedRect(rbar, radius, radius);
-			_p->setOpacity(Ui::kDefaultBgOpacity);
-			_p->setClipRect(
-				rbar.x() + outline,
-				rbar.y(),
-				rbar.width() - outline,
-				rbar.height());
-			_p->drawRoundedRect(rbar, radius, radius);
 		}
 		_p->setOpacity(1.);
 		_p->setClipping(false);
