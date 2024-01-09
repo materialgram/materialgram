@@ -86,6 +86,9 @@ const auto CommandByName = base::flat_map<QString, Command>{
 	{ u"account4"_q          , Command::ShowAccount4 },
 	{ u"account5"_q          , Command::ShowAccount5 },
 	{ u"account6"_q          , Command::ShowAccount6 },
+	{ u"account7"_q          , Command::ShowAccount7 },
+	{ u"account8"_q          , Command::ShowAccount8 },
+	{ u"account9"_q          , Command::ShowAccount9 },
 
 	{ u"folder1"_q           , Command::ShowFolder1 },
 	{ u"folder2"_q           , Command::ShowFolder2 },
