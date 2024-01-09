@@ -1,3 +1,11 @@
+4.14.4.1 (10.01.24)
+
+- Increased account limit from 3-6 to 10-20
+- Official changelog:
+- Switch between logged in accounts using Ctrl+Shift+[1-9] shortcuts.
+- Add poll creation in groups to the attach menu, if exists.
+- Another fix for payment card validation.
+
 4.14.3.1 (04.01.24)
 
 - Remove large emoji outline
