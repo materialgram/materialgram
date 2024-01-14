@@ -37,10 +37,10 @@ PreLaunchWindow::PreLaunchWindow(QString title) {
 	setWindowIcon(Window::CreateIcon());
 	setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
-	setWindowTitle(title.isEmpty() ? u"Telegram"_q : title);
+	setWindowTitle(title.isEmpty() ? u"materialgram"_q : title);
 
 	QPalette p(palette());
-	p.setColor(QPalette::Window, QColor(255, 255, 255));
+	p.setColor(QPalette::Window, QColor(255, 252, 245));
 	setPalette(p);
 
 	_size = QFontInfo(font()).pixelSize();
@@ -51,16 +51,16 @@ PreLaunchWindow::PreLaunchWindow(QString title) {
 	setStyleSheet(uR"(
 QPushButton {
 	padding: %1px %2px;
-	background-color: #ffffff;
+	background-color: #fffcf5;
 	border-radius: %3px;
 }
 QPushButton#confirm:hover,
 QPushButton#cancel:hover {
-	background-color: #e3f1fa;
-	color: #2f9fea;
+	background-color: #ebecde;
+	color: #57651a;
 }
 QPushButton#confirm {
-	color: #2f9fea;
+	color: #57651a;
 }
 QPushButton#cancel {
 	color: #aeaeae;
@@ -70,7 +70,7 @@ QLineEdit {
 	padding: 5px;
 }
 QLineEdit:focus {
-	border: 2px solid #37a1de;
+	border: 2px solid #57651a;
 	padding: 4px;
 }
 )"_q.arg(paddingVertical).arg(paddingHorizontal).arg(borderRadius));
@@ -104,8 +104,8 @@ PreLaunchLabel::PreLaunchLabel(QWidget *parent) : QLabel(parent) {
 	setFont(labelFont);
 
 	QPalette p(palette());
-	p.setColor(QPalette::WindowText, QColor(0, 0, 0));
-	p.setColor(QPalette::Text, QColor(0, 0, 0));
+	p.setColor(QPalette::WindowText, QColor(27, 28, 23));
+	p.setColor(QPalette::Text, QColor(27, 28, 23));
 	setPalette(p);
 	show();
 };
@@ -123,10 +123,10 @@ PreLaunchInput::PreLaunchInput(QWidget *parent, bool password) : QLineEdit(paren
 	setFont(logFont);
 
 	QPalette p(palette());
-	p.setColor(QPalette::Window, QColor(255, 255, 255));
-	p.setColor(QPalette::Base, QColor(255, 255, 255));
-	p.setColor(QPalette::WindowText, QColor(0, 0, 0));
-	p.setColor(QPalette::Text, QColor(0, 0, 0));
+	p.setColor(QPalette::Window, QColor(255, 252, 245));
+	p.setColor(QPalette::Base, QColor(255, 252, 245));
+	p.setColor(QPalette::WindowText, QColor(27, 28, 23));
+	p.setColor(QPalette::Text, QColor(27, 28, 23));
 	setPalette(p);
 
 	QLineEdit::setTextMargins(0, 0, 0, 0);
@@ -209,7 +209,7 @@ NotStartedWindow::NotStartedWindow()
 	_log.setPlainText(Logs::full());
 
 	connect(&_close, &QPushButton::clicked, [=] { close(); });
-	_close.setText(u"CLOSE"_q);
+	_close.setText(u"Close"_q);
 
 	QRect scr(QApplication::primaryScreen()->availableGeometry());
 	move(scr.x() + (scr.width() / 6), scr.y() + (scr.height() / 6));
