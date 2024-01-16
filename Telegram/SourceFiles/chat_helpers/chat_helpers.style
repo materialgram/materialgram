@@ -1278,6 +1278,8 @@ ttlMediaImportantTooltipLabel: FlatLabel(defaultImportantTooltipLabel) {
 	}
 }
 ttlMediaButton: RoundButton(defaultActiveButton) {
+	textFg: windowFg;
+	textFgOver: windowFgOver;
 	textBg: shadowFg;
 	textBgOver: shadowFg;
 	ripple: universalRippleAnimation;
