@@ -1,3 +1,12 @@
+4.14.6.1 (16.01.24)
+
+- Show more recent stickers
+- Updated themes and some icons
+- Official changelog:
+- Allow sending one-time voice messages.
+- Improve playing one-time voice and video messages.
+- Remove Ctrl+Shift+[1-9] shortcuts by default, some are used in input methods.
+
 4.14.4.1 (10.01.24)
 
 - Increased account limit from 3-6 to 10-20
