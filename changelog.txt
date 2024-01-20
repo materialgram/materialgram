@@ -1,3 +1,12 @@
+4.14.9.1 (20.01.24)
+
+- Updated about box
+- Official changelog:
+- Fix initial position and size of secondary windows.
+- Optimize messages loading. (load replies on demand)
+- Fix local online status turning off.
+- Fix two possible crashes in messages history and group search.
+
 4.14.7.1 (18.01.24)
 
 - Updated some icons
