@@ -27,6 +27,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Added the ability to delete more than 100 messages at once (experimental)
 - Added admin menu and chat log buttons above the members list
 - Removed message bubble tails and reverted old paddings
+- Removed "large emoji" outline
 - Replaced all sounds
 - Reduced image compression
 - Reduced minimum window size
@@ -34,9 +35,11 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Reduced use of uppercase in the interface
 - Reduced some timeouts
 - Increased upload speed
+- Increased max accounts limit from 3/6 to 10/20
 - Improved spoiler animation
 - Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers" + ability to copy the author's id
 - Improved chat export. 10000 messages in one html document and faster file download
+- Show more recent stickers
 - Show the approximate date of account creation in the profile
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
 
