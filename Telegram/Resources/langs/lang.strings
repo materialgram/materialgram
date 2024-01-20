@@ -2989,6 +2989,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_about_version" = "version {version}";
 "lng_about_text1" = "Official free messaging app based on {api_link}\nfor speed and security.";
 "lng_about_text1_api" = "Telegram API";
+"materialgram_about_text1" = "Feature list is available on {features_link}.";
+"materialgram_about_github" = "GitHub";
+"materialgram_about_text3" = "Made with ❤️ in 🇺🇦";
 "lng_about_text2" = "This software is licensed under {gpl_link} version 3.\nSource code is available on {github_link}.";
 "lng_about_text3" = "Visit {faq_link} for more info.";
 "lng_about_text3_faq" = "Telegram FAQ";

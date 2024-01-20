@@ -28,10 +28,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 namespace {
 
 rpl::producer<TextWithEntities> Text1() {
-	return tr::lng_about_text1(
-		lt_api_link,
-		tr::lng_about_text1_api(
-		) | Ui::Text::ToLink("https://core.telegram.org/api"),
+	return tr::materialgram_about_text1(
+		lt_features_link,
+		tr::materialgram_about_github(
+		) | Ui::Text::ToLink("https://github.com/kukuruzka165/materialgram#features"),
 		Ui::Text::WithEntities);
 }
 
@@ -48,11 +48,8 @@ rpl::producer<TextWithEntities> Text2() {
 		Ui::Text::WithEntities);
 }
 
-rpl::producer<TextWithEntities> Text3() {
-	return tr::lng_about_text3(
-		lt_faq_link,
-		tr::lng_about_text3_faq() | Ui::Text::ToLink(telegramFaqLink()),
-		Ui::Text::WithEntities);
+rpl::producer<QString> Text3() {
+	return tr::materialgram_about_text3();
 }
 
 } // namespace
