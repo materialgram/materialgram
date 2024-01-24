@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=materialgram
-Comment=Unofficial desktop version of Telegram with Material Design
+Comment=Unofficial Telegram Desktop with Material Design
 TryExec=materialgram
 Exec=materialgram -- %u
 Icon=materialgram
