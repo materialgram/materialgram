@@ -9,6 +9,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "base/timer.h"
 #include "base/bytes.h"
+#include "webrtc/webrtc_device_id.h"
 
 namespace Core {
 class FileLocation;
@@ -94,7 +95,10 @@ public:
 	// Thread: Main.
 	Instance();
 
-	std::unique_ptr<Track> createTrack();
+	[[nodiscard]] QString playbackDeviceId() const;
+	[[nodiscard]] QString captureDeviceId() const;
+
+	[[nodiscard]] std::unique_ptr<Track> createTrack();
 
 	void detachTracks();
 	void reattachTracks();
@@ -115,15 +119,19 @@ private:
 
 private:
 	std::set<Track*> _tracks;
+	Webrtc::DeviceId _playbackDeviceId;
+	Webrtc::DeviceId _captureDeviceId;
 
 	base::Timer _updateTimer;
 
 	base::Timer _detachFromDeviceTimer;
 	bool _detachFromDeviceForce = false;
 
+	rpl::lifetime _lifetime;
+
 };
 
-Instance &Current();
+[[nodiscard]] Instance &Current();
 
 } // namespace Audio
 } // namespace Media

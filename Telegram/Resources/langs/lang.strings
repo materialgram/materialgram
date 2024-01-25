@@ -631,6 +631,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_call_accept_calls" = "Accept calls from this device";
 "lng_settings_call_device_default" = "Same as the System";
 
+"lng_settings_section_devices" = "Speakers and Camera";
+"lng_settings_devices_calls" = "Calls and video chats";
+"lng_settings_devices_calls_same" = "Use the same devices for calls";
+"lng_settings_devices_inactive" = "Unavailable";
+
 "lng_settings_language" = "Language";
 "lng_settings_default_scale" = "Default interface scale";
 "lng_settings_connection_type" = "Connection type";
@@ -2443,6 +2448,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_in_dlg_contact" = "Contact";
 "lng_in_dlg_audio" = "Voice message";
 "lng_in_dlg_video_message" = "Video message";
+"lng_in_dlg_voice_message_ttl" = "One-time Voice Message";
+"lng_in_dlg_video_message_ttl" = "One-time Video Message";
 "lng_in_dlg_file" = "File";
 "lng_in_dlg_sticker" = "Sticker";
 "lng_in_dlg_sticker_emoji" = "{emoji} Sticker";
