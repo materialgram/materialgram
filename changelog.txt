@@ -1,3 +1,14 @@
+4.14.11.1 (25.01.24)
+
+- Updated some icons
+- Official changelog:
+- Fix crash when accepting calls.
+- Fix possible crash in loopback audio on Windows.
+- Allow choosing audio device for music and video files.
+- Allow choosing microphone device for voice recording.
+- Allow pause and resume voice messages recording.
+- Track audio device changes on Windows and macOS.
+
 4.14.9.1 (20.01.24)
 
 - Updated about box
