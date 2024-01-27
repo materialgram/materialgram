@@ -108,7 +108,9 @@ base::options::toggle ShowPeerIdBelowAbout({
 		std::shared_ptr<Ui::Show> show,
 		const QString &addToLink) {
 	return [=](QString link) {
-		if (!link.startsWith(u"https://"_q)) {
+		if (addToLink.isEmpty()) {
+			link = "@" + peer->userName();
+		} else if (!link.startsWith(u"https://"_q)) {
 			link = peer->session().createInternalLinkFull(peer->userName())
 				+ addToLink;
 		}
