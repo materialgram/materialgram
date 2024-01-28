@@ -632,24 +632,24 @@ void StickerSetBox::updateButtons() {
 							&st::menuIconRemove);
 					} else {
 						(*menu)->addAction(
-							(type == Data::StickersType::Masks
-								? tr::lng_masks_archive_pack(tr::now)
-								: tr::lng_stickers_archive_pack(tr::now)),
-							archive,
-							&st::menuIconArchive);
-						(*menu)->addAction(
-							((type == Data::StickersType::Emoji)
-								? tr::lng_stickers_share_emoji
-								: (type == Data::StickersType::Masks)
-								? tr::lng_stickers_share_masks
-								: tr::lng_stickers_share_pack)(tr::now),
-							[=] { share(); closeBox(); },
-							& st::menuIconShare);
-						(*menu)->addAction(
-							tr::lng_channel_admin_status_creator(tr::now),
-							[=] { author(); closeBox(); },
-							&st::menuIconProfile);
+						(type == Data::StickersType::Masks
+							? tr::lng_masks_archive_pack(tr::now)
+							: tr::lng_stickers_archive_pack(tr::now)),
+						archive,
+						&st::menuIconArchive);
 					}
+					(*menu)->addAction(
+						((type == Data::StickersType::Emoji)
+							? tr::lng_stickers_share_emoji
+							: (type == Data::StickersType::Masks)
+							? tr::lng_stickers_share_masks
+							: tr::lng_stickers_share_pack)(tr::now),
+						[=] { share(); closeBox(); },
+						& st::menuIconShare);
+					(*menu)->addAction(
+						tr::lng_channel_admin_status_creator(tr::now),
+						[=] { author(); closeBox(); },
+						&st::menuIconProfile);
 					(*menu)->popup(QCursor::pos());
 					return true;
 				});
