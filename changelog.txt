@@ -1,7 +1,13 @@
-4.14.11.1 (25.01.24)
+4.14.12.1 (01.02.24)
 
 - Updated some icons
+- Fixed sharing installed emoji packs
+- Copy username as @ if possible
 - Official changelog:
+- Tags in Saved Messages.
+- Audio output device selection for music and videos.
+- Audio input device selection for voice messages recording.
+- Default device changes should be applied instantly. (Windows / macOS)
 - Fix crash when accepting calls.
 - Fix possible crash in loopback audio on Windows.
 - Allow choosing audio device for music and video files.
