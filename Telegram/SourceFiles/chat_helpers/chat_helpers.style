@@ -70,7 +70,6 @@ ComposeIcons {
 	menuSpoiler: icon;
 	menuSpoilerOff: icon;
 
-	stripBubble: icon;
 	stripExpandPanel: icon;
 	stripExpandDropdown: icon;
 }
@@ -606,18 +605,8 @@ defaultComposeIcons: ComposeIcons {
 	menuSpoiler: menuIconSpoiler;
 	menuSpoilerOff: menuIconSpoilerOff;
 
-	stripBubble: icon{
-		{ "chat/reactions_bubble_shadow", windowShadowFg },
-		{ "chat/reactions_bubble", windowBg },
-	};
-	stripExpandPanel: icon{
-		{ "chat/reactions_round_big", windowBgRipple },
-		{ "chat/reactions_expand_panel", windowSubTextFg },
-	};
-	stripExpandDropdown: icon{
-		{ "chat/reactions_round_small", windowBgRipple },
-		{ "chat/reactions_expand_panel", windowSubTextFg },
-	};
+	stripExpandPanel: icon{{ "chat/reactions_expand_panel", windowSubTextFg }};
+	stripExpandDropdown: icon{{ "chat/reactions_expand_panel", windowSubTextFg }};
 }
 defaultEmojiPanAbout: FlatLabel(defaultFlatLabel) {
 	minWidth: 10px;
@@ -760,7 +749,6 @@ reactStripSize: 32px;
 reactStripMinWidth: 60px;
 reactStripImage: 26px;
 reactStripSkip: 7px;
-reactStripBubbleRight: 20px;
 userpicBuilderEmojiPan: EmojiPan(statusEmojiPan) {
 	margin: margins(reactStripSkip, 0px, reactStripSkip, 0px);
 	padding: margins(reactStripSkip, 0px, reactStripSkip, reactStripSkip);
