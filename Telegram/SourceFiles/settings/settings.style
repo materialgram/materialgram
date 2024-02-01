@@ -91,6 +91,7 @@ settingsPremiumIconStar: icon {{ "settings/premium/star", windowFgActive }};
 settingsPremiumIconVoice: icon {{ "settings/premium/voice", windowFgActive }};
 settingsPremiumIconFiles: icon {{ "settings/premium/files", windowFgActive }};
 settingsPremiumIconTranslations: icon {{ "settings/premium/translations", windowFgActive }};
+settingsPremiumIconTags: icon {{ "settings/premium/tags", windowFgActive }};
 
 settingsStoriesIconOrder: icon {{ "settings/premium/stories_order", premiumButtonBg1 }};
 settingsStoriesIconStealth: icon {{ "menu/stealth", premiumButtonBg1 }};
