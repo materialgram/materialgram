@@ -1,3 +1,11 @@
+4.14.13.1 (03.02.24)
+
+- Updated themes
+- Official changelog:
+- Fix display of statistics for single posts.
+- Allow editing tag name from search tags.
+- Fix a crash in tags removal.
+
 4.14.12.1 (01.02.24)
 
 - Updated some icons
