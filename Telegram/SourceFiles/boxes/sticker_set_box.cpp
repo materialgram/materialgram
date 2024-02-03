@@ -611,7 +611,7 @@ void StickerSetBox::updateButtons() {
 		} else if (_inner->official()) {
 			addButton(tr::lng_about_done(), [=] { closeBox(); });
 		} else {
-			addButton(tr::lng_stickers_remove_pack_confirm(), std::move(remove));
+			addButton(tr::lng_stickers_remove_pack_confirm(), [=] { remove(); closeBox(); });
 			addButton(tr::lng_cancel(), [=] { closeBox(); });
 
 			if (!_inner->shortName().isEmpty()) {
