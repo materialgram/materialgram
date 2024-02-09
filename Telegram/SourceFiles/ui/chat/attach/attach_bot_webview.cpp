@@ -579,7 +579,7 @@ bool Panel::createWebview(const Webview::ThemeParams &params) {
 			height = _mainButton->height();
 		}
 		bottom->move(inner.x(), inner.y() + inner.height() - height);
-		container->resize(inner.width(), inner.height() - height);
+		container->setFixedSize(inner.width(), inner.height() - height);
 		bottom->resizeToWidth(inner.width());
 	}, bottom->lifetime());
 	container->show();
@@ -702,6 +702,10 @@ postEvent: function(eventType, eventData) {
 	}
 }
 };)");
+
+	if (!_webview) {
+		return false;
+	}
 
 	setupProgressGeometry();
 
@@ -1177,7 +1181,7 @@ void Panel::createMainButton() {
 		}
 		button->move(inner.x(), inner.y() + inner.height() - height);
 		if (const auto raw = _webviewParent.data()) {
-			raw->resize(inner.width(), inner.height() - height);
+			raw->setFixedSize(inner.width(), inner.height() - height);
 		}
 		button->resizeToWidth(inner.width());
 		_webviewBottom->setVisible(!shown);
