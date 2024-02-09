@@ -1,3 +1,10 @@
+4.14.14.1 (10.02.24)
+
+- Show online counter in large groups
+- Updated themes
+- Official changelog:
+- Fix webview regression on Linux X11.
+
 4.14.13.1 (03.02.24)
 
 - Updated themes
