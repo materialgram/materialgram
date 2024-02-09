@@ -72,8 +72,8 @@ void PaintOutlineSegments(
 QLinearGradient UnreadStoryOutlineGradient(QRectF rect) {
 	auto result = QLinearGradient(rect.topRight(), rect.bottomLeft());
 	result.setStops({
-		{ 0., st::groupCallLive1->c },
-		{ 1., st::groupCallMuted1->c },
+		{ 0., st::windowBgActive->c },
+		{ 1., st::windowBgActive->c },
 	});
 	return result;
 }
