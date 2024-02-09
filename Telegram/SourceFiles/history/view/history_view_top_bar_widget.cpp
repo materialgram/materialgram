@@ -1198,9 +1198,7 @@ void TopBarWidget::updateMembersShowArea() {
 		} else if (const auto chat = peer->asChat()) {
 			return chat->amIn();
 		} else if (const auto megagroup = peer->asMegagroup()) {
-			return megagroup->canViewMembers()
-				&& (megagroup->membersCount()
-					< megagroup->session().serverConfig().chatSizeMax);
+			return megagroup->canViewMembers();
 		}
 		return false;
 	}();
@@ -1638,9 +1636,7 @@ void TopBarWidget::updateOnlineDisplay() {
 	} else if (const auto channel = peer->asChannel()) {
 		if (channel->isMegagroup()
 			&& channel->canViewMembers()
-			&& (channel->membersCount() > 0)
-			&& (channel->membersCount()
-				<= channel->session().serverConfig().chatSizeMax)) {
+			&& channel->membersCount() > 0) {
 			if (channel->lastParticipantsRequestNeeded()) {
 				session().api().chatParticipants().requestLast(channel);
 			}
