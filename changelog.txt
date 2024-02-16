@@ -1,3 +1,10 @@
+4.14.16.1 (16.02.24)
+
+- Updated icons
+- Official changelog:
+- Boost groups.
+- Fix webview regression on Linux X11. (2nd attempt)
+
 4.14.14.1 (10.02.24)
 
 - Show online counter in large groups
