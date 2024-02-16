@@ -356,6 +356,7 @@ HistoryInner::HistoryInner(
 		_theme = std::move(theme);
 		controller->setChatStyleTheme(_theme);
 	}, lifetime());
+	Assert(_theme != nullptr);
 
 	setAttribute(Qt::WA_AcceptTouchEvents);
 
