@@ -1,3 +1,13 @@
+4.15.0.1 (16.02.24)
+
+- Updated Day theme
+- Updated icons
+- Official changelog:
+- Stories from groups.
+- Group appearance settings.
+- Group emoji pack.
+- Boost groups to unlock features.
+
 4.14.16.1 (16.02.24)
 
 - Updated icons
