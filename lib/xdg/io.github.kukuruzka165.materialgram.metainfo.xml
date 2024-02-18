@@ -25,8 +25,8 @@
     <keywords>
         <keyword>tg</keyword>
         <keyword>telegram</keyword>
-	<keyword>tdesktop</keyword>
-	<keyword>materialgram</keyword>
+		<keyword>tdesktop</keyword>
+		<keyword>materialgram</keyword>
         <keyword>messaging</keyword>
         <keyword>messenger</keyword>
         <keyword>chat</keyword>
@@ -34,12 +34,12 @@
         <keyword>im</keyword>
     </keywords>
     <requires>
-        <display_length compare="ge">medium</display_length>
+        <display_length compare="ge">480</display_length>
         <internet>always</internet>
+		<control>keyboard</control>
     </requires>
     <supports>
         <control>pointing</control>
-        <control>keyboard</control>
         <control>touch</control>
     </supports>
     <content_rating type="oars-1.1">
@@ -75,5 +75,7 @@
     <launchable type="desktop-id">io.github.kukuruzka165.materialgram.desktop</launchable>
     <provides>
         <binary>materialgram</binary>
+		<dbus type="session">io.github.kukuruzka165.materialgram</dbus>
+        <mediatype>x-scheme-handler/tg</mediatype>
     </provides>
 </component>
