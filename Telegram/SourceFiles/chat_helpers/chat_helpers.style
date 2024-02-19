@@ -298,7 +298,8 @@ stickersTrendingAddTop: 14px;
 stickersTrendingAdd: RoundButton(defaultActiveButton) {
 	width: -16px;
 	height: 26px;
-	textTop: 4px;
+	textTop: 5px;
+	radius: 10px;
 }
 stickersTrendingInstalled: RoundButton(stickersTrendingAdd) {
 	textFg: activeButtonBg;
