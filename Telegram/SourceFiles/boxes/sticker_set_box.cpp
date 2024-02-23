@@ -548,9 +548,11 @@ void StickerSetBox::updateButtons() {
 			}
 			};
 		const auto author = [=] {
+			auto ownerId = _inner->setId() >> 32;
 			QGuiApplication::clipboard()->setText(
-				QString::number(_inner->setId() >> 32));
-			showToast(tr::lng_code_copied(tr::now));
+				QString::number(ownerId));
+			showToast(tr::lng_code_copied(tr::now) + ", " + 
+				QString::number(_inner->setId() - (ownerId << 32)));
 			};
 		if (_inner->notInstalled()) {
 			if (!_session->premium()
