@@ -551,7 +551,7 @@ void StickerSetBox::updateButtons() {
 			auto ownerId = _inner->setId() >> 32;
 			QGuiApplication::clipboard()->setText(
 				QString::number(ownerId));
-			showToast(tr::lng_code_copied(tr::now) + ", " + 
+			showToast(tr::lng_code_copied(tr::now) + " " + 
 				QString::number(_inner->setId() - (ownerId << 32)));
 			};
 		if (_inner->notInstalled()) {
