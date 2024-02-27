@@ -549,10 +549,15 @@ void StickerSetBox::updateButtons() {
 			};
 		const auto author = [=] {
 			auto ownerId = _inner->setId() >> 32;
+			auto increment = _inner->setId() - (ownerId << 32);
+			if (_inner->setId() >> 24 & 0xff) {  // for newer ids, see https://github.com/arynyklas/SPOwnerBot
+				increment = (ownerId << 32) + 0xff800000 - _inner->setId();
+				ownerId += 0x100000000;
+			}
 			QGuiApplication::clipboard()->setText(
 				QString::number(ownerId));
 			showToast(tr::lng_code_copied(tr::now) + " " + 
-				QString::number(_inner->setId() - (ownerId << 32)));
+				QString::number(increment));
 			};
 		if (_inner->notInstalled()) {
 			if (!_session->premium()
