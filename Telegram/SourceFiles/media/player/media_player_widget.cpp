@@ -259,7 +259,7 @@ void Widget::setShadowGeometryToLeft(int x, int y, int w, int h) {
 
 void Widget::showShadowAndDropdowns() {
 	_shadow->show();
-	_playbackSlider->setVisible(_type == AudioMsgId::Type::Song);
+	_playbackSlider->show();
 	if (_volumeHidden) {
 		_volumeHidden = false;
 		_volume->show();
