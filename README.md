@@ -23,13 +23,15 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Included own Material You theme with colorizer ([Day](https://t.me/addtheme/materialgram_day), [Dark](https://t.me/addtheme/materialgram_dark))
 - **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
 - Material icons instead of default ones
-- Added the ability to seek round videos (experimental)
-- Added the ability to delete more than 100 messages at once (experimental)
+- Ability to seek round videos (experimental)
+- Ability to delete more than 100 messages at once (experimental)
+- Ability to copy the sticker set author's id and increment
 - Added admin menu and chat log buttons above the members list
+- Copy usernames as @example if possible
 - Removed message bubble tails and reverted old paddings
 - Removed "large emoji" outline
 - Replaced all sounds
-- Reduced image compression
+- Reduced image compression (94% on photos, 100% on wallpapers)
 - Reduced minimum window size
 - Reduced minimum brush thickness in the photo editor
 - Reduced use of uppercase in the interface
@@ -37,11 +39,17 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Increased upload speed
 - Increased max accounts limit from 3/6 to 10/20
 - Improved spoiler animation
-- Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers" + ability to copy the author's id
+- Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers"
 - Improved chat export. 10000 messages in one html document and faster file download
 - Show more recent stickers
+- Show online counter in large groups (experimental)
 - Show the approximate date of account creation in the profile
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
+
+## Arch install script by [@omansh-krishn](https://github.com/omansh-krishn)
+```
+sudo sh -c "curl -s https://raw.githubusercontent.com/materialgram/arch/x86_64/installer.sh | bash"
+```
 
 ## Build instructions
 * [Windows 64-bit][win64]
