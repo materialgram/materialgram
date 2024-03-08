@@ -1,3 +1,14 @@
+4.15.1.1 (08.03.24)
+
+- Reduced message tooltip timeout
+- Improved spoilers (once again)
+- Fixed sticker pack author for newer ids
+- Show increment when copying sticker pack author id
+- Fixed add recommended folder button
+- Updated icons
+- Official changelog:
+- Telegram Business features.
+
 4.15.0.1 (16.02.24)
 
 - Updated Day theme
