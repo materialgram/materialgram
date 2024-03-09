@@ -1,4 +1,4 @@
-4.15.1.1 (08.03.24)
+4.15.1.2 (09.03.24)
 
 - Reduced message tooltip timeout
 - Improved spoilers (once again)
