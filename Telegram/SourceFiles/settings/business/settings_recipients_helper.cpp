@@ -253,7 +253,7 @@ void AddBusinessRecipientsSelector(
 		includeInner,
 		tr::lng_chatbots_include_button(),
 		st::settingsChatbotsAdd,
-		{ &st::settingsIconAdd, IconType::Round, &st::windowBgActive });
+		{ &st::settingsIconAdd, IconType::Round, &st::sideBarBg });
 	includeAdd->setClickedCallback([=] {
 		const auto save = [=](Data::BusinessChats value) {
 			change([&](Data::BusinessRecipients &data) {
