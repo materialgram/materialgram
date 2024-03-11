@@ -204,7 +204,7 @@ void AddBusinessRecipientsSelector(
 		excludeInner,
 		tr::lng_chatbots_exclude_button(),
 		st::settingsChatbotsAdd,
-		{ &st::settingsIconRemove, IconType::Round, &st::windowBgActive });
+		{ &st::settingsIconRemove, IconType::Round, &st::sideBarBg });
 	excludeAdd->setClickedCallback([=] {
 		const auto save = [=](Data::BusinessChats value) {
 			change([&](Data::BusinessRecipients &data) {

@@ -104,12 +104,12 @@ settingsStoriesIconDownload: icon {{ "menu/download", premiumButtonBg1 }};
 settingsStoriesIconCaption: icon {{ "settings/premium/stories_caption", premiumButtonBg1 }};
 settingsStoriesIconLinks: icon {{ "menu/links_profile", premiumButtonBg1 }};
 
-settingsBusinessIconLocation: icon {{ "settings/premium/business/business_location", settingsIconFg }};
-settingsBusinessIconHours: icon {{ "settings/premium/business/business_hours", settingsIconFg }};
-settingsBusinessIconReplies: icon {{ "settings/premium/business/business_quick", settingsIconFg }};
-settingsBusinessIconGreeting: icon {{ "settings/premium/status", settingsIconFg }};
-settingsBusinessIconAway: icon {{ "settings/premium/business/business_away", settingsIconFg }};
-settingsBusinessIconChatbots: icon {{ "settings/premium/business/business_chatbots", settingsIconFg }};
+settingsBusinessIconLocation: icon {{ "settings/premium/business/business_location", windowFgActive }};
+settingsBusinessIconHours: icon {{ "settings/premium/business/business_hours", windowFgActive }};
+settingsBusinessIconReplies: icon {{ "settings/premium/business/business_quick", windowFgActive }};
+settingsBusinessIconGreeting: icon {{ "settings/premium/status", windowFgActive }};
+settingsBusinessIconAway: icon {{ "settings/premium/business/business_away", windowFgActive }};
+settingsBusinessIconChatbots: icon {{ "settings/premium/business/business_chatbots", windowFgActive }};
 
 settingsPremiumNewBadge: FlatLabel(defaultFlatLabel) {
 	style: TextStyle(semiboldTextStyle) {
