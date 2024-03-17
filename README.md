@@ -46,7 +46,14 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Show the approximate date of account creation in the profile
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
 
-## Arch install script by [@omansh-krishn](https://github.com/omansh-krishn)
+## For Arch Linux users [@omansh-krishn](https://github.com/omansh-krishn) made a [PKG repository](https://github.com/materialgram/arch.git)
+You can use it right away by adding this to your pacman.conf
+```
+[materialgram]
+SigLevel = Never
+Server = https://$repo.github.io/arch
+```
+Or you can use this script
 ```
 sudo sh -c "curl -s https://raw.githubusercontent.com/materialgram/arch/x86_64/installer.sh | bash"
 ```
