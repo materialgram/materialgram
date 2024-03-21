@@ -516,6 +516,7 @@ QByteArray Parser::block(
 	const auto id = Number(photo.id);
 	result = tag("a", {
 		{ "href", href },
+		{ "oncontextmenu", data.vurl() ? QByteArray() : "return false;" },
 		{ "data-context", data.vurl() ? QByteArray() : "viewer-photo" + id },
 	}, result) + caption(data.vcaption());
 	return result;
@@ -576,6 +577,7 @@ QByteArray Parser::block(
 		const auto href = resource("video" + id);
 		result = tag("a", {
 			{ "href", href },
+			{ "oncontextmenu", "return false;" },
 			{ "data-context", "viewer-video" + id },
 		}, result);
 	}
@@ -745,6 +747,7 @@ QByteArray Parser::block(const MTPDpageBlockAudio &data) {
 	const auto src = documentFullUrl(audio);
 	return tag("figure", tag("audio", {
 		{ "src", src },
+		{ "oncontextmenu", "return false;" },
 		{ "controls", std::nullopt },
 	}) + caption(data.vcaption()));
 }
@@ -848,7 +851,7 @@ QByteArray Parser::block(const MTPDpageRelatedArticle &data) {
 			inner += tag(
 				"span",
 				{ { "class", "related-link-source" } },
-				EscapeText(utf(*author)
+				EscapeText((author ? utf(*author) : QByteArray())
 					+ separator
 					+ langDateTimeFull(parsed).toUtf8()));
 		}

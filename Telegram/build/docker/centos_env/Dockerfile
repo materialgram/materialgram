@@ -54,7 +54,7 @@ FROM builder AS patches
 RUN git init patches \
 	&& cd patches \
 	&& git remote add origin {{ GIT }}/desktop-app/patches.git \
-	&& git fetch --depth=1 origin cc0c2f83650bbd52064bb7bc7257c950822cce5b \
+	&& git fetch --depth=1 origin 75140a10eefcecaad7b3f3aa4586b880a39007ff \
 	&& git reset --hard FETCH_HEAD \
 	&& rm -rf .git
 
@@ -171,7 +171,7 @@ RUN git clone -b v1.4 --depth=1 {{ GIT }}/xiph/opus.git \
 FROM builder AS dav1d
 COPY --link --from=nasm {{ LibrariesPath }}/nasm-cache /
 
-RUN git clone -b 1.2.1 --depth=1 {{ GIT }}/videolan/dav1d.git \
+RUN git clone -b 1.4.1 --depth=1 {{ GIT }}/videolan/dav1d.git \
 	&& cd dav1d \
 	&& meson build \
 		--buildtype=plain \
@@ -184,7 +184,7 @@ RUN git clone -b 1.2.1 --depth=1 {{ GIT }}/videolan/dav1d.git \
 	&& rm -rf dav1d
 
 FROM builder AS libde265
-RUN git clone -b v1.0.12 --depth=1 {{ GIT }}/strukturag/libde265.git \
+RUN git clone -b v1.0.15 --depth=1 {{ GIT }}/strukturag/libde265.git \
 	&& cd libde265 \
 	&& cmake -GNinja . \
 		-DCMAKE_BUILD_TYPE=None \
@@ -238,7 +238,7 @@ RUN git clone -b chrome-m116-5845 --depth=1 {{ GIT }}/webmproject/libwebp.git \
 FROM builder AS libavif
 COPY --link --from=dav1d {{ LibrariesPath }}/dav1d-cache /
 
-RUN git clone -b v1.0.1 --depth=1 {{ GIT }}/AOMediaCodec/libavif.git \
+RUN git clone -b v1.0.4 --depth=1 {{ GIT }}/AOMediaCodec/libavif.git \
 	&& cd libavif \
 	&& cmake -GNinja -B build . \
 		-DCMAKE_BUILD_TYPE=None \
@@ -252,11 +252,12 @@ RUN git clone -b v1.0.1 --depth=1 {{ GIT }}/AOMediaCodec/libavif.git \
 FROM builder AS libheif
 COPY --link --from=libde265 {{ LibrariesPath }}/libde265-cache /
 
-RUN git clone -b v1.16.2 --depth=1 {{ GIT }}/strukturag/libheif.git \
+RUN git clone -b v1.17.6 --depth=1 {{ GIT }}/strukturag/libheif.git \
 	&& cd libheif \
 	&& cmake -GNinja -B build . \
 		-DCMAKE_BUILD_TYPE=None \
 		-DBUILD_SHARED_LIBS=OFF \
+		-DBUILD_TESTING=OFF \
 		-DENABLE_PLUGIN_LOADING=OFF \
 		-DWITH_X265=OFF \
 		-DWITH_AOM_DECODER=OFF \
@@ -705,27 +706,6 @@ RUN git clone -b 2.78.1 --depth=1 {{ GIT }}/GNOME/glib.git \
 	&& cd .. \
 	&& rm -rf glib
 
-FROM patches AS glibmm
-COPY --link --from=glib {{ LibrariesPath }}/glib-cache /
-
-RUN git clone -b 2.78.0 --depth=1 {{ GIT }}/GNOME/glibmm.git \
-	&& cd glibmm \
-	&& git apply ../patches/glibmm.patch \
-	&& CFLAGS="$CFLAGS {{ CFLAGS_LTO }}" CXXFLAGS="$CXXFLAGS {{ CFLAGS_LTO }}" meson build \
-		--buildtype=plain \
-		--default-library=both \
-		-Dbuild-documentation=false \
-		-Dbuild-examples=false \
-		-Dsigc++-3.0:build-documentation=false \
-		-Dsigc++-3.0:build-examples=false \
-		-Dsigc++-3.0:build-tests=false \
-		-Dsigc++-3.0:validation=false \
-		-Dmm-common:use-network=true \
-	&& meson compile -C build \
-	&& DESTDIR="{{ LibrariesPath }}/glibmm-cache" meson install -C build \
-	&& cd .. \
-	&& rm -rf glibmm
-
 FROM builder AS gobject-introspection
 COPY --link --from=glib {{ LibrariesPath }}/glib-cache /
 
@@ -873,7 +853,6 @@ COPY --link --from=openal {{ LibrariesPath }}/openal-cache /
 COPY --link --from=openssl {{ LibrariesPath }}/openssl-cache /
 COPY --link --from=xkbcommon {{ LibrariesPath }}/xkbcommon-cache /
 COPY --link --from=glib {{ LibrariesPath }}/glib-cache /
-COPY --link --from=glibmm {{ LibrariesPath }}/glibmm-cache /
 COPY --link --from=gobject-introspection {{ LibrariesPath }}/gobject-introspection-cache /
 COPY --link --from=qt {{ LibrariesPath }}/qt-cache /
 COPY --link --from=breakpad {{ LibrariesPath }}/breakpad-cache /

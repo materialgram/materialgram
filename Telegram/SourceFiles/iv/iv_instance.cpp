@@ -47,7 +47,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "window/window_session_controller.h"
 #include "window/window_session_controller_link_info.h"
 
-#include <QtGui/QDesktopServices>
 #include <QtGui/QGuiApplication>
 
 namespace Iv {
@@ -708,7 +707,7 @@ void Shown::streamMap(QString params, Webview::DataRequest request) {
 void Shown::sendEmbed(QByteArray hash, Webview::DataRequest request) {
 	const auto i = _embeds.find(hash);
 	if (i != end(_embeds)) {
-		requestDone(std::move(request), i->second, "text/html");
+		requestDone(std::move(request), i->second, "text/html; charset=utf-8");
 	} else {
 		requestFail(std::move(request));
 	}
@@ -832,7 +831,8 @@ void Instance::show(
 			processJoinChannel(event.context);
 			break;
 		case Type::OpenLinkExternal:
-			QDesktopServices::openUrl(event.url);
+			File::OpenUrl(event.url);
+			closeAll();
 			break;
 		case Type::OpenMedia:
 			if (const auto window = Core::App().activeWindow()) {

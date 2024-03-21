@@ -172,7 +172,9 @@ ScheduledWidget::ScheduledWidget(
 		if (const auto item = session().data().message(fullId)) {
 			const auto media = item->media();
 			if (!media || media->webpage() || media->allowsEditCaption()) {
-				_composeControls->editMessage(fullId);
+				_composeControls->editMessage(
+					fullId,
+					_inner->getSelectedTextRange(item));
 			}
 		}
 	}, _inner->lifetime());
@@ -252,7 +254,8 @@ void ScheduledWidget::setupComposeControls() {
 					& ~ChatRestriction::SendPolls;
 				const auto canSendAnything = Data::CanSendAnyOf(
 					_history->peer,
-					allWithoutPolls);
+					allWithoutPolls,
+					false);
 				const auto restriction = Data::RestrictionError(
 					_history->peer,
 					ChatRestriction::SendOther);
@@ -650,7 +653,11 @@ void ScheduledWidget::send() {
 	const auto error = GetErrorTextForSending(
 		_history->peer,
 		{
-			.topicRootId = _forumTopic ? _forumTopic->topicRootId() : MsgId(),
+			.topicRootId = _forumTopic
+				? _forumTopic->topicRootId()
+				: history()->isForum()
+				? MsgId(1)
+				: MsgId(),
 			.forward = nullptr,
 			.text = &textWithTags,
 			.ignoreSlowmodeCountdown = true,
@@ -1143,7 +1150,7 @@ QRect ScheduledWidget::floatPlayerAvailableRect() {
 }
 
 Context ScheduledWidget::listContext() {
-	return Context::History;
+	return _forumTopic ? Context::ScheduledTopic : Context::History;
 }
 
 bool ScheduledWidget::listScrollTo(int top, bool syntetic) {
