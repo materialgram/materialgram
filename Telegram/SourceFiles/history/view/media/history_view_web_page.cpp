@@ -138,7 +138,7 @@ constexpr auto kMaxOriginalEntryLines = 8192;
 
 [[nodiscard]] TextWithEntities PageToPhrase(not_null<WebPageData*> page) {
 	const auto type = page->type;
-	const auto text = Ui::Text::Upper(page->iv
+	const auto text = page->iv
 		? tr::lng_view_button_iv(tr::now)
 		: (type == WebPageType::Theme)
 		? tr::lng_view_button_theme(tr::now)
@@ -169,7 +169,7 @@ constexpr auto kMaxOriginalEntryLines = 8192;
 		? tr::lng_view_button_user(tr::now)
 		: (type == WebPageType::BotApp)
 		? tr::lng_view_button_bot_app(tr::now)
-		: QString());
+		: QString();
 	if (page->iv) {
 		const auto manager = &page->owner().customEmojiManager();
 		const auto &icon = st::historyIvIcon;
@@ -263,7 +263,7 @@ QSize WebPage::countOptimalSize() {
 		if (!_sponsoredData->buttonText.isEmpty()) {
 			_openButton.setText(
 				st::semiboldTextStyle,
-				Ui::Text::Upper(_sponsoredData->buttonText));
+				_sponsoredData->buttonText);
 		}
 	}
 
