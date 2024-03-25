@@ -63,6 +63,11 @@ PRIVATE
     calls/group/ui/desktop_capture_choose_source.cpp
     calls/group/ui/desktop_capture_choose_source.h
 
+    chat_helpers/field_characters_count_manager.cpp
+    chat_helpers/field_characters_count_manager.h
+    chat_helpers/stickers_emoji_image_loader.cpp
+    chat_helpers/stickers_emoji_image_loader.h
+
     core/file_location.cpp
     core/file_location.h
     core/mime_type.cpp
@@ -398,6 +403,9 @@ PRIVATE
     ui/widgets/fields/special_fields.h
     ui/widgets/fields/time_part_input_with_placeholder.cpp
     ui/widgets/fields/time_part_input_with_placeholder.h
+
+    window/window_slide_animation.cpp
+    window/window_slide_animation.h
 
     ui/ui_pch.h
 )

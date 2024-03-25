@@ -392,8 +392,6 @@ PRIVATE
     chat_helpers/spellchecker_common.h
     chat_helpers/stickers_dice_pack.cpp
     chat_helpers/stickers_dice_pack.h
-    chat_helpers/stickers_emoji_image_loader.cpp
-    chat_helpers/stickers_emoji_image_loader.h
     chat_helpers/stickers_emoji_pack.cpp
     chat_helpers/stickers_emoji_pack.h
     chat_helpers/stickers_gift_box_pack.cpp
@@ -997,6 +995,8 @@ PRIVATE
     intro/intro_step.h
     intro/intro_widget.cpp
     intro/intro_widget.h
+    iv/iv_delegate_impl.cpp
+    iv/iv_delegate_impl.h
     iv/iv_instance.cpp
     iv/iv_instance.h
     lang/lang_cloud_manager.cpp
@@ -1497,8 +1497,6 @@ PRIVATE
     window/window_session_controller.cpp
     window/window_session_controller.h
     window/window_session_controller_link_info.h
-    window/window_slide_animation.cpp
-    window/window_slide_animation.h
     window/window_top_bar_wrap.h
     window/themes/window_theme.cpp
     window/themes/window_theme.h
