@@ -337,7 +337,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_edit_caption_voice" = "Sorry, you can't edit your message while you're having an unsent voice message.";
 
 "lng_intro_about" = "Welcome to the official Telegram Desktop app.\nIt's fast and secure.";
-"materialgram_intro_about" = "Thanks for installing!\nNew releases are available in @materialgram channel or on GitHub\n";
+"materialgram_intro_about" = "Thanks for installing!\nNew releases are available in @materialgram channel or on GitHub";
 "lng_start_msgs" = "Start messaging";
 
 "lng_intro_next" = "Next";
@@ -1306,6 +1306,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_via_link_shared_many#one" = "Link shared with **{count} user**.";
 "lng_via_link_shared_many#other" = "Link shared with **{count} users**.";
 
+"materialgram_info_registration" = "Registration date";
 "lng_info_mobile_label" = "Mobile";
 "lng_info_mobile_context_menu_fragment_about" = "This number is not tied to a SIM card and was acquired on {link}.";
 "lng_info_mobile_context_menu_fragment_about_link" = "Fragment";

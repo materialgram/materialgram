@@ -352,7 +352,7 @@ void SetupMaterialgram(
 	const auto settings = &Core::App().settings();
 	const auto button = container->add(object_ptr<Button>(
 		container,
-		tr::lng_passport_birth_date(),
+		tr::materialgram_info_registration(),
 		st::settingsButtonNoIcon
 	))->toggleOn(
 		rpl::single(settings->birthDateEnabled())

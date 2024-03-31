@@ -954,7 +954,7 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 			st::infoProfileLabeledUsernamePadding);
 		if (Core::App().settings().birthDateEnabled()) {
 			addInfoOneLine(
-				tr::lng_passport_birth_date(),
+				tr::materialgram_info_registration(),
 				RegistrationValue(user),
 				tr::lng_context_copy_text(tr::now));
 		}
