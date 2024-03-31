@@ -225,7 +225,8 @@ QString findRegistrationTime(long long userId) {
 		{6527226055, 1690289160},
 		{6813121418, 1698489600},
 		{6865576492, 1699052400},
-		{6925870357, 1701192327}
+		{6925870357, 1701192327},
+		{7000000000, 1711889200} // 2024
 	};
 	std::sort(userData.begin(), userData.end(), [](const UserData& a, const UserData& b) {
 		return a.id < b.id;
@@ -242,7 +243,7 @@ QString findRegistrationTime(long long userId) {
 		return parseRegistrationTime("< ", 1380326400);
 	}
 	else {
-		return parseRegistrationTime("> ", 1701192327);
+		return parseRegistrationTime("> ", 1711889200);
 	}
 }
 
