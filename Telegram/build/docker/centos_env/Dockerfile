@@ -51,7 +51,7 @@ FROM builder AS patches
 RUN git init patches \
 	&& cd patches \
 	&& git remote add origin {{ GIT }}/desktop-app/patches.git \
-	&& git fetch --depth=1 origin b85bc8bb1ba866dfa3d1ee983dc642fa6ccff12a \
+	&& git fetch --depth=1 origin 7b8f30b787691a325d17e20ddd455e87738e7432 \
 	&& git reset --hard FETCH_HEAD \
 	&& rm -rf .git
 
@@ -79,7 +79,7 @@ RUN git init zlib \
 	&& rm -rf zlib
 
 FROM builder AS xz
-RUN git clone -b v5.4.4 --depth=1 {{ GIT }}/tukaani-project/xz.git \
+RUN git clone -b v5.4.4 --depth=1 https://git.tukaani.org/xz.git \
 	&& cd xz \
 	&& cmake -B build . -DCMAKE_BUILD_TYPE=None \
 	&& cmake --build build -j$(nproc) \

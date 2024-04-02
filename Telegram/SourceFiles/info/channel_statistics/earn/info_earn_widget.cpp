@@ -5,14 +5,14 @@ the official desktop application for the Telegram messaging service.
 For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
-#include "info/boosts/info_boosts_widget.h"
+#include "info/channel_statistics/earn/info_earn_widget.h"
 
-#include "info/boosts/info_boosts_inner_widget.h"
+#include "info/channel_statistics/earn/info_earn_inner_widget.h"
 #include "info/info_controller.h"
 #include "info/info_memento.h"
 #include "lang/lang_keys.h"
 
-namespace Info::Boosts {
+namespace Info::ChannelEarn {
 
 Memento::Memento(not_null<Controller*> controller)
 : ContentMemento(Info::Statistics::Tag{
@@ -29,7 +29,7 @@ Memento::Memento(not_null<PeerData*> peer)
 Memento::~Memento() = default;
 
 Section Memento::section() const {
-	return Section(Section::Type::Boosts);
+	return Section(Section::Type::ChannelEarn);
 }
 
 void Memento::setState(SavedState state) {
@@ -76,7 +76,7 @@ bool Widget::showInternal(not_null<ContentMemento*> memento) {
 }
 
 rpl::producer<QString> Widget::title() {
-	return tr::lng_boosts_title();
+	return tr::lng_channel_earn_title();
 }
 
 void Widget::setInternalState(
@@ -93,6 +93,10 @@ rpl::producer<bool> Widget::desiredShadowVisibility() const {
 
 void Widget::showFinished() {
 	_inner->showFinished();
+}
+
+void Widget::setInnerFocus() {
+	_inner->setInnerFocus();
 }
 
 std::shared_ptr<ContentMemento> Widget::doCreateMemento() {
@@ -118,4 +122,4 @@ std::shared_ptr<Info::Memento> Make(not_null<PeerData*> peer) {
 			std::make_shared<Memento>(peer)));
 }
 
-} // namespace Info::Boosts
+} // namespace Info::ChannelEarn
