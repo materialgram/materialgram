@@ -594,8 +594,8 @@ void StickerSetBox::updateButtons() {
 
 			if (!_inner->shortName().isEmpty()) {
 				const auto top = addTopButton(st::infoTopBarMenu);
-				const auto menu =
-					std::make_shared<base::unique_qptr<Ui::PopupMenu>>();
+				const auto menu
+					= std::make_shared<base::unique_qptr<Ui::PopupMenu>>();
 				top->setClickedCallback([=] {
 					*menu = base::make_unique_q<Ui::PopupMenu>(
 						top,
@@ -629,6 +629,16 @@ void StickerSetBox::updateButtons() {
 				};
 				const auto menu =
 					std::make_shared<base::unique_qptr<Ui::PopupMenu>>();
+				const auto remove = [=] {
+					const auto session = &_show->session();
+					auto box = ChatHelpers::MakeConfirmRemoveSetBox(
+						session,
+						st::boxLabel,
+						_inner->setId());
+					if (box) {
+						_show->showBox(std::move(box));
+					}
+				};
 				top->setClickedCallback([=] {
 					*menu = base::make_unique_q<Ui::PopupMenu>(
 						top,
