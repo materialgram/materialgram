@@ -1,8 +1,16 @@
+4.16.7.1 (15.04.24)
+
+- Official changelog:
+- Reimplement file open confirmations.
+- Show custom emoji preview on long press.
+- Fix resume chat bot button disappearance.
+- Fix GIF files playback. (regression in 4.16.3.beta)
+- Fix editing privacy for groups and channels invitations.
+- Possible fix for the network unresponsiveness after sleep.
+- Possible fix for wide range of memory allocator crashes on Linux.
+
 4.16.4.1 (07.04.24)
 
-- Updated registration date database
-- Updated icons
-- Translate "Registration date"
 - Official changelog:
 - Show information about Fragment phone numbers and usernames.
 - Fix jump to original story from a story repost.
