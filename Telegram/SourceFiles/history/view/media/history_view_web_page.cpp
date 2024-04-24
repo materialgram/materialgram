@@ -150,7 +150,7 @@ constexpr auto kStickerSetLines = 3;
 
 [[nodiscard]] TextWithEntities PageToPhrase(not_null<WebPageData*> page) {
 	const auto type = page->type;
-	const auto text = Ui::Text::Upper(page->iv
+	const auto text = page->iv
 		? tr::lng_view_button_iv(tr::now)
 		: (type == WebPageType::Theme)
 		? tr::lng_view_button_theme(tr::now)
@@ -186,7 +186,7 @@ constexpr auto kStickerSetLines = 3;
 		? tr::lng_view_button_emojipack(tr::now)
 		: (type == WebPageType::StickerSet)
 		? tr::lng_view_button_stickerset(tr::now)
-		: QString());
+		: QString();
 	if (page->iv) {
 		const auto manager = &page->owner().customEmojiManager();
 		const auto &icon = st::historyIvIcon;
