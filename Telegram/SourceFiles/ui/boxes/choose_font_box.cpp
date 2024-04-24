@@ -567,7 +567,6 @@ std::vector<Selector::Entry> Selector::FullList(const QString &now) {
 		.replyBar = st::msgInReplyBarColor->c,
 		.replyNameFg = st::msgInServiceFg->c,
 		.textFg = st::historyTextInFg->c,
-		.bubbleTail = st::historyBubbleTailInLeft.instance(st::msgInBg->c),
 	};
 }
 
@@ -609,15 +608,6 @@ void PreviewPainter::paintBubble(QPainter &p) {
 		bubble.height() + st::msgShadow - cornerShadow.height(),
 		_bubbleShadowBottomRight);
 	Ui::FillRoundRect(p, bubble, _msgBg.color(), _bubbleCorners);
-	const auto &bubbleTail = _request.bubbleTail;
-	const auto tail = bubbleTail.size() / bubbleTail.devicePixelRatio();
-	p.drawImage(-tail.width(), bubble.height() - tail.height(), bubbleTail);
-	p.fillRect(
-		-tail.width(),
-		bubble.height(),
-		tail.width() + bubble.width() - cornerShadow.width(),
-		st::msgShadow,
-		_request.msgShadow);
 	p.translate(_content.topLeft());
 	const auto local = _content.translated(-_content.topLeft());
 	p.setClipRect(local);
@@ -630,7 +620,6 @@ void PreviewPainter::validateBubbleCache() {
 	}
 	const auto radius = st::bubbleRadiusLarge;
 	_bubbleCorners = Ui::PrepareCornerPixmaps(radius, _msgBg.color());
-	_bubbleCorners.p[2] = {};
 	_bubbleShadowBottomRight
 		= Ui::PrepareCornerPixmaps(radius, _msgShadow.color()).p[3];
 }
