@@ -880,6 +880,13 @@ public:
 		_ivPosition = position;
 	}
 
+	[[nodiscard]] QString customFontFamily() const {
+		return _customFontFamily;
+	}
+	void setCustomFontFamily(const QString &value) {
+		_customFontFamily = value;
+	}
+
 	[[nodiscard]] static bool ThirdColumnByDefault();
 	[[nodiscard]] static float64 DefaultDialogsWidthRatio();
 
@@ -1009,6 +1016,7 @@ private:
 	rpl::variable<bool> _storiesClickTooltipHidden = false;
 	rpl::variable<bool> _ttlVoiceClickTooltipHidden = false;
 	WindowPosition _ivPosition;
+	QString _customFontFamily;
 
 	bool _tabbedReplacedWithInfo = false; // per-window
 	rpl::event_stream<bool> _tabbedReplacedWithInfoValue; // per-window
