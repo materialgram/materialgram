@@ -278,7 +278,7 @@ QSize WebPage::countOptimalSize() {
 		if (!_sponsoredData->buttonText.isEmpty()) {
 			_openButton.setText(
 				st::semiboldTextStyle,
-				Ui::Text::Upper(_sponsoredData->buttonText));
+				_sponsoredData->buttonText);
 		}
 	}
 
