@@ -1,3 +1,17 @@
+4.16.10.1 (27.04.24)
+
+- Updated icons
+- Official changelog:
+- Group admins can mass-moderate many messages.
+- Premium users can use animated emoji in polls.
+- Show "Frequent contacts" when you focus the search field.
+- Show "Recent chats" when you focus the search field.
+- Show "Channels" and channel recommendations.
+- Allow changing font in Settings > Chat settings > Font family.
+- Fix in-app playing of some video and audio files.
+- Fix crash on Linux opening chats with custom backgrounds.
+- Fix crash on quit after using scheduled messages.
+
 4.16.7.1 (15.04.24)
 
 - Official changelog:
