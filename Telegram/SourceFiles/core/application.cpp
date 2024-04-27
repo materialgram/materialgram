@@ -243,14 +243,10 @@ Application::~Application() {
 	Media::Player::finish(_audio.get());
 	style::stopManager();
 
-	ThirdParty::finish();
-
 	Instance = nullptr;
 }
 
 void Application::run() {
-	ThirdParty::start();
-
 	// Depends on OpenSSL on macOS, so on ThirdParty::start().
 	// Depends on notifications settings.
 	_notifications = std::make_unique<Window::Notifications::System>();
@@ -1527,14 +1523,14 @@ void Application::closeChatFromWindows(not_null<PeerData*> peer) {
 		}
 	}
 	if (const auto window = windowFor(&peer->account())) {
-		const auto primary = window->sessionController();
-		if ((primary->activeChatCurrent().peer() == peer)
-			&& (&primary->session() == &peer->session())) {
-			primary->clearSectionStack();
-		}
-		if (const auto forum = primary->shownForum().current()) {
-			if (peer->forum() == forum) {
-				primary->closeForum();
+		if (const auto primary = window->sessionController()) {
+			if (primary->activeChatCurrent().peer() == peer) {
+				primary->clearSectionStack();
+			}
+			if (const auto forum = primary->shownForum().current()) {
+				if (peer->forum() == forum) {
+					primary->closeForum();
+				}
 			}
 		}
 	}

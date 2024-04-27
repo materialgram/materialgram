@@ -1107,6 +1107,13 @@ void Widget::updateHasFocus(not_null<QWidget*> focused) {
 	}
 }
 
+bool Widget::cancelSearchByMouseBack() {
+	return _searchHasFocus
+		&& !_searchSuggestionsLocked
+		&& !_searchInChat
+		&& cancelSearch();
+}
+
 void Widget::processSearchFocusChange() {
 	_searchSuggestionsLocked = _suggestions && _suggestions->persist();
 	updateCancelSearch();
@@ -1788,6 +1795,8 @@ void Widget::escape() {
 			const auto first = list.empty() ? FilterId() : list.front().id();
 			if (controller()->activeChatsFilterCurrent() != first) {
 				controller()->setActiveChatsFilter(first);
+			} else {
+				_search->setFocus();
 			}
 		}
 	} else if (!_searchInChat
@@ -2575,9 +2584,9 @@ void Widget::listScrollUpdated() {
 }
 
 void Widget::updateCancelSearch() {
-	const auto shown = _searchHasFocus
-		|| _searchSuggestionsLocked
-		|| !_search->getLastText().isEmpty();
+	const auto shown = !_search->getLastText().isEmpty()
+		|| (!_searchInChat
+			&& (_searchHasFocus || _searchSuggestionsLocked));
 	_cancelSearch->toggle(shown, anim::type::normal);
 }
 
@@ -2970,12 +2979,14 @@ void Widget::updateLockUnlockVisibility(anim::type animated) {
 		return;
 	}
 	const auto hidden = !session().domain().local().hasLocalPasscode()
-		|| (_showAnimation != nullptr)
+		|| _showAnimation
 		|| _openedForum
 		|| !_widthAnimationCache.isNull()
 		|| _childList
-		|| !_search->getLastText().isEmpty()
-		|| _searchInChat;
+		|| _searchHasFocus
+		|| _searchSuggestionsLocked
+		|| _searchInChat
+		|| !_search->getLastText().isEmpty();
 	if (_lockUnlock->toggled() == hidden) {
 		const auto stories = _stories && !_stories->empty();
 		_lockUnlock->toggle(
@@ -3253,13 +3264,7 @@ void Widget::keyPressEvent(QKeyEvent *e) {
 		} else {
 			_inner->selectSkipPage(_scroll->height(), -1);
 		}
-	} else if (!(e->modifiers() & ~Qt::ShiftModifier)
-		&& e->key() != Qt::Key_Shift
-		&& !_openedFolder
-		&& !_openedForum
-		&& _search->isVisible()
-		&& !_search->hasFocus()
-		&& !e->text().isEmpty()) {
+	} else if (redirectKeyToSearch(e)) {
 		// This delay in search focus processing allows us not to create
 		// _suggestions in case the event inserts some non-whitespace search
 		// query while still show _suggestions animated, if it is a space.
@@ -3271,6 +3276,31 @@ void Widget::keyPressEvent(QKeyEvent *e) {
 	} else {
 		e->ignore();
 	}
+}
+
+bool Widget::redirectKeyToSearch(QKeyEvent *e) const {
+	if (_openedFolder
+		|| _openedForum
+		|| !_search->isVisible()
+		|| _search->hasFocus()) {
+		return false;
+	}
+	const auto character = !(e->modifiers() & ~Qt::ShiftModifier)
+		&& (e->key() != Qt::Key_Shift)
+		&& !e->text().isEmpty();
+	if (character) {
+		return true;
+	} else if (e != QKeySequence::Paste) {
+		return false;
+	}
+	const auto useSelectionMode = (e->key() == Qt::Key_Insert)
+		&& (e->modifiers() == (Qt::CTRL | Qt::SHIFT))
+		&& QGuiApplication::clipboard()->supportsSelection();
+	const auto pasteMode = useSelectionMode
+		? QClipboard::Selection
+		: QClipboard::Clipboard;
+	const auto data = QGuiApplication::clipboard()->mimeData(pasteMode);
+	return data && data->hasText();
 }
 
 void Widget::paintEvent(QPaintEvent *e) {

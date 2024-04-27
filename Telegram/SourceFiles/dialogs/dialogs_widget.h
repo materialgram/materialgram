@@ -133,6 +133,7 @@ public:
 	QRect floatPlayerAvailableRect() override;
 
 	bool cancelSearch();
+	bool cancelSearchByMouseBack();
 
 	~Widget();
 
@@ -248,6 +249,8 @@ private:
 	void updateLockUnlockPosition();
 	void updateSuggestions(anim::type animated);
 	void processSearchFocusChange();
+
+	[[nodiscard]] bool redirectKeyToSearch(QKeyEvent *e) const;
 
 	MTP::Sender _api;
 
