@@ -1,4 +1,4 @@
-4.16.10.1 (27.04.24)
+4.16.10.2 (27.04.24)
 
 - Updated icons
 - Official changelog:
