@@ -970,6 +970,11 @@ void Suggestions::setupChats() {
 		_chatsScroll->scrollToY(request.ymin, request.ymax);
 	}, _topPeers->lifetime());
 
+	_topPeers->verticalScrollEvents(
+	) | rpl::start_with_next([=](not_null<QWheelEvent*> e) {
+		_chatsScroll->viewportEvent(e);
+	}, _topPeers->lifetime());
+
 	_chatsScroll->setVisible(_tab.current() == Tab::Chats);
 }
 
@@ -1114,6 +1119,39 @@ void Suggestions::chooseRow() {
 	if (!_topPeers->chooseRow()) {
 		_recentPeersChoose();
 	}
+}
+
+Data::Thread *Suggestions::updateFromParentDrag(QPoint globalPosition) {
+	return (_tab.current() == Tab::Chats)
+		? updateFromChatsDrag(globalPosition)
+		: updateFromChannelsDrag(globalPosition);
+}
+
+Data::Thread *Suggestions::updateFromChatsDrag(QPoint globalPosition) {
+	if (const auto top = _topPeers->updateFromParentDrag(globalPosition)) {
+		return _controller->session().data().history(PeerId(top));
+	}
+	return fromListId(_recentUpdateFromParentDrag(globalPosition));
+}
+
+Data::Thread *Suggestions::updateFromChannelsDrag(QPoint globalPosition) {
+	if (const auto id = _myChannelsUpdateFromParentDrag(globalPosition)) {
+		return fromListId(id);
+	}
+	return fromListId(_recommendationsUpdateFromParentDrag(globalPosition));
+}
+
+Data::Thread *Suggestions::fromListId(uint64 peerListRowId) {
+	return peerListRowId
+		? _controller->session().data().history(PeerId(peerListRowId)).get()
+		: nullptr;
+}
+
+void Suggestions::dragLeft() {
+	_topPeers->dragLeft();
+	_recentDragLeft();
+	_myChannelsDragLeft();
+	_recommendationsDragLeft();
 }
 
 void Suggestions::show(anim::type animated, Fn<void()> finish) {
@@ -1299,6 +1337,12 @@ object_ptr<Ui::SlideWrap<>> Suggestions::setupRecentPeers(
 		}
 		return JumpResult::NotApplied;
 	};
+	_recentUpdateFromParentDrag = [=](QPoint globalPosition) {
+		return raw->updateFromParentDrag(globalPosition);
+	};
+	_recentDragLeft = [=] {
+		raw->dragLeft();
+	};
 	raw->scrollToRequests(
 	) | rpl::start_with_next([this](Ui::ScrollToRequest request) {
 		const auto add = _topPeersWrap->toggled() ? _topPeers->height() : 0;
@@ -1433,6 +1477,12 @@ object_ptr<Ui::SlideWrap<>> Suggestions::setupMyChannels() {
 		}
 		return JumpResult::NotApplied;
 	};
+	_myChannelsUpdateFromParentDrag = [=](QPoint globalPosition) {
+		return raw->updateFromParentDrag(globalPosition);
+	};
+	_myChannelsDragLeft = [=] {
+		raw->dragLeft();
+	};
 	raw->scrollToRequests(
 	) | rpl::start_with_next([this](Ui::ScrollToRequest request) {
 		_channelsScroll->scrollToY(request.ymin, request.ymax);
@@ -1493,6 +1543,12 @@ object_ptr<Ui::SlideWrap<>> Suggestions::setupRecommendations() {
 				: JumpResult::NotApplied;
 		}
 		return JumpResult::NotApplied;
+	};
+	_recommendationsUpdateFromParentDrag = [=](QPoint globalPosition) {
+		return raw->updateFromParentDrag(globalPosition);
+	};
+	_recommendationsDragLeft = [=] {
+		raw->dragLeft();
 	};
 	raw->scrollToRequests(
 	) | rpl::start_with_next([this](Ui::ScrollToRequest request) {

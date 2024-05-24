@@ -79,10 +79,6 @@ layout:
   /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/webkitgtk-6.0:
     bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/webkitgtk-6.0
 
-package-repositories:
-  - type: apt
-    ppa: kisak/kisak-mesa
-
 parts:
   telegram:
     plugin: cmake
@@ -109,7 +105,6 @@ parts:
       - libprotobuf-dev
       - libpulse-dev
       - libssl-dev
-      - libwayland-dev
       - libxcb1-dev
       - libxcb-keysyms1-dev
       - libxcb-record0-dev
@@ -119,14 +114,13 @@ parts:
       - libasound2
       - libavif16
       - libboost-regex1.83.0
-      - libglib2.0-0
+      - libglib2.0-0t64
       - libheif1
       - libopenal1
       - libopus0
-      - libprotobuf-lite32
+      - libprotobuf-lite32t64
       - libpulse0
-      - libssl3
-      - libwayland-client0
+      - libssl3t64
       - libwebkitgtk-6.0-4
       - libxcb1
       - libxcb-keysyms1
@@ -171,7 +165,7 @@ parts:
   patches:
     source: https://github.com/desktop-app/patches.git
     source-depth: 1
-    source-commit: ce5098d9bd638ec264fd8cf69ef3ef31d8139d18
+    source-commit: 803f1c2630f5eb0d3b00ba3f095b3079c0533156
     plugin: dump
     override-pull: |
       craftctl default
@@ -193,7 +187,7 @@ parts:
       - dpkg-dev
       - gtk-update-icon-cache
       - libglib2.0-bin
-      - libgtk-3-0
+      - libgtk-3-0t64
     stage-packages:
       - libc-bin
       - libgdk-pixbuf-2.0-0
@@ -211,7 +205,7 @@ parts:
           update-icon-caches "$theme"
         fi
       done
-      GTK_PATH=$PWD/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gtk-3.0 /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgtk-3-0/gtk-query-immodules-3.0 > usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gtk-3.0/3.0.0/immodules/immodules.cache
+      GTK_PATH=$PWD/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gtk-3.0 /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgtk-3-0t64/gtk-query-immodules-3.0 > usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gtk-3.0/3.0.0/immodules/immodules.cache
     after:
       - telegram
 
@@ -326,18 +320,18 @@ parts:
       - libegl1
       - libfontconfig1
       - libfreetype6
-      - libglib2.0-0
+      - libglib2.0-0t64
       - libglx0
-      - libgtk-3-0
+      - libgtk-3-0t64
       - libharfbuzz0b
       - libice6
       - libicu74
       - liblcms2-2
       - libopengl0
       - libpcre2-16-0
-      - libpng16-16
+      - libpng16-16t64
       - libsm6
-      - libssl3
+      - libssl3t64
       - libvulkan1
       - libwayland-client0
       - libwayland-cursor0
@@ -366,7 +360,7 @@ parts:
       - mesa-vulkan-drivers
       - xkb-data
     override-pull: |
-      QT=6.7.0
+      QT=6.7.1
 
       git clone -b v${QT} --depth=1 https://github.com/qt/qt5.git .
       git submodule update --init --recursive --depth=1 qtbase qtdeclarative qtwayland qtimageformats qtsvg qtshadertools
@@ -469,11 +463,11 @@ parts:
       - libegl1
       - libgbm1
       - libgl1
-      - libglib2.0-0
+      - libglib2.0-0t64
       - libopenh264-7
       - libopus0
-      - libssl3
-      - libvpx8
+      - libssl3t64
+      - libvpx9
       - libx11-6
       - libxcomposite1
       - libxdamage1

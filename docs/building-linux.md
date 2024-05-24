@@ -20,7 +20,7 @@ Install [poetry](https://python-poetry.org), go to ***BuildPath*** and run
 Go to ***BuildPath*/materialgram** and run (using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
 
     docker run --rm -it \
-        -v $PWD:/usr/src/materialgram \
+        -v "$PWD:/usr/src/materialgram" \
         materialgram:centos_env \
         /usr/src/materialgram/Telegram/build/docker/centos_env/build.sh \
         -D TDESKTOP_API_ID=YOUR_API_ID \
@@ -29,7 +29,7 @@ Go to ***BuildPath*/materialgram** and run (using [your **api_id** and **api_has
 Or, to create a debug build, run (also using [your **api_id** and **api_hash**](#obtain-your-api-credentials))
 
     docker run --rm -it \
-        -v $PWD:/usr/src/materialgram \
+        -v "$PWD:/usr/src/materialgram" \
         -e CONFIG=Debug \
         materialgram:centos_env \
         /usr/src/materialgram/Telegram/build/docker/centos_env/build.sh \
