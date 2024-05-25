@@ -1,3 +1,21 @@
+5.0.2.1 (24.05.24)
+
+- Report webview platform as android (for bots that only work from mobile)
+- Official changelog:
+- Toggle chats search focus by Tab key.
+- Unfocus empty search by Backspace key.
+- Add a spoiler to already sent media when editing.
+- Forward by drag-n-drop to frequent contacts / recent searches.
+- Allow wide chats list in empty window with narrow list when a chat is opened.
+- Improve custom font support in the input fields.
+- Fix input method typing from unfocused search.
+- Fix possible media reordering on batch send.
+- Fix crash in group emoji set saving.
+- Fix possible hang on quit on macOS.
+- Fix several crashes in new interfaces.
+- Fix monospace font size.
+- Fix possible problem with underline font size.
+
 5.0.0.1 (02.05.24)
 
 - Updated icons
