@@ -441,9 +441,6 @@ void Selector::initGeometry(int innerTop) {
 	const auto top = innerTop
 		- margins.top()
 		- (_useTransparency ? _collapsedTopSkip : 0);
-	const auto add = _useTransparency
-		? (_st.icons.stripBubble.height() - margins.bottom())
-		: 0;
 	_outer = QRect(0, _collapsedTopSkip - _aboutExtend, width, height);
 	_outerWithBubble = _outer.marginsAdded({ 0, 0, 0, 0 });
 	setGeometry(_outerWithBubble.marginsAdded(
