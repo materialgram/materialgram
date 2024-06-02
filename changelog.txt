@@ -1,3 +1,24 @@
+5.1.1.1 (02.06.24)
+
+- Fixed bold font on some systems
+- Updated icons
+- Official changelog:
+- Send messages with effects.
+- Move photo or video captions above the media.
+- Long press on chat userpic to show quick preview.
+- Fully close search in chat by "Cancel" click.
+- Allow editing caption placement and spoiler in topics.
+- Disable effects on forwarded messages and inline results.
+- Jump to chat from preview only by Double-Click.
+- Show author userpics in forwarded messages.
+- Fix reply to last message by Ctrl+Up in topics.
+- Ctrl+Click on Reply in menu to Reply in another chat.
+- Allow Zero-Width-Space character in text rendering.
+- Fix creating custom links in the message field.
+- Fix jump to the topic with last unread message.
+- Fix newline entering via Shift+Enter on Linux.
+- Fix forum search open by Ctrl+F.
+
 5.0.2.1 (24.05.24)
 
 - Report webview platform as android (for bots that only work from mobile)
