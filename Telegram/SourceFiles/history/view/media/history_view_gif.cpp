@@ -379,6 +379,10 @@ bool Gif::autoplayEnabled() const {
 		_data);
 }
 
+bool Gif::hideMessageText() const {
+	return _data->isVideoMessage();
+}
+
 void Gif::draw(Painter &p, const PaintContext &context) const {
 	if (width() < st::msgPadding.left() + st::msgPadding.right() + 1) return;
 
@@ -388,7 +392,6 @@ void Gif::draw(Painter &p, const PaintContext &context) const {
 	const auto displayLoading = (item->isSending() || _data->displayLoading());
 	const auto st = context.st;
 	const auto sti = context.imageStyle();
-	const auto stm = context.messageStyle();
 	const auto cornerDownload = downloadInCorner();
 	const auto canBePlayed = _dataMedia->canBePlayed(_realParent);
 	const auto autoplay = autoplayEnabled()
@@ -762,7 +765,8 @@ void Gif::draw(Painter &p, const PaintContext &context) const {
 				fullRight = maxRight;
 			}
 		}
-		if (isRound || needInfoDisplay()) {
+		if (isRound
+			|| ((!bubble || isBubbleBottom()) && needInfoDisplay())) {
 			_parent->drawInfo(
 				p,
 				context,
@@ -1117,7 +1121,9 @@ TextState Gif::textState(QPoint point, StateRequest request) const {
 			? _cancell
 			: _savel;
 	}
-	if (unwrapped || !bubble) {
+	const auto checkBottomInfo = !inWebPage
+		&& (unwrapped || !bubble || isBubbleBottom());
+	if (checkBottomInfo) {
 		auto fullRight = usex + paintx + usew;
 		auto fullBottom = painty + painth;
 		auto maxRight = _parent->width() - st::msgMargin.left();
@@ -1136,19 +1142,17 @@ TextState Gif::textState(QPoint point, StateRequest request) const {
 				fullRight = maxRight;
 			}
 		}
-		if (!inWebPage) {
-			const auto bottomInfoResult = _parent->bottomInfoTextState(
-				fullRight,
-				fullBottom,
-				point,
-				(unwrapped
-					? InfoDisplayType::Background
-					: InfoDisplayType::Image));
-			if (bottomInfoResult.link
-				|| bottomInfoResult.cursor != CursorState::None
-				|| bottomInfoResult.customTooltip) {
-				return bottomInfoResult;
-			}
+		const auto bottomInfoResult = _parent->bottomInfoTextState(
+			fullRight,
+			fullBottom,
+			point,
+			(unwrapped
+				? InfoDisplayType::Background
+				: InfoDisplayType::Image));
+		if (bottomInfoResult.link
+			|| bottomInfoResult.cursor != CursorState::None
+			|| bottomInfoResult.customTooltip) {
+			return bottomInfoResult;
 		}
 		if (const auto size = bubble ? std::nullopt : _parent->rightActionSize()) {
 			const auto rightActionWidth = size->width();

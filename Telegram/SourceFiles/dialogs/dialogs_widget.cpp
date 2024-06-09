@@ -9,7 +9,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "base/qt/qt_key_modifiers.h"
 #include "base/options.h"
-#include "dialogs/ui/chat_search_tabs.h"
+#include "dialogs/ui/chat_search_in.h"
 #include "dialogs/ui/dialogs_stories_content.h"
 #include "dialogs/ui/dialogs_stories_list.h"
 #include "dialogs/ui/dialogs_suggestions.h"
@@ -336,7 +336,20 @@ Widget::Widget(
 	) | rpl::start_with_next([=] {
 		searchCursorMoved();
 	}, lifetime());
-	_inner->cancelSearchFromUserRequests(
+	_inner->changeSearchTabRequests(
+	) | rpl::filter([=](ChatSearchTab tab) {
+		return _searchState.tab != tab;
+	}) | rpl::start_with_next([=](ChatSearchTab tab) {
+		auto copy = _searchState;
+		copy.tab = tab;
+		applySearchState(std::move(copy));
+	}, lifetime());
+	_inner->cancelSearchRequests(
+	) | rpl::start_with_next([=] {
+		setInnerFocus(true);
+		applySearchState({});
+	}, lifetime());
+	_inner->cancelSearchFromRequests(
 	) | rpl::start_with_next([=] {
 		auto copy = _searchState;
 		copy.fromPeer = nullptr;
@@ -345,10 +358,9 @@ Widget::Widget(
 		}
 		applySearchState(std::move(copy));
 	}, lifetime());
-	_inner->cancelSearchRequests(
+	_inner->changeSearchFromRequests(
 	) | rpl::start_with_next([=] {
-		setInnerFocus(true);
-		applySearchState({});
+		showSearchFrom();
 	}, lifetime());
 	_inner->chosenRow(
 	) | rpl::start_with_next([=](const ChosenRow &row) {
@@ -675,9 +687,12 @@ void Widget::setupMoreChatsBar() {
 	controller()->activeChatsFilter(
 	) | rpl::start_with_next([=](FilterId id) {
 		storiesToggleExplicitExpand(false);
-		if (!_searchState.inChat) {
-			cancelSearch();
-		}
+		const auto cancelled = cancelSearch(true);
+		const auto guard = gsl::finally([&] {
+			if (cancelled) {
+				controller()->content()->dialogsCancelled();
+			}
+		});
 
 		if (!id) {
 			_moreChatsBar = nullptr;
@@ -1093,9 +1108,6 @@ void Widget::updateControlsVisibility(bool fast) {
 		updateJumpToDateVisibility(fast);
 		updateSearchFromVisibility(fast);
 	}
-	if (_searchTabs) {
-		_searchTabs->show();
-	}
 	if (_connecting) {
 		_connecting->setForceHidden(false);
 	}
@@ -1239,102 +1251,6 @@ void Widget::updateSuggestions(anim::type animated) {
 	}
 }
 
-void Widget::updateSearchTabs() {
-	const auto has = _searchState.inChat || _searchingHashtag;
-	if (!has) {
-		if (_searchTabs) {
-			_searchTabs = nullptr;
-			updateControlsGeometry();
-		}
-		return;
-	} else if (!_searchTabs) {
-		const auto savedSession = &session();
-		const auto markedTextContext = [=](Fn<void()> repaint) {
-			return Core::MarkedTextContext{
-				.session = savedSession,
-				.customEmojiRepaint = std::move(repaint),
-			};
-		};
-		_searchTabs = std::make_unique<ChatSearchTabs>(
-			this,
-			_searchState.tab,
-			std::move(markedTextContext));
-		_searchTabs->setVisible(!_showAnimation);
-		_searchTabs->tabChanges(
-		) | rpl::filter([=](ChatSearchTab tab) {
-			return (_searchState.tab != tab);
-		}) | rpl::start_with_next([=](ChatSearchTab tab) {
-			auto copy = _searchState;
-			copy.tab = tab;
-			applySearchState(std::move(copy));
-		}, _searchTabs->lifetime());
-	}
-	const auto sublist = _searchState.inChat.sublist();
-	const auto topic = _searchState.inChat.topic();
-	const auto peer = _searchState.inChat.owningHistory()
-		? _searchState.inChat.owningHistory()->peer.get()
-		: _openedForum
-		? _openedForum->channel().get()
-		: nullptr;
-	const auto topicShortLabel = !topic
-		? TextWithEntities()
-		: topic->iconId()
-		? Ui::Text::SingleCustomEmoji(
-			Data::SerializeCustomEmojiId(topic->iconId()))
-		: Ui::Text::SingleCustomEmoji(Data::TopicIconEmojiEntity({
-			.title = (topic->isGeneral()
-				? Data::ForumGeneralIconTitle()
-				: topic->title()),
-			.colorId = (topic->isGeneral()
-				? Data::ForumGeneralIconColor(st::windowSubTextFg->c)
-				: topic->colorId()),
-			}));
-	const auto peerShortLabel = peer
-		? Ui::Text::SingleCustomEmoji(
-			session().data().customEmojiManager().peerUserpicEmojiData(
-				peer,
-				{},
-				true))
-		: sublist
-		? Ui::Text::SingleCustomEmoji(
-			session().data().customEmojiManager().peerUserpicEmojiData(
-				sublist->peer(),
-				{},
-				true))
-		: TextWithEntities();
-	const auto myShortLabel = DefaultShortLabel(ChatSearchTab::MyMessages);
-	const auto publicShortLabel = _searchingHashtag
-		? DefaultShortLabel(ChatSearchTab::PublicPosts)
-		: TextWithEntities();
-	if ((_searchState.tab == ChatSearchTab::ThisTopic
-		&& !_searchState.inChat.topic())
-		|| (_searchState.tab == ChatSearchTab::ThisPeer
-			&& !_searchState.inChat
-			&& !_openedForum)
-		|| (_searchState.tab == ChatSearchTab::PublicPosts
-			&& !_searchingHashtag)) {
-		_searchState.tab = _searchState.inChat.topic()
-			? ChatSearchTab::ThisTopic
-			: (_searchState.inChat.owningHistory()
-				|| _searchState.inChat.sublist())
-			? ChatSearchTab::ThisPeer
-			: ChatSearchTab::MyMessages;
-	}
-	const auto peerTabType = (peer && peer->isBroadcast())
-		? ChatSearchPeerTabType::Channel
-		: (peer && (peer->isChat() || peer->isMegagroup()))
-		? ChatSearchPeerTabType::Group
-		: ChatSearchPeerTabType::Chat;
-	_searchTabs->setTabShortLabels({
-		{ ChatSearchTab::ThisTopic, topicShortLabel },
-		{ ChatSearchTab::ThisPeer, peerShortLabel },
-		{ ChatSearchTab::MyMessages, myShortLabel },
-		{ ChatSearchTab::PublicPosts, publicShortLabel },
-	}, _searchState.tab, peerTabType);
-
-	updateControlsGeometry();
-}
-
 void Widget::changeOpenedSubsection(
 		FnMut<void()> change,
 		bool fromRight,
@@ -1385,7 +1301,7 @@ void Widget::changeOpenedFolder(Data::Folder *folder, anim::type animated) {
 		return;
 	}
 	changeOpenedSubsection([&] {
-		cancelSearch();
+		cancelSearch(true);
 		closeChildList(anim::type::instant);
 		controller()->closeForum();
 		_openedFolder = folder;
@@ -1439,7 +1355,7 @@ void Widget::changeOpenedForum(Data::Forum *forum, anim::type animated) {
 		return;
 	}
 	changeOpenedSubsection([&] {
-		cancelSearch();
+		cancelSearch(true);
 		closeChildList(anim::type::instant);
 		_openedForum = forum;
 		_searchState.tab = forum
@@ -2729,9 +2645,8 @@ QString Widget::validateSearchQuery() {
 			setSearchQuery(fixed.text, fixed.cursorPosition);
 		}
 		return fixed.text;
-	} else if (_searchingHashtag != IsHashtagSearchQuery(query)) {
-		_searchingHashtag = !_searchingHashtag;
-		updateSearchTabs();
+	} else {
+		_searchingHashtag = IsHashtagSearchQuery(query);
 	}
 	return query;
 }
@@ -2777,7 +2692,7 @@ void Widget::showForum(
 		changeOpenedForum(forum, params.animated);
 		return;
 	}
-	cancelSearch();
+	cancelSearch(true);
 	openChildList(forum, params);
 }
 
@@ -2929,7 +2844,7 @@ bool Widget::applySearchState(SearchState state) {
 		state.tab = (_openedForum && !state.inChat)
 			? ChatSearchTab::ThisPeer
 			: ChatSearchTab::MyMessages;
-	} else if (!state.inChat && !_searchTabs) {
+	} else if (!state.inChat && !_searchingHashtag) {
 		state.tab = (forum || _openedForum)
 			? ChatSearchTab::ThisPeer
 			: ChatSearchTab::MyMessages;
@@ -2963,6 +2878,20 @@ bool Widget::applySearchState(SearchState state) {
 		return false;
 	}
 
+	if ((state.tab == ChatSearchTab::ThisTopic
+		&& !state.inChat.topic())
+		|| (state.tab == ChatSearchTab::ThisPeer
+			&& !state.inChat
+			&& !_openedForum)
+		|| (state.tab == ChatSearchTab::PublicPosts
+			&& !_searchingHashtag)) {
+		state.tab = state.inChat.topic()
+			? ChatSearchTab::ThisTopic
+			: (state.inChat.owningHistory() || state.inChat.sublist())
+			? ChatSearchTab::ThisPeer
+			: ChatSearchTab::MyMessages;
+	}
+
 	const auto migrateFrom = (peer && !topic)
 		? peer->migrateFrom()
 		: nullptr;
@@ -2976,7 +2905,6 @@ bool Widget::applySearchState(SearchState state) {
 	}
 	if (inChatChanged) {
 		controller()->setSearchInChat(_searchState.inChat);
-		updateSearchTabs();
 	}
 	if (queryChanged || inChatChanged) {
 		updateCancelSearch();
@@ -3331,9 +3259,6 @@ void Widget::updateControlsGeometry() {
 	if (_forumRequestsBar) {
 		_forumRequestsBar->resizeToWidth(barw);
 	}
-	if (_searchTabs) {
-		_searchTabs->resizeToWidth(barw);
-	}
 	_updateScrollGeometryCached = [=] {
 		const auto moreChatsBarTop = expandedStoriesTop
 			+ ((!_stories || _stories->isHidden()) ? 0 : _aboveScrollAdded);
@@ -3355,13 +3280,8 @@ void Widget::updateControlsGeometry() {
 		if (_forumReportBar) {
 			_forumReportBar->bar().move(0, forumReportTop);
 		}
-		const auto searchTabsTop = forumReportTop
+		const auto scrollTop = forumReportTop
 			+ (_forumReportBar ? _forumReportBar->bar().height() : 0);
-		if (_searchTabs) {
-			_searchTabs->move(0, searchTabsTop);
-		}
-		const auto scrollTop = searchTabsTop
-			+ (_searchTabs ? _searchTabs->height() : 0);
 		const auto scrollHeight = height() - scrollTop - bottomSkip;
 		const auto wasScrollHeight = _scroll->height();
 		_scroll->setGeometry(0, scrollTop, scrollWidth, scrollHeight);
@@ -3422,7 +3342,8 @@ void Widget::keyPressEvent(QKeyEvent *e) {
 		//}
 	} else if ((e->key() == Qt::Key_Backspace || e->key() == Qt::Key_Tab)
 		&& _searchHasFocus
-		&& !_searchState.inChat) {
+		&& !_searchState.inChat
+		&& _searchState.query.isEmpty()) {
 		escape();
 	} else if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
 		submit();
@@ -3652,17 +3573,18 @@ void Widget::setSearchQuery(const QString &query, int cursorPosition) {
 	}
 }
 
-bool Widget::cancelSearch() {
+bool Widget::cancelSearch(bool forceFullCancel) {
 	cancelSearchRequest();
 	auto updatedState = _searchState;
 	const auto clearingQuery = !updatedState.query.isEmpty();
-	auto clearingInChat = !clearingQuery
+	auto clearingInChat = (forceFullCancel || !clearingQuery)
 		&& (updatedState.inChat
 			|| updatedState.fromPeer
 			|| !updatedState.tags.empty());
 	if (clearingQuery) {
 		updatedState.query = QString();
-	} else if (clearingInChat) {
+	}
+	if (clearingInChat) {
 		if (updatedState.inChat && controller()->adaptive().isOneColumn()) {
 			if (const auto thread = updatedState.inChat.thread()) {
 				controller()->showThread(thread);
@@ -3680,7 +3602,7 @@ bool Widget::cancelSearch() {
 		setInnerFocus(true);
 		clearingInChat = true;
 	}
-	const auto clearSearchFocus = !updatedState.inChat
+	const auto clearSearchFocus = (forceFullCancel || !updatedState.inChat)
 		&& (_searchHasFocus || _searchSuggestionsLocked);
 	if (!updatedState.inChat && _suggestions) {
 		_suggestions->clearPersistance();

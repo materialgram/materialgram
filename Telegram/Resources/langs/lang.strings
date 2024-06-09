@@ -2320,6 +2320,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_credits_summary_options_more" = "More Options";
 "lng_credits_summary_options_about" = "By proceeding and purchasing Stars, you agree with the {link}.";
 "lng_credits_summary_options_about_link" = "Terms and Conditions";
+"lng_credits_summary_options_about_url" = "https://telegram.org/tos/stars";
 "lng_credits_summary_history_tab_full" = "All Transactions";
 "lng_credits_summary_history_tab_in" = "Incoming";
 "lng_credits_summary_history_tab_out" = "Outgoing";
@@ -5246,6 +5247,21 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_search_tab_no_results_text" = "There were no results for \"{query}\".";
 "lng_search_tab_no_results_retry" = "Try another hashtag.";
 "lng_search_tab_by_hashtag" = "Enter a hashtag to find messages containing it.";
+
+"lng_contact_details_button" = "View Contact";
+"lng_contact_details_title" = "Contact details";
+"lng_contact_details_phone" = "Phone";
+"lng_contact_details_phone_main" = "Main Phone";
+"lng_contact_details_phone_home" = "Home Phone";
+"lng_contact_details_phone_mobile" = "Mobile Phone";
+"lng_contact_details_phone_work" = "Work Phone";
+"lng_contact_details_phone_other" = "Other Phone";
+"lng_contact_details_email" = "Email";
+"lng_contact_details_address" = "Address";
+"lng_contact_details_url" = "URL";
+"lng_contact_details_note" = "Note";
+"lng_contact_details_birthday" = "Birthday";
+"lng_contact_details_organization" = "Organization";
 
 // Wnd specific
 

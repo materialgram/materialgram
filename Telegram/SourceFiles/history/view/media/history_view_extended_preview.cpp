@@ -113,6 +113,10 @@ void ExtendedPreview::unloadHeavyPart() {
 	_spoiler.animation = nullptr;
 }
 
+bool ExtendedPreview::enforceBubbleWidth() const {
+	return true;
+}
+
 QSize ExtendedPreview::countOptimalSize() {
 	const auto &preview = _invoice->extendedPreview;
 	const auto dimensions = preview.dimensions;
@@ -162,6 +166,9 @@ QSize ExtendedPreview::countCurrentSize(int newWidth) {
 			st::msgMaxWidth,
 			_parent->textualMaxWidth());
 		newWidth = qMin(qMax(newWidth, maxWithCaption), thumbMaxWidth);
+	}
+	if (newWidth >= maxWidth()) {
+		newHeight = qMin(newHeight, minHeight());
 	}
 	return { newWidth, newHeight };
 }
