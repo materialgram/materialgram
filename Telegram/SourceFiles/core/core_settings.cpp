@@ -361,7 +361,6 @@ QByteArray Settings::serialize() const {
 		stream
 			<< qint32(_trayIconMonochrome.current() ? 1 : 0)
 			<< qint32(_birthDateEnabled.current() ? 1 : 0)
-			<< qint32(_datacenterEnabled.current() ? 1 : 0)
 			<< qint32(_ttlVoiceClickTooltipHidden.current() ? 1 : 0)
 			<< _playbackDeviceId.current()
 			<< _captureDeviceId.current()
@@ -373,7 +372,8 @@ QByteArray Settings::serialize() const {
 			<< qint32(std::clamp(
 				qRound(_dialogsNoChatWidthRatio.current() * 1000000),
 				0,
-				1000000));
+				1000000))
+			<< qint32(_datacenterEnabled.current() ? 1 : 0);
 	}
 
 	Ensures(result.size() == size);
@@ -491,10 +491,10 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	base::flat_set<QString> recentEmojiSkip;
 	qint32 trayIconMonochrome = (_trayIconMonochrome.current() ? 1 : 0);
 	qint32 birthDateEnabled = (_birthDateEnabled.current() ? 1 : 0);
-	qint32 datacenterEnabled = (_datacenterEnabled.current() ? 1 : 0);
 	qint32 ttlVoiceClickTooltipHidden = _ttlVoiceClickTooltipHidden.current() ? 1 : 0;
 	QByteArray ivPosition;
 	QString customFontFamily = _customFontFamily;
+	qint32 datacenterEnabled = (_datacenterEnabled.current() ? 1 : 0);
 
 	stream >> themesAccentColors;
 	if (!stream.atEnd()) {
@@ -759,12 +759,6 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 		birthDateEnabled = 1;
 	}
 	if (!stream.atEnd()) {
-		stream >> datacenterEnabled;
-	}
-	else {
-		datacenterEnabled = 1;
-	}
-	if (!stream.atEnd()) {
 		stream >> ttlVoiceClickTooltipHidden;
 	}
 	if (!stream.atEnd()) {
@@ -803,6 +797,12 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 			dialogsNoChatWidthRatioInt / 1000000.,
 			0.,
 			1.);
+	}
+	if (!stream.atEnd()) {
+		stream >> datacenterEnabled;
+	}
+	else {
+		datacenterEnabled = 1;
 	}
 	if (stream.status() != QDataStream::Ok) {
 		LOG(("App Error: "
@@ -1007,12 +1007,12 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	_recentEmojiSkip = std::move(recentEmojiSkip);
 	_trayIconMonochrome = (trayIconMonochrome == 1);
 	_birthDateEnabled = (birthDateEnabled == 1);
-	_datacenterEnabled = (datacenterEnabled == 1);
 	_ttlVoiceClickTooltipHidden = (ttlVoiceClickTooltipHidden == 1);
 	if (!ivPosition.isEmpty()) {
 		_ivPosition = Deserialize(ivPosition);
 	}
 	_customFontFamily = customFontFamily;
+	_datacenterEnabled = (datacenterEnabled == 1);
 }
 
 QString Settings::getSoundPath(const QString &key) const {
