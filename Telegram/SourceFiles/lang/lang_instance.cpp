@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of Telegram Desktop,
 the official desktop application for the Telegram messaging service.
 
@@ -91,6 +91,27 @@ QMap <QString, QString> registrationStrings = {
 	{"sr", "Датум регистрације"},
 	{"es", "Fecha de registro"},
 	{"tr", "Kayıt tarihi"}
+};
+
+QMap<QString, QString> datacenterStrings = {
+	{"uk", "Датацентр"},
+	{"ru", "Дата-центр"},
+	{"de", "Datenzentrum"},
+	{"be", "Дата-цэнтр"},
+	{"ca", "Centre de dades"},
+	{"hr", "Centar podataka"},
+	{"nl", "Datacentrum"},
+	{"fr", "Centre de données"},
+	{"id", "Pusat data"},
+	{"it", "Centro dati"},
+	{"kk", "Деректер орталығы"},
+	{"ko", "데이터 센터"},
+	{"ms", "Pusat data"},
+	{"pl", "Centrum danych"},
+	{"pt-br", "Centro de dados"},
+	{"sr", "Центар података"},
+	{"es", "Centro de datos"},
+	{"tr", "Veri merkezi"}
 };
 
 ValueParser::ValueParser(
@@ -716,6 +737,7 @@ void Instance::applyDifferenceToMe(
 	auto language = qs(difference.vlang_code()).trimmed().remove("-raw");
 	if (registrationStrings.contains(language)) {
 		applyValue("materialgram_info_registration", registrationStrings.value(language).toUtf8());
+		applyValue("materialgram_info_dc", datacenterStrings.value(language).toUtf8());
 	}
 	if (!_derived) {
 		_updated.fire({});

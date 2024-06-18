@@ -755,7 +755,15 @@ public:
 	[[nodiscard]] rpl::producer<bool> birthDateEnabledChanges() const {
 		return _birthDateEnabled.changes();
 	}
-
+	void setDatacenterEnabled(bool value) {
+		_datacenterEnabled = value;
+	}
+	[[nodiscard]] bool datacenterEnabled() const {
+		return _datacenterEnabled.current();
+	}
+	[[nodiscard]] rpl::producer<bool> datacenterEnabledChanges() const {
+		return _datacenterEnabled.changes();
+	}
 	void setCustomDeviceModel(const QString &model) {
 		_customDeviceModel = model;
 	}
@@ -999,6 +1007,7 @@ private:
 	rpl::variable<bool> _closeToTaskbar = false;
 	rpl::variable<bool> _trayIconMonochrome = true;
 	rpl::variable<bool> _birthDateEnabled = false;
+	rpl::variable<bool> _datacenterEnabled = false;
 	rpl::variable<QString> _customDeviceModel;
 	rpl::variable<Media::RepeatMode> _playerRepeatMode;
 	rpl::variable<Media::OrderMode> _playerOrderMode;

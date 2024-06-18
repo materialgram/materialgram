@@ -350,7 +350,7 @@ void SetupMaterialgram(
 	not_null<Ui::VerticalLayout*> container) {
 	const auto session = &controller->session();
 	const auto settings = &Core::App().settings();
-	const auto button = container->add(object_ptr<Button>(
+	const auto registration = container->add(object_ptr<Button>(
 		container,
 		tr::materialgram_info_registration(),
 		st::settingsButtonNoIcon
@@ -358,11 +358,27 @@ void SetupMaterialgram(
 		rpl::single(settings->birthDateEnabled())
 	);
 
-	button->toggledValue(
+	registration->toggledValue(
 	) | rpl::filter([=](bool enabled) {
 		return (enabled != settings->birthDateEnabled());
 		}) | rpl::start_with_next([=](bool enabled) {
 			settings->setBirthDateEnabled(enabled);
+			Core::App().saveSettingsDelayed();
+			}, container->lifetime());
+    
+	const auto datacenter = container->add(object_ptr<Button>(
+		container,
+		tr::materialgram_info_dc(),
+		st::settingsButtonNoIcon
+	))->toggleOn(
+		rpl::single(settings->datacenterEnabled())
+	);
+
+	datacenter->toggledValue(
+	) | rpl::filter([=](bool enabled) {
+		return (enabled != settings->datacenterEnabled());
+		}) | rpl::start_with_next([=](bool enabled) {
+			settings->setDatacenterEnabled(enabled);
 			Core::App().saveSettingsDelayed();
 			}, container->lifetime());
 }

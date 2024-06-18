@@ -1397,6 +1397,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_via_link_shared_many#other" = "Link shared with **{count} users**.";
 
 "materialgram_info_registration" = "Registration date";
+"materialgram_info_dc" = "Data center";
 "lng_info_personal_channel_label" = "Channel";
 "lng_info_mobile_label" = "Mobile";
 "lng_info_mobile_context_menu_fragment_about" = "This number is not tied to a SIM card and was acquired on {link}.";

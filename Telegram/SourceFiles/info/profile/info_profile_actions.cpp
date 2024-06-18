@@ -1075,6 +1075,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 				RegistrationValue(user),
 				tr::lng_context_copy_text(tr::now));
 		}
+		if (user->hasUserpic() && Core::App().settings().datacenterEnabled()) {
+			addInfoOneLine(
+				tr::materialgram_info_dc(),
+				rpl::single(QString::number(std::get<StorageFileLocation>(user->userpicLocation().file().data).dcId())) | Ui::Text::ToWithEntities(),
+				tr::lng_context_copy_text(tr::now));
+		}
 		const auto callback = UsernamesLinkCallback(
 			_peer,
 			controller,
