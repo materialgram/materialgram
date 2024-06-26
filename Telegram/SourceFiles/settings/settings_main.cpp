@@ -88,7 +88,6 @@ private:
 	void initViewers();
 	void refreshStatusText();
 	void refreshNameGeometry(int newWidth);
-	void refreshPhoneGeometry(int newWidth);
 	void refreshUsernameGeometry(int newWidth);
 
 	const not_null<Window::SessionController*> _controller;
@@ -98,7 +97,6 @@ private:
 
 	object_ptr<Ui::UserpicButton> _userpic;
 	object_ptr<Ui::FlatLabel> _name = { nullptr };
-	object_ptr<Ui::FlatLabel> _phone = { nullptr };
 	object_ptr<Ui::FlatLabel> _username = { nullptr };
 
 };
@@ -133,15 +131,11 @@ Cover::Cover(
 	Ui::UserpicButton::Source::PeerPhoto,
 	st::infoProfileCover.photo)
 , _name(this, st::infoProfileCover.name)
-, _phone(this, st::defaultFlatLabel)
 , _username(this, st::infoProfileMegagroupCover.status) {
 	_user->updateFull();
 
 	_name->setSelectable(true);
 	_name->setContextCopyText(tr::lng_profile_copy_fullname(tr::now));
-
-	_phone->setSelectable(true);
-	_phone->setContextCopyText(tr::lng_profile_copy_phone(tr::now));
 
 	initViewers();
 	setupChildGeometry();
@@ -181,7 +175,6 @@ void Cover::setupChildGeometry() {
 			st::settingsPhotoTop,
 			newWidth);
 		refreshNameGeometry(newWidth);
-		refreshPhoneGeometry(newWidth);
 		refreshUsernameGeometry(newWidth);
 	}, lifetime());
 }
@@ -192,13 +185,6 @@ void Cover::initViewers() {
 	) | rpl::start_with_next([=](const QString &name) {
 		_name->setText(name);
 		refreshNameGeometry(width());
-	}, lifetime());
-
-	Info::Profile::PhoneValue(
-		_user
-	) | rpl::start_with_next([=](const TextWithEntities &value) {
-		_phone->setText(value.text);
-		refreshPhoneGeometry(width());
 	}, lifetime());
 
 	Info::Profile::UsernameValue(
@@ -237,16 +223,6 @@ void Cover::refreshNameGeometry(int newWidth) {
 	const auto badgeTop = nameTop;
 	const auto badgeBottom = nameTop + _name->height();
 	_badge.move(badgeLeft, badgeTop, badgeBottom);
-}
-
-void Cover::refreshPhoneGeometry(int newWidth) {
-	const auto phoneLeft = st::settingsPhoneLeft;
-	const auto phoneTop = st::settingsPhoneTop;
-	const auto phoneWidth = newWidth
-		- phoneLeft
-		- st::infoProfileCover.rightSkip;
-	_phone->resizeToWidth(phoneWidth);
-	_phone->moveToLeft(phoneLeft, phoneTop, newWidth);
 }
 
 void Cover::refreshUsernameGeometry(int newWidth) {

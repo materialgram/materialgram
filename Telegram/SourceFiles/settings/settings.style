@@ -413,11 +413,11 @@ settingsPhotoLeft: 22px;
 settingsPhotoTop: 8px;
 settingsPhotoBottom: 16px;
 settingsNameLeft: 112px;
-settingsNameTop: 12px;
+settingsNameTop: 25px;
 settingsPhoneLeft: settingsNameLeft;
 settingsPhoneTop: 37px;
 settingsUsernameLeft: settingsNameLeft;
-settingsUsernameTop: 58px;
+settingsUsernameTop: 49px;
 settingsPeerToPeerSkip: 9px;
 
 settingsIconRadius: 6px;
