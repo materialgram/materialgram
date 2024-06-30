@@ -373,7 +373,7 @@ QByteArray Settings::serialize() const {
 				qRound(_dialogsNoChatWidthRatio.current() * 1000000),
 				0,
 				1000000))
-			<< qint32(_datacenterEnabled.current() ? 1 : 0);
+			<< qint32(_datacenterEnabled.current() ? 1 : 0)
 			<< qint32(_systemUnlockEnabled ? 1 : 0);
 	}
 
