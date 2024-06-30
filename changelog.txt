@@ -1,3 +1,15 @@
+5.2.0.1 (30.06.24)
+
+- Added the option to show data center in profiles
+- Hide phone number in settings
+- Official changelog:
+- Pay for content with Telegram Stars.
+- Enable local passcode unlock by Windows Hello and Touch ID.
+- Allow opening forums, topics and archive in a separate window.
+- Support nice blockquotes and code blocks edition when composing messages.
+- Support collapsing blockquotes and specifying syntax highlight language.
+- Support nice spoiler animation in the message composing input field.
+
 5.1.7.1 (14.06.24)
 
 - Official changelog:
