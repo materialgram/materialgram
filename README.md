@@ -42,6 +42,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Improved spoiler animation
 - Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers"
 - Improved chat export. 10000 messages in one html document and faster file download
+- Hide phone number in settings
 - Show more recent stickers
 - Show online counter in large groups (experimental)
 - Show the approximate date of account creation (optional)
