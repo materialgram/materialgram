@@ -631,6 +631,7 @@ storiesEmojiPan: EmojiPan(defaultEmojiPan) {
 		menuSpoilerOff: icon {{ "menu/spoiler_off", storiesComposeWhiteText }};
 		menuBelow: icon {{ "menu/link_below", storiesComposeWhiteText }};
 		menuAbove: icon {{ "menu/link_above", storiesComposeWhiteText }};
+		menuPrice: icon {{ "menu/earn", storiesComposeWhiteText }};
 
 		stripExpandPanel: icon{{ "chat/reactions_expand_panel", storiesComposeGrayIcon }};
 		stripExpandDropdown: icon{{ "chat/reactions_expand_panel", storiesComposeGrayIcon }};

@@ -1255,9 +1255,6 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 	) | rpl::map(rpl::mappers::_1 != nullptr));
 	result->finishAnimating();
 
-	auto channelToggleValue = PersonalChannelValue(
-		user
-	) | rpl::map([=] { return !!user->personalChannelId(); });
 	auto channel = PersonalChannelValue(
 		user
 	) | rpl::start_spawning(result->lifetime());
@@ -1285,8 +1282,10 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 			object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
 				container,
 				object_ptr<Ui::VerticalLayout>(container)));
-		onlyChannelWrap->toggleOn(rpl::duplicate(channelToggleValue)
-			| rpl::map(!rpl::mappers::_1));
+		onlyChannelWrap->toggleOn(PersonalChannelValue(user) | rpl::map([=] {
+			return user->personalChannelId()
+				&& !user->personalChannelMessageId();
+		}));
 		onlyChannelWrap->finishAnimating();
 
 		Ui::AddDivider(onlyChannelWrap->entity());
@@ -1327,7 +1326,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 			object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
 				container,
 				object_ptr<Ui::VerticalLayout>(container)));
-		messageChannelWrap->toggleOn(rpl::duplicate(channelToggleValue));
+		messageChannelWrap->toggleOn(PersonalChannelValue(
+			user
+		) | rpl::map([=] {
+			return user->personalChannelId()
+				&& user->personalChannelMessageId();
+		}));
 		messageChannelWrap->finishAnimating();
 
 		const auto clear = [=] {

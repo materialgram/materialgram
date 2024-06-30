@@ -349,6 +349,10 @@ std::unique_ptr<Data::Media> HistoryItem::CreateMedia(
 		return std::make_unique<Data::MediaGiveawayResults>(
 			item,
 			Data::ComputeGiveawayResultsData(item, media));
+	}, [&](const MTPDmessageMediaPaidMedia &media) -> Result {
+		return std::make_unique<Data::MediaInvoice>(
+			item,
+			Data::ComputeInvoiceData(item, media));
 	}, [](const MTPDmessageMediaEmpty &) -> Result {
 		return nullptr;
 	}, [](const MTPDmessageMediaUnsupported &) -> Result {
@@ -1813,7 +1817,8 @@ void HistoryItem::applyEdition(const MTPDmessageService &message) {
 	}
 }
 
-void HistoryItem::applyEdition(const MTPMessageExtendedMedia &media) {
+void HistoryItem::applyEdition(
+		const QVector<MTPMessageExtendedMedia> &media) {
 	if (const auto existing = this->media()) {
 		if (existing->updateExtendedMedia(this, media)) {
 			checkBuyButton();
@@ -2241,7 +2246,7 @@ bool HistoryItem::forbidsSaving() const {
 	if (forbidsForward()) {
 		return true;
 	} else if (const auto invoice = _media ? _media->invoice() : nullptr) {
-		return (invoice->extendedMedia != nullptr);
+		return HasExtendedMedia(*invoice);
 	}
 	return false;
 }
@@ -2384,6 +2389,13 @@ std::optional<QString> HistoryItem::errorTextForForward(
 		&& _media->poll()->publicVotes()
 		&& peer->isBroadcast()) {
 		return tr::lng_restricted_send_public_polls(tr::now);
+	} else if (_media
+		&& _media->invoice()
+		&& _media->invoice()->isPaidMedia
+		&& peer->isBroadcast()
+		&& peer->isFullLoaded()
+		&& !peer->asBroadcast()->canPostPaidMedia()) {
+		return tr::lng_restricted_send_paid_media(tr::now);
 	} else if (!Data::CanSend(to, requiredRight, false)) {
 		return tr::lng_forward_cant(tr::now);
 	}
@@ -2991,10 +3003,10 @@ bool HistoryItem::externalReply() const {
 	return false;
 }
 
-bool HistoryItem::hasExtendedMediaPreview() const {
+bool HistoryItem::hasUnpaidContent() const {
 	if (const auto media = _media.get()) {
 		if (const auto invoice = media->invoice()) {
-			return (invoice->extendedPreview && !invoice->extendedMedia);
+			return HasUnpaidMedia(*invoice);
 		}
 	}
 	return false;
@@ -3778,7 +3790,7 @@ void HistoryItem::createComponents(const MTPDmessage &data) {
 void HistoryItem::refreshMedia(const MTPMessageMedia *media) {
 	const auto was = (_media != nullptr);
 	if (const auto invoice = was ? _media->invoice() : nullptr) {
-		if (invoice->extendedMedia) {
+		if (HasExtendedMedia(*invoice)) {
 			return;
 		}
 	}
@@ -5548,4 +5560,10 @@ void HistoryItem::clearDependencyMessage() {
 			dependent->msgId = 0;
 		}
 	}
+}
+
+void HistoryItem::overrideMedia(std::unique_ptr<Data::Media> media) {
+	Expects(!media || media->parent() == this);
+
+	_media = std::move(media);
 }
