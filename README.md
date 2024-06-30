@@ -30,8 +30,9 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Copy usernames as @example if possible
 - Removed message bubble tails and reverted old paddings
 - Removed "large emoji" outline
+- Replaced webview platform with "android"
 - Replaced all sounds
-- Reduced image compression (94% on photos, 100% on wallpapers)
+- Reduced jpeg compression (94% on photos, 100% on wallpapers)
 - Reduced minimum window size
 - Reduced minimum brush thickness in the photo editor
 - Reduced use of uppercase in the interface
@@ -43,7 +44,8 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Improved chat export. 10000 messages in one html document and faster file download
 - Show more recent stickers
 - Show online counter in large groups (experimental)
-- Show the approximate date of account creation in the profile
+- Show the approximate date of account creation (optional)
+- Show data center (optional)
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
 
 ## For Arch Linux users [@omansh-krishn](https://github.com/omansh-krishn) made a [PKG repository](https://github.com/materialgram/arch.git)
