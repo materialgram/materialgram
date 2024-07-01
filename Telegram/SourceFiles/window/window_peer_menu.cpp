@@ -67,7 +67,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "info/info_controller.h"
 #include "info/info_memento.h"
 #include "info/channel_statistics/boosts/info_boosts_widget.h"
-#include "info/channel_statistics/earn/info_earn_widget.h"
+#include "info/channel_statistics/earn/info_channel_earn_widget.h"
 #include "info/profile/info_profile_values.h"
 #include "info/statistics/info_statistics_widget.h"
 #include "info/stories/info_stories_widget.h"
@@ -689,8 +689,9 @@ void Filler::addNewWindow() {
 	_addAction(tr::lng_context_new_window(tr::now), [=] {
 		Ui::PreventDelayedActivation();
 		if (const auto strong = weak.get()) {
+			const auto forum = !strong->asTopic() && peer->isForum();
 			controller->showInNewWindow(SeparateId(
-				peer->isForum() ? SeparateType::Forum : SeparateType::Chat,
+				forum ? SeparateType::Forum : SeparateType::Chat,
 				strong));
 		}
 	}, &st::menuIconNewWindow);

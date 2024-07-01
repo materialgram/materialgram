@@ -506,15 +506,15 @@ OverlayWidget::OverlayWidget()
 				return base::EventFilterResult::Cancel;
 			}
 		} else if (e->type() == QEvent::WindowStateChange) {
-			const auto state = _window->windowState();
-			if (state & Qt::WindowMinimized || Platform::IsMac()) {
-			} else if (state & Qt::WindowMaximized) {
+			const auto state = window()->windowState();
+			if (state == Qt::WindowMinimized || Platform::IsMac()) {
+			} else if (state == Qt::WindowMaximized) {
 				if (_fullscreen || _windowed) {
 					_fullscreen = _windowed = false;
 					savePosition();
 				}
 			} else if (_fullscreen || _windowed) {
-			} else if (state & Qt::WindowFullScreen) {
+			} else if (state == Qt::WindowFullScreen) {
 				_fullscreen = true;
 				savePosition();
 			} else {
@@ -3841,16 +3841,12 @@ void OverlayWidget::updatePowerSaveBlocker(
 		&& !IsPausedOrPausing(state.state)
 		&& !IsStoppedOrStopping(state.state);
 
-	_window->shownValue() | rpl::filter([=](bool shown) {
-		return shown;
-	}) | rpl::take(1) | rpl::start_with_next([=] {
-		base::UpdatePowerSaveBlocker(
-			_streamed->powerSaveBlocker,
-			block,
-			base::PowerSaveBlockType::PreventDisplaySleep,
-			[] { return u"Video playback is active"_q; },
-			[=] { return window(); });
-	}, lifetime());
+	base::UpdatePowerSaveBlocker(
+		_streamed->powerSaveBlocker,
+		block,
+		base::PowerSaveBlockType::PreventDisplaySleep,
+		[] { return u"Video playback is active"_q; },
+		[=] { return _window->windowHandle(); });
 }
 
 QImage OverlayWidget::transformedShownContent() const {
