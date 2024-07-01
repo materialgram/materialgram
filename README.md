@@ -41,8 +41,8 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Increased max accounts limit from 3/6 to 10/20
 - Improved spoiler animation
 - Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers"
-- Improved chat export. 10000 messages in one html document and faster file download
-- Hide phone number in settings
+- Improved chat export. 10000 messages in one html document and faster file downloads
+- Hide your phone number in profile and settings (except "My account" screen)
 - Show more recent stickers
 - Show online counter in large groups (experimental)
 - Show the approximate date of account creation (optional)

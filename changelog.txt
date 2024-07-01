@@ -1,3 +1,14 @@
+5.2.1.1 (01.07.24)
+
+- Show data center for groups and channels
+- Show data center locations
+- Hide phone number in own profile
+- Official changelog:
+- Fix crash when opening topic in a new window.
+- Fix crash in topic search scope dropdown.
+- Fix crash in video player.
+- Fix feeze and crash in Instant View (Windows).
+
 5.2.0.1 (30.06.24)
 
 - Added the option to show data center in profiles
