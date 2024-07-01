@@ -1078,7 +1078,7 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 		if (user->hasUserpic() && Core::App().settings().datacenterEnabled()) {
 			addInfoOneLine(
 				tr::materialgram_info_dc(),
-				rpl::single(QString::number(std::get<StorageFileLocation>(user->userpicLocation().file().data).dcId())) | Ui::Text::ToWithEntities(),
+				DataCenterValue(_peer),
 				tr::lng_context_copy_text(tr::now));
 		}
 		const auto callback = UsernamesLinkCallback(
@@ -1220,6 +1220,13 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 			: AboutWithIdValue(_peer));
 		if (!_topic) {
 			addTranslateToMenu(about.text, AboutWithIdValue(_peer));
+		}
+
+		if (_peer->hasUserpic() && Core::App().settings().datacenterEnabled()) {
+			addInfoOneLine(
+				tr::materialgram_info_dc(),
+				DataCenterValue(_peer),
+				tr::lng_context_copy_text(tr::now));
 		}
 	}
 	if (!_peer->isSelf()) {

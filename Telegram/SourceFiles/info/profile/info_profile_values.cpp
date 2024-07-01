@@ -253,6 +253,12 @@ rpl::producer<TextWithEntities> RegistrationValue(not_null<PeerData*> peer) {
 	return rpl::single(findRegistrationTime(userId)) | Ui::Text::ToWithEntities();
 }
 
+rpl::producer<TextWithEntities> DataCenterValue(not_null<PeerData*> peer) {
+	return rpl::single(QString::number(
+		std::get<StorageFileLocation>(peer->userpicLocation().file().data).dcId())
+	)| Ui::Text::ToWithEntities();
+}
+
 rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
 	return peer->session().changes().peerFlagsValue(
 		peer,
