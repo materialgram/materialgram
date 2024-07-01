@@ -254,9 +254,14 @@ rpl::producer<TextWithEntities> RegistrationValue(not_null<PeerData*> peer) {
 }
 
 rpl::producer<TextWithEntities> DataCenterValue(not_null<PeerData*> peer) {
-	return rpl::single(QString::number(
-		std::get<StorageFileLocation>(peer->userpicLocation().file().data).dcId())
-	)| Ui::Text::ToWithEntities();
+	auto dcId = std::get<StorageFileLocation>(peer->userpicLocation().file().data).dcId();
+	auto dcName = (dcId == 1) ? "1, Miami" :
+		(dcId == 2) ? "2, Amsterdam" :
+		(dcId == 3) ? "3, Miami" :
+		(dcId == 4) ? "4, Amsterdam" :
+		(dcId == 5) ? "5, Singapore" :
+		"Unknown";
+	return rpl::single(dcName) | Ui::Text::ToWithEntities();
 }
 
 rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
