@@ -1042,7 +1042,7 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 				user->session().supportHelper().infoTextValue(user));
 		}
 
-		{
+		if (!user->isSelf()) {
 			const auto phoneLabel = addInfoOneLine(
 				tr::lng_info_mobile_label(),
 				PhoneOrHiddenValue(user),
