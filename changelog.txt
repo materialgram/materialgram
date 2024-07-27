@@ -1,3 +1,13 @@
+5.2.5.1 (27.07.24)
+
+- Fix media viewer context menu.
+- Fix blockquotes layout in messages.
+- Allow opening several web apps.
+- Send location marks and venues.
+- Fix crash in bot star stats page.
+- Fix topics search in topic groups.
+- Fix Instant View pages content updating.
+
 5.2.1.1 (01.07.24)
 
 - Show data center for groups and channels
