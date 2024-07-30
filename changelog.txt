@@ -1,3 +1,8 @@
+5.2.6.1 (30.07.24)
+
+- Official changelog:
+- Fix launching on X11. (Linux)
+
 5.2.5.1 (27.07.24)
 
 - Fix media viewer context menu.
