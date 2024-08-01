@@ -1,3 +1,13 @@
+5.3.0.1 (01.08.24)
+
+- Official changelog:
+- View recent and popular web apps in chats search.
+- Open several web apps in different windows.
+- Gift Telegram Stars to your friends.
+- Send location marks and venues.
+- Open tonsite:// links in webview.
+- Edit order of stickers in your packs.
+
 5.2.6.1 (30.07.24)
 
 - Official changelog:
