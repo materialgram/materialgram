@@ -69,6 +69,7 @@ namespace {
 
 constexpr auto kProlongTimeout = 60 * crl::time(1000);
 constexpr auto kRefreshBotsTimeout = 60 * 60 * crl::time(1000);
+constexpr auto kPopularAppBotsLimit = 100;
 
 [[nodiscard]] DocumentData *ResolveIcon(
 		not_null<Main::Session*> session,
@@ -651,7 +652,9 @@ void WebViewInstance::resolve() {
 	}, [&](WebViewSourceLinkApp data) {
 		resolveApp(data.appname, data.token, !_context.maySkipConfirmation);
 	}, [&](WebViewSourceLinkBotProfile) {
-		requestWithMenuAdd();
+		confirmOpen([=] {
+			requestMain();
+		});
 	}, [&](WebViewSourceLinkAttachMenu data) {
 		requestWithMenuAdd();
 	}, [&](WebViewSourceMainMenu) {
@@ -667,7 +670,13 @@ void WebViewInstance::resolve() {
 	}, [&](WebViewSourceGame game) {
 		showGame();
 	}, [&](WebViewSourceBotProfile) {
-		requestWithMenuAdd();
+		if (_context.maySkipConfirmation) {
+			requestMain();
+		} else {
+			confirmOpen([=] {
+				requestMain();
+			});
+		}
 	});
 }
 
@@ -753,6 +762,10 @@ void WebViewInstance::confirmOpen(Fn<void()> done) {
 		close();
 		done();
 	};
+	const auto cancel = [=](Fn<void()> close) {
+		botClose();
+		close();
+	};
 	_parentShow->show(Ui::MakeConfirmBox({
 		.text = tr::lng_allow_bot_webview(
 			tr::now,
@@ -760,7 +773,7 @@ void WebViewInstance::confirmOpen(Fn<void()> done) {
 			Ui::Text::Bold(_bot->name()),
 			Ui::Text::RichLangValue),
 		.confirmed = crl::guard(this, callback),
-		.cancelled = crl::guard(this, [=] { botClose(); }),
+		.cancelled = crl::guard(this, cancel),
 		.confirmText = tr::lng_box_ok(),
 	}));
 }
@@ -774,6 +787,10 @@ void WebViewInstance::confirmAppOpen(
 			done((*allowed) && (*allowed)->checked());
 			close();
 		};
+		const auto cancelled = [=](Fn<void()> close) {
+			botClose();
+			close();
+		};
 		Ui::ConfirmBox(box, {
 			tr::lng_allow_bot_webview(
 				tr::now,
@@ -781,7 +798,7 @@ void WebViewInstance::confirmAppOpen(
 				Ui::Text::Bold(_bot->name()),
 				Ui::Text::RichLangValue),
 			crl::guard(this, callback),
-			crl::guard(this, [=] { botClose(); }),
+			crl::guard(this, cancelled),
 		});
 		if (writeAccess) {
 			(*allowed) = box->addRow(
@@ -860,6 +877,31 @@ void WebViewInstance::requestSimple() {
 		MTP_string(_button.startCommand),
 		MTP_dataJSON(MTP_bytes(botThemeParams().json)),
 		MTP_string("android")
+	)).done([=](const MTPWebViewResult &result) {
+		show(qs(result.data().vurl()));
+	}).fail([=](const MTP::Error &error) {
+		_parentShow->showToast(error.type());
+		close();
+	}).send();
+}
+
+void WebViewInstance::requestMain() {
+	using Flag = MTPmessages_RequestMainWebView::Flag;
+	_requestId = _session->api().request(MTPmessages_RequestMainWebView(
+		MTP_flags(Flag::f_theme_params
+			| (_button.startCommand.isEmpty()
+						? Flag()
+						: Flag::f_start_param)
+			| (v::is<WebViewSourceLinkBotProfile>(_source)
+				? (v::get<WebViewSourceLinkBotProfile>(_source).compact
+					? Flag::f_compact
+					: Flag(0))
+				: Flag(0))),
+		_context.action->history->peer->input,
+		_bot->inputUser,
+		MTP_string(_button.startCommand),
+		MTP_dataJSON(MTP_bytes(botThemeParams().json)),
+		MTP_string("tdesktop")
 	)).done([=](const MTPWebViewResult &result) {
 		show(qs(result.data().vurl()));
 	}).fail([=](const MTP::Error &error) {
@@ -1415,7 +1457,10 @@ AttachWebView::AttachWebView(not_null<Main::Session*> session)
 	_refreshTimer.callEach(kRefreshBotsTimeout);
 }
 
-AttachWebView::~AttachWebView() = default;
+AttachWebView::~AttachWebView() {
+	closeAll();
+	_session->api().request(_popularAppBotsRequestId).cancel();
+}
 
 void AttachWebView::openByUsername(
 		not_null<Window::SessionController*> controller,
@@ -1470,6 +1515,40 @@ void AttachWebView::close(not_null<WebViewInstance*> instance) {
 void AttachWebView::closeAll() {
 	cancel();
 	base::take(_instances);
+}
+
+void AttachWebView::loadPopularAppBots() {
+	if (_popularAppBotsLoaded.current() || _popularAppBotsRequestId) {
+		return;
+	}
+	_popularAppBotsRequestId = _session->api().request(
+		MTPbots_GetPopularAppBots(
+			MTP_string(),
+			MTP_int(kPopularAppBotsLimit))
+	).done([=](const MTPbots_PopularAppBots &result) {
+		_popularAppBotsRequestId = 0;
+
+		const auto &list = result.data().vusers().v;
+		auto parsed = std::vector<not_null<UserData*>>();
+		parsed.reserve(list.size());
+		for (const auto &user : list) {
+			const auto bot = _session->data().processUser(user);
+			if (bot->isBot()) {
+				parsed.push_back(bot);
+			}
+		}
+		_popularAppBots = std::move(parsed);
+		_popularAppBotsLoaded = true;
+	}).send();
+}
+
+auto AttachWebView::popularAppBots() const
+-> const std::vector<not_null<UserData*>> & {
+	return _popularAppBots;
+}
+
+rpl::producer<> AttachWebView::popularAppBotsLoaded() const {
+	return _popularAppBotsLoaded.changes() | rpl::to_empty;
 }
 
 void AttachWebView::cancel() {

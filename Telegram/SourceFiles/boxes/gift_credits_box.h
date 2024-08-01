@@ -7,11 +7,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #pragma once
 
+namespace Window {
+class SessionController;
+} // namespace Window
+
 namespace Ui {
 
-[[nodiscard]] QColor ColorFromSerialized(quint32 serialized);
-[[nodiscard]] std::optional<QColor> MaybeColorFromSerialized(
-	quint32 serialized);
-[[nodiscard]] QColor Color32FromSerialized(quint32 serialized);
+void ShowGiftCreditsBox(
+	not_null<Window::SessionController*> controller,
+	Fn<void()> gifted);
 
 } // namespace Ui

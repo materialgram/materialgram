@@ -220,7 +220,8 @@ QByteArray Settings::serialize() const {
 		+ Serialize::bytearraySize(ivPosition)
 		+ Serialize::stringSize(noWarningExtensions)
 		+ Serialize::stringSize(_customFontFamily)
-		+ sizeof(qint32) * 2;
+		+ sizeof(qint32) * 3
+		+ Serialize::bytearraySize(_tonsiteStorageToken);
 
 	auto result = QByteArray();
 	result.reserve(size);
@@ -374,7 +375,9 @@ QByteArray Settings::serialize() const {
 				0,
 				1000000))
 			<< qint32(_datacenterEnabled.current() ? 1 : 0)
-			<< qint32(_systemUnlockEnabled ? 1 : 0);
+			<< qint32(_systemUnlockEnabled ? 1 : 0)
+			<< qint32(!_weatherInCelsius ? 0 : *_weatherInCelsius ? 1 : 2)
+			<< _tonsiteStorageToken;
 	}
 
 	Ensures(result.size() == size);
@@ -497,6 +500,8 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	QString customFontFamily = _customFontFamily;
 	qint32 datacenterEnabled = (_datacenterEnabled.current() ? 1 : 0);
 	qint32 systemUnlockEnabled = _systemUnlockEnabled ? 1 : 0;
+	qint32 weatherInCelsius = !_weatherInCelsius ? 0 : *_weatherInCelsius ? 1 : 2;
+	QByteArray tonsiteStorageToken = _tonsiteStorageToken;
 
 	stream >> themesAccentColors;
 	if (!stream.atEnd()) {
@@ -809,6 +814,12 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	if (!stream.atEnd()) {
 		stream >> systemUnlockEnabled;
 	}
+	if (!stream.atEnd()) {
+		stream >> weatherInCelsius;
+	}
+	if (!stream.atEnd()) {
+		stream >> tonsiteStorageToken;
+	}
 	if (stream.status() != QDataStream::Ok) {
 		LOG(("App Error: "
 			"Bad data for Core::Settings::constructFromSerialized()"));
@@ -1019,6 +1030,10 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	_customFontFamily = customFontFamily;
 	_datacenterEnabled = (datacenterEnabled == 1);
 	_systemUnlockEnabled = (systemUnlockEnabled == 1);
+	_weatherInCelsius = !weatherInCelsius
+		? std::optional<bool>()
+		: (weatherInCelsius == 1);
+	_tonsiteStorageToken = tonsiteStorageToken;
 }
 
 QString Settings::getSoundPath(const QString &key) const {

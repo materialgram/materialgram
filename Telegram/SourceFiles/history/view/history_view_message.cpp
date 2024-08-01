@@ -2384,10 +2384,10 @@ TextState Message::textState(
 			if (getStateForwardedInfo(point, trect, &result, request)) {
 				return result;
 			}
-			if (getStateReplyInfo(point, trect, &result)) {
+			if (getStateViaBotIdInfo(point, trect, &result)) {
 				return result;
 			}
-			if (getStateViaBotIdInfo(point, trect, &result)) {
+			if (getStateReplyInfo(point, trect, &result)) {
 				return result;
 			}
 		}
