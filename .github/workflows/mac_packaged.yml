@@ -1,0 +1,129 @@
+name: MacOS Packaged.
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+
+  macos:
+    name: MacOS
+    runs-on: macos-13
+
+    strategy:
+      matrix:
+        defines:
+          - ""
+
+    env:
+      GIT: "https://github.com"
+      CMAKE_PREFIX_PATH: "/usr/local/opt/ffmpeg@6:/usr/local/opt/openal-soft"
+      UPLOAD_ARTIFACT: "true"
+      ONLY_CACHE: "false"
+      MANUAL_CACHING: "1"
+      AUTO_CACHING: "1"
+
+    steps:
+      - name: Get repository name.
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
+
+      - name: Clone.
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          path: ${{ env.REPO_NAME }}
+
+      - name: First set up.
+        run: |
+          brew update
+          brew upgrade || true
+          brew install ada-url autoconf automake boost cmake ffmpeg@6 openal-soft openh264 openssl opus ninja pkg-config python qt yasm xz
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+          xcodebuild -version > CACHE_KEY.txt
+          brew list --versions >> CACHE_KEY.txt
+          echo $MANUAL_CACHING >> CACHE_KEY.txt
+          echo "$GITHUB_WORKSPACE" >> CACHE_KEY.txt
+          if [ "$AUTO_CACHING" = "1" ]; then
+            thisFile=$REPO_NAME/.github/workflows/mac_packaged.yml
+            echo `md5 -q $thisFile` >> CACHE_KEY.txt
+          fi
+          echo "CACHE_KEY=`md5 -q CACHE_KEY.txt`" >> $GITHUB_ENV
+
+          echo "LibrariesPath=`pwd`" >> $GITHUB_ENV
+
+          curl -o tg_owt-version.json https://api.github.com/repos/desktop-app/tg_owt/git/refs/heads/master
+
+      - name: RNNoise.
+        run: |
+          cd $LibrariesPath
+
+          git clone --depth=1 https://gitlab.xiph.org/xiph/rnnoise.git
+          cd rnnoise
+          ./autogen.sh
+          ./configure --disable-examples --disable-doc
+          make -j$(sysctl -n hw.logicalcpu)
+          make install
+
+      - name: WebRTC cache.
+        id: cache-webrtc
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.LibrariesPath }}/tg_owt
+          key: ${{ runner.OS }}-webrtc-${{ env.CACHE_KEY }}-${{ hashFiles('**/tg_owt-version.json') }}
+      - name: WebRTC.
+        if: steps.cache-webrtc.outputs.cache-hit != 'true'
+        run: |
+          cd $LibrariesPath
+
+          git clone --depth=1 --recursive --shallow-submodules $GIT/desktop-app/tg_owt.git
+          cd tg_owt
+
+          cmake -B build . -GNinja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel
+
+      - name: materialgram build.
+        if: env.ONLY_CACHE == 'false'
+        env:
+          tg_owt_DIR: ${{ env.LibrariesPath }}/tg_owt/build
+        run: |
+          cd $REPO_NAME
+
+          DEFINE=""
+          if [ -n "${{ matrix.defines }}" ]; then
+            DEFINE="-D ${{ matrix.defines }}=ON"
+            echo Define from matrix: $DEFINE
+            echo "ARTIFACT_NAME=materialgram_${{ matrix.defines }}" >> $GITHUB_ENV
+          else
+            echo "ARTIFACT_NAME=materialgram" >> $GITHUB_ENV
+          fi
+
+          cmake -Bbuild -GNinja . \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_FIND_FRAMEWORK=LAST \
+          $DEFINE
+
+          cmake --build build --parallel
+
+          cd build
+          macdeployqt materialgram.app
+          codesign --remove-signature materialgram.app
+
+          mkdir dmgsrc
+          mv materialgram.app dmgsrc
+          hdiutil create -volname materialgram -srcfolder dmgsrc -ov -format UDZO materialgram.dmg
+
+      - name: Move artifact.
+        if: env.UPLOAD_ARTIFACT == 'true'
+        run: |
+          cd $REPO_NAME/build
+          mkdir artifact
+          mv materialgram.dmg artifact/
+      - uses: actions/upload-artifact@v4
+        if: env.UPLOAD_ARTIFACT == 'true'
+        name: Upload artifact.
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.REPO_NAME }}/build/artifact/
