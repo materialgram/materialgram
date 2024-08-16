@@ -103,6 +103,9 @@ jobs:
           cmake -Bbuild -GNinja . \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_FIND_FRAMEWORK=LAST \
+          -DTDESKTOP_API_ID=${{ secrets.API_ID }} \
+          -DTDESKTOP_API_HASH=${{ secrets.API_HASH }} \
+          -DDESKTOP_APP_DISABLE_AUTOUPDATE=OFF \
           $DEFINE
 
           cmake --build build --parallel
