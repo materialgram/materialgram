@@ -20,8 +20,7 @@ You will require **api_id** and **api_hash** to access the Telegram API servers.
 
 ## Install third party software
 
-* Download **Python 3.10** installer from [https://www.python.org/downloads/](https://www.python.org/downloads/) and install it with adding to PATH. **Python 3.11** and above may not work!
-* Download **CMake 3.21 or later** installer from [https://cmake.org/download/](https://cmake.org/download/) and install it.
+* Download **Python 3.10** installer from [https://www.python.org/downloads/](https://www.python.org/downloads/) and install it with adding to PATH.
 * Download **Git** installer from [https://git-scm.com/download/win](https://git-scm.com/download/win) and install it.
 
 ## Clone source code and prepare libraries
