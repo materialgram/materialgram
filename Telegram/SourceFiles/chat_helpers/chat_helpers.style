@@ -1495,3 +1495,7 @@ pickLocationChooseOnMap: RoundButton(defaultActiveButton) {
 		font: font(15px semibold);
 	}
 }
+
+sendGifBox: Box(defaultBox) {
+	shadowIgnoreBottomSkip: true;
+}
