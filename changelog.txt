@@ -1,3 +1,18 @@
+5.5.4.1 (13.09.24)
+
+- Fix channel updates stopping after difference request failing.
+- Add QR code generation for your username in Settings.
+- Add mention link QR code sharing.
+- Fix sending files from network drives. (Windows)
+- Support two bottom buttons in web apps.
+- Fix text layout outside of the message bubble glitch.
+- Don't stop video when dragging media viewer in window mode.
+- Fix crash in peer short info box.
+- Star Giveaways.
+- Swipe-to-Reply.
+- Audio device selection in one-on-one calls.
+- Text selection in collapsed / expanded quotes.
+
 5.4.1.1 (17.08.24)
 
 - Official changelog:
