@@ -77,5 +77,6 @@
         <binary>materialgram</binary>
 		<dbus type="session">io.github.kukuruzka165.materialgram</dbus>
         <mediatype>x-scheme-handler/tg</mediatype>
+		<mediatype>x-scheme-handler/tonsite</mediatype>
     </provides>
 </component>

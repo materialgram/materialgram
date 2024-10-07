@@ -89,6 +89,7 @@ sudo sh -c "curl -s https://raw.githubusercontent.com/materialgram/arch/x86_64/i
 * **QR Code generator** ([MIT License](https://github.com/nayuki/QR-Code-generator#license))
 * **CMake** ([New BSD License](https://github.com/Kitware/CMake/blob/master/Copyright.txt))
 * **Hunspell** ([LGPL](https://github.com/hunspell/hunspell/blob/master/COPYING.LESSER))
+* **Ada** ([Apache License 2.0](https://github.com/ada-url/ada/blob/main/LICENSE-APACHE))
 
 [//]: # (LINKS)
 [telegram_api]: https://core.telegram.org
