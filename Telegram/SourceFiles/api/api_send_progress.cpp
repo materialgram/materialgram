@@ -152,6 +152,7 @@ void SendProgressManager::send(const Key &key, int progress) {
 }
 
 bool SendProgressManager::skipRequest(const Key &key) const {
+	if (Main::Session::debugActions) return true;
 	const auto user = key.history->peer->asUser();
 	if (!user) {
 		return false;

@@ -111,6 +111,7 @@ public:
 		return _user;
 	}
 	bool validateSelf(UserId id);
+	static inline bool debugActions = false;
 
 	[[nodiscard]] Data::Changes &changes() const {
 		return *_changes;

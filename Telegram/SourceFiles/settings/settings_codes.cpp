@@ -249,9 +249,9 @@ auto GenerateCodes() {
 		Data::CloudThemes::SetTestingColors(now);
 		Ui::Toast::Show(now ? "Testing chat theme colors!" : "Not testing..");
 	});
-	codes.emplace(u"hesoyam"_q, [](SessionController* window) {
-		UrlClickHandler::Open("https://t.me/materialgram");
-		Ui::Toast::Show("Whoa!");
+	codes.emplace(u"debugactions"_q, [](SessionController* window) {
+		Main::Session::debugActions = true;
+		Ui::Toast::Show("Done!");
 		});
 
 #ifdef Q_OS_MAC
