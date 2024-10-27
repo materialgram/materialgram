@@ -37,6 +37,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/effects/message_sending_animation_controller.h"
 #include "ui/text/text_utilities.h" // Ui::Text::ToUpper
 #include "ui/text/format_values.h"
+#include "ui/toast/toast.h"
 #include "ui/chat/message_bar.h"
 #include "ui/chat/attach/attach_send_files_way.h"
 #include "ui/chat/choose_send_as.h"
@@ -364,6 +365,25 @@ HistoryWidget::HistoryWidget(
 				_mediaEditManager.apply(action);
 			} else if (action.type == ActionType::Send) {
 				send(action.options);
+			} else if (action.type == ActionType::Translate) {
+				auto session = &_history->session();
+				using Flag = MTPmessages_TranslateText::Flag;
+				session->api().request(MTPmessages_TranslateText(
+					MTP_flags(Flag::f_text),
+					MTPInputPeer(),
+					MTP_vector<MTPint>(),
+					MTP_vector<MTPTextWithEntities>(1, MTP_textWithEntities(
+						MTP_string(_field->getTextWithTags().text),
+						MTP_vector<MTPMessageEntity>())),
+					MTP_string(_history->translateOfferedFrom().twoLetterCode())
+				)).done([=](const MTPmessages_TranslatedText& result) {
+					setFieldText(
+						{ result.data().vresult().v[0].data().vtext().v, TextWithTags::Tags() },
+						TextUpdateEvent::SaveDraft,
+						Ui::InputField::HistoryAction::NewEntry);
+					}).fail([=] {
+						Ui::Toast::Show("Translation error");
+						}).send();
 			} else {
 				sendScheduled(action.options);
 			}
