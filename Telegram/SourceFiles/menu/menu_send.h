@@ -55,6 +55,7 @@ struct Details {
 	CaptionState caption = CaptionState::None;
 	std::optional<uint64> price;
 	bool effectAllowed = false;
+	bool translationAllowed = false;
 };
 
 enum class FillMenuResult : uchar {

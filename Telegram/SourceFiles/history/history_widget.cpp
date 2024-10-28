@@ -4256,7 +4256,8 @@ SendMenu::Details HistoryWidget::sendMenuDetails() const {
 		? SendMenu::Type::ScheduledToUser
 		: SendMenu::Type::Scheduled;
 	const auto effectAllowed = _peer && _peer->isUser();
-	return { .type = type, .effectAllowed = effectAllowed };
+	const auto translationAllowed = _field->hasText();
+	return { .type = type, .effectAllowed = effectAllowed, .translationAllowed = translationAllowed };
 }
 
 SendMenu::Details HistoryWidget::saveMenuDetails() const {

@@ -712,7 +712,7 @@ FillMenuResult FillSendMenu(
 				details); },
 			&icons.menuWhenOnline);
 	}
-	if (sending) {
+	if (sending && details.translationAllowed) {
 		menu->addAction(
 			tr::lng_context_translate(tr::now),
 			[=] { action({ .type = ActionType::Translate }, details); },
