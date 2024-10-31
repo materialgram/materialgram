@@ -1,5 +1,28 @@
+5.7.0.1 (01.11.24)
+
+- Translate outgoing messages to the chat language (experimental)
+- Official changelog:
+- Sending video messages.
+- New video quality selection in channels.
+- Adding media to sent text messages via Edit.
+- Ads in bots with revenue sharing with bot developers.
+- Chat-specific hashtags.
+- Add ability to change page scale in Instant View pages.
+- Fix unnecessary timestamp jump to a new line.
+- Fix secondary button positioning in miniapps.
+- Fix a crash in QR code copy for a chat without a photo.
+- Fix a crash in share options menu showing.
+- Fix a crash on monitor disconnect.
+- Message selection marks.
+- Better copy username / public link / ID menu in profiles.
+- Keyboard navigation (Up/Down/PageUp/PageDown) in chat preview.
+- Improved QR options for profile links.
+- Fix calls color problems on Windows.
+- Fix scroll problems on Linux.
+
 5.6.1.1 (07.10.24)
 
+- Official changelog:
 - Fix media viewer sometimes blocking the app after launch.
 - Gifts for Telegram Stars.
 - Mention / hashtag autocomplete in media caption field.
@@ -25,6 +48,7 @@
 
 5.5.4.1 (13.09.24)
 
+- Official changelog:
 - Fix channel updates stopping after difference request failing.
 - Add QR code generation for your username in Settings.
 - Add mention link QR code sharing.
