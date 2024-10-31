@@ -35,6 +35,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/wrap/slide_wrap.h"
 #include "ui/widgets/menu/menu_add_action_callback.h"
 #include "ui/widgets/continuous_sliders.h"
+#include "ui/widgets/popup_menu.h"
 #include "ui/text/text_utilities.h"
 #include "ui/toast/toast.h"
 #include "ui/new_badges.h"
