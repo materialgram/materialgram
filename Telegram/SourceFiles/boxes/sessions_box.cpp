@@ -59,6 +59,9 @@ enum class Type {
 	Firefox,
 	Safari,
 	Other,
+	Materialgram,
+	Octogram,
+	Swiftgram,
 };
 
 class Row;
@@ -161,6 +164,7 @@ void RenameBox(not_null<Ui::GenericBox*> box) {
 	const auto platform = entry.platform.toLower();
 	const auto device = entry.name.toLower();
 	const auto system = entry.system.toLower();
+	const auto info = entry.info.toLower();
 	const auto apiId = entry.apiId;
 	const auto kDesktop = std::array{ 2040, 17349, 611335 };
 	const auto kMac = std::array{ 2834 };
@@ -199,7 +203,13 @@ void RenameBox(not_null<Ui::GenericBox*> box) {
 		return {};
 	};
 
-	if (ranges::contains(kAndroid, apiId)) {
+	if (info.contains("materialgram")) {
+		return Type::Materialgram;
+	} else if (info.contains("octogram")) {
+		return Type::Octogram;
+	} else if (info.contains("swiftgram")) {
+		return Type::Swiftgram;
+	} else if (ranges::contains(kAndroid, apiId)) {
 		return Type::Android;
 	} else if (ranges::contains(kDesktop, apiId)) {
 		return detectDesktop().value_or(Type::Linux);
@@ -233,12 +243,15 @@ void RenameBox(not_null<Ui::GenericBox*> box) {
 		case Type::Windows:
 		case Type::Mac:
 		case Type::Other:
+		case Type::Materialgram:
 			// Blue.
 			return { st::historyPeer4UserpicBg, st::historyPeer4UserpicBg2 };
 		case Type::Ubuntu:
+		case Type::Swiftgram:
 			// Orange.
 			return { st::historyPeer8UserpicBg, st::historyPeer8UserpicBg2 };
 		case Type::Linux:
+		case Type::Octogram:
 			// Purple.
 			return { st::historyPeer5UserpicBg, st::historyPeer5UserpicBg2 };
 		case Type::iPhone:
@@ -281,6 +294,9 @@ void RenameBox(not_null<Ui::GenericBox*> box) {
 	case Type::Firefox: return st::sessionIconFirefox;
 	case Type::Safari: return st::sessionIconSafari;
 	case Type::Other: return st::sessionIconOther;
+	case Type::Materialgram: return st::sessionIconMaterialgram;
+	case Type::Octogram: return st::sessionIconOctogram;
+	case Type::Swiftgram: return st::sessionIconSwiftgram;
 	}
 	Unexpected("Type in IconForType.");
 }
@@ -289,6 +305,9 @@ void RenameBox(not_null<Ui::GenericBox*> box) {
 	switch (type) {
 	case Type::Web: return &st::sessionBigIconWeb;
 	case Type::Other: return &st::sessionBigIconOther;
+	case Type::Materialgram: return &st::sessionBigIconMaterialgram;
+	case Type::Octogram: return &st::sessionBigIconOctogram;
+	case Type::Swiftgram: return &st::sessionBigIconSwiftgram;
 	}
 	return nullptr;
 }
