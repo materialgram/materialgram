@@ -1,3 +1,17 @@
+5.9.0.1 (14.12.24)
+
+- Use new icons in active sessions menu
+- Official changelog:
+- Affiliate programs for bots.
+- Add option to show folder tags in chats list.
+- Ctrl+Click on Reply in groups to reply in another chat.
+- Fix freeze on forward messages box opening.
+- Improve phrases in bot subscriptions.
+- Improve bottom label color in mini apps.
+- Fix some fullscreen issues in mini apps.
+- Fix miss-order of archived chats in forward box.
+- Fix emoji status pack view from profile regression.
+
 5.8.1.1 (18.11.24)
 
 - Removed recent stickers limit

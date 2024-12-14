@@ -21,7 +21,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 
 ## Features
 - Included own Material You theme with colorizer ([Day](https://t.me/addtheme/materialgram_day), [Dark](https://t.me/addtheme/materialgram_dark))
-- **Google Sans** font everywhere (except for Arabic characters, they use the **Vazir** font)
+- **Google Sans** font everywhere (except for Arabic characters, they use the **Vazirmatn** font)
 - Material icons instead of default ones
 - Ability to seek round videos (experimental)
 - Ability to delete more than 100 messages at once (experimental)
@@ -82,7 +82,7 @@ sudo sh -c "curl -s https://raw.githubusercontent.com/materialgram/arch/x86_64/i
 * **FFmpeg** ([LGPL](https://www.ffmpeg.org/legal.html))
 * **Guideline Support Library** ([MIT License](https://github.com/Microsoft/GSL/blob/master/LICENSE))
 * **Range-v3** ([Boost License](https://github.com/ericniebler/range-v3/blob/master/LICENSE.txt))
-* **Vazir font** ([SIL Open Font License 1.1](https://github.com/rastikerdar/vazir-font/blob/master/OFL.txt))
+* **Vazirmatn font** ([SIL Open Font License 1.1](https://github.com/rastikerdar/vazirmatn/blob/master/OFL.txt))
 * **Emoji alpha codes** ([MIT License](https://github.com/emojione/emojione/blob/master/extras/alpha-codes/LICENSE.md))
 * **Catch test framework** ([Boost License](https://github.com/philsquared/Catch/blob/master/LICENSE.txt))
 * **xxHash** ([BSD License](https://github.com/Cyan4973/xxHash/blob/dev/LICENSE))
