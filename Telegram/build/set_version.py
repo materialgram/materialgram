@@ -3,12 +3,6 @@ import os
 if os.path.isfile("version") is True:
     os.remove("version")
 
-def nf(number, amount):
-    n = str(number)
-    while len(n) < amount:
-        n += "0"
-    return n
-
 def replaceline(path, linecontains, replacewith):
     with open(path, "r") as file:
         lines = file.readlines()
@@ -19,11 +13,12 @@ def replaceline(path, linecontains, replacewith):
             else:
                 file.write(line)
 
-major, minor, patch, materialver = input("Enter your major version: "), input("Minor: "), input("Patch: "), input("materialgram version: ")
-ver = major + "." + minor + "." + patch + "." + materialver
+major, minor, patch, materialver, buildnumber = input("Enter your major version: "), input("Minor: "), input("Patch: "), input("materialgram version: "), str(50100000) + input("Build number: ")
+ver = f"{major}.{minor}.{patch}.{materialver}"
 print(ver)
+print(buildnumber)
 with open("version", 'xt') as versionfile:
-    versionfile.write(f"AppVersion         {nf(major, 3)}{nf(minor, 3)}{nf(patch, 2)}{materialver}\n"
+    versionfile.write(f"AppVersion         {buildnumber}\n"
                       f"AppVersionStrMajor {major}.{minor}\n"
                       f"AppVersionStrSmall {major}.{minor}.{patch}.{materialver}\n"
                       f"AppVersionStr      {major}.{minor}.{patch}.{materialver}\n"
@@ -32,7 +27,7 @@ with open("version", 'xt') as versionfile:
 replaceline("../SourceFiles/core/version.h", 'constexpr auto AppVersionStr = "',
             f'{major}.{minor}.{patch}.{materialver}";')
 replaceline("../SourceFiles/core/version.h", 'constexpr auto AppVersion = ',
-            f'{nf(major, 3)}{nf(minor, 3)}{nf(patch, 2)}{materialver};')
+            f'{buildnumber};')
 replaceline("../Resources/winrc/Telegram.rc", ' FILEVERSION ',
             f'{major},{minor},{patch},{materialver}')
 replaceline("../Resources/winrc/Telegram.rc", ' PRODUCTVERSION ',

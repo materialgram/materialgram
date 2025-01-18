@@ -1,3 +1,11 @@
+5.10.0.1 (02.01.25)
+
+- Official changelog:
+- Collectible Gifts.
+- Reactions for Service Messages.
+- Verification from Third Parties.
+- Custom Emoji in Folder Names.
+
 5.9.0.1 (14.12.24)
 
 - Use new icons in active sessions menu
