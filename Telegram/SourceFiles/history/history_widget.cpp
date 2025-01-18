@@ -86,7 +86,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/stickers/data_custom_emoji.h"
 #include "history/history.h"
 #include "history/history_item.h"
-#include "history/history_item_helpers.h" // GetErrorTextForSending.
+#include "history/history_item_helpers.h" // GetErrorForSending.
 #include "history/history_drag_area.h"
 #include "history/history_inner_widget.h"
 #include "history/history_item_components.h"
@@ -1048,7 +1048,7 @@ void HistoryWidget::refreshTabbedPanel() {
 
 void HistoryWidget::initVoiceRecordBar() {
 	_voiceRecordBar->setStartRecordingFilter([=] {
-		const auto error = [&]() -> std::optional<QString> {
+		const auto error = [&]() -> Data::SendError {
 			if (_peer) {
 				if (const auto error = Data::RestrictionError(
 						_peer,
@@ -1056,10 +1056,10 @@ void HistoryWidget::initVoiceRecordBar() {
 					return error;
 				}
 			}
-			return std::nullopt;
+			return {};
 		}();
 		if (error) {
-			controller()->showToast(*error);
+			Data::ShowSendErrorToast(controller(), _peer, error);
 			return true;
 		} else if (showSlowmodeError()) {
 			return true;
@@ -1878,7 +1878,7 @@ void HistoryWidget::fileChosen(ChatHelpers::FileChosen &&data) {
 		} else if (!_field->isHidden()) {
 			Data::InsertCustomEmoji(_field.data(), data.document);
 		}
-	} else {
+	} else if (_history) {
 		controller()->sendingAnimation().appendSending(
 			data.messageSendingFrom);
 		const auto localId = data.messageSendingFrom.localId;
@@ -1950,7 +1950,7 @@ void HistoryWidget::activate() {
 
 void HistoryWidget::setInnerFocus() {
 	if (_list) {
-		if (isSearching()) {
+		if (isSearching() && !_nonEmptySelection) {
 			_composeSearch->setInnerFocus();
 		} else if (isChoosingTheme()) {
 			_chooseTheme->setFocus();
@@ -3619,14 +3619,19 @@ void HistoryWidget::historyLoaded() {
 }
 
 bool HistoryWidget::clearMaybeSendStart() {
-	if (!_showAndMaybeSendStart) {
+	if (!_showAndMaybeSendStart || !_history) {
+		return false;
+	} else if (!_history->peer->isFullLoaded()) {
+		_history->peer->updateFull();
 		return false;
 	}
 	_showAndMaybeSendStart = false;
 	if (const auto user = _history ? _history->peer->asUser() : nullptr) {
-		if (const auto info = user->botInfo.get()) {
-			if (!info->startToken.isEmpty()) {
-				return true;
+		if (user->blockStatus() == PeerData::BlockStatus::NotBlocked) {
+			if (const auto info = user->botInfo.get()) {
+				if (!info->startToken.isEmpty()) {
+					return true;
+				}
 			}
 		}
 	}
@@ -3995,10 +4000,8 @@ void HistoryWidget::preloadHistoryIfNeeded() {
 		preloadHistoryByScroll();
 		checkReplyReturns();
 	}
-	if (_history && _history->loadedAtTop() && _history->loadedAtBottom()) {
-		if (clearMaybeSendStart() && !_history->isDisplayedEmpty()) {
-			sendBotStartCommand();
-		}
+	if (clearMaybeSendStart() && !_history->isDisplayedEmpty()) {
+		sendBotStartCommand();
 	}
 }
 
@@ -4693,7 +4696,7 @@ void HistoryWidget::chooseAttach(
 	if (!_peer || !_canSendMessages) {
 		return;
 	} else if (const auto error = Data::AnyFileRestrictionError(_peer)) {
-		controller()->showToast(*error);
+		Data::ShowSendErrorToast(controller(), _peer, error);
 		return;
 	} else if (showSlowmodeError()) {
 		return;
@@ -5723,12 +5726,12 @@ bool HistoryWidget::showSendingFilesError(
 bool HistoryWidget::showSendingFilesError(
 		const Ui::PreparedList &list,
 		std::optional<bool> compress) const {
-	const auto text = [&] {
+	const auto error = [&]() -> Data::SendError {
 		const auto error = _peer
 			? Data::FileRestrictionError(_peer, list, compress)
-			: std::nullopt;
-		if (error) {
-			return *error;
+			: Data::SendError();
+		if (!_peer || error) {
+			return error;
 		} else if (const auto left = _peer->slowmodeSecondsLeft()) {
 			return tr::lng_slowmode_enabled(
 				tr::now,
@@ -5748,15 +5751,15 @@ bool HistoryWidget::showSendingFilesError(
 		}
 		return tr::lng_forward_send_files_cant(tr::now);
 	}();
-	if (text.isEmpty()) {
+	if (!error) {
 		return false;
-	} else if (text == u"(toolarge)"_q) {
+	} else if (error.text == u"(toolarge)"_q) {
 		const auto fileSize = list.files.back().size;
 		controller()->show(
 			Box(FileSizeLimitBox, &session(), fileSize, nullptr));
 		return true;
 	}
-	controller()->showToast(text);
+	Data::ShowSendErrorToast(controller(), _peer, error);
 	return true;
 }
 
@@ -5796,7 +5799,7 @@ bool HistoryWidget::showSendMessageError(
 		return false;
 	}
 	const auto topicRootId = resolveReplyToTopicRootId();
-	const auto error = GetErrorTextForSending(
+	const auto error = GetErrorForSending(
 		_peer,
 		{
 			.topicRootId = topicRootId,
@@ -5804,10 +5807,10 @@ bool HistoryWidget::showSendMessageError(
 			.text = &textWithTags,
 			.ignoreSlowmodeCountdown = ignoreSlowmodeCountdown,
 		});
-	if (error.isEmpty()) {
+	if (!error) {
 		return false;
 	}
-	controller()->showToast(error);
+	Data::ShowSendErrorToast(controller(), _peer, error);
 	return true;
 }
 
@@ -6307,39 +6310,39 @@ int HistoryWidget::countAutomaticScrollTop() {
 	return ScrollMax;
 }
 
-QString HistoryWidget::computeSendRestriction() const {
-	if (const auto user = _peer ? _peer->asUser() : nullptr) {
-		if (user->meRequiresPremiumToWrite()
-			&& !user->session().premium()) {
-			return u"premium_required"_q;
-		}
-	}
+Data::SendError HistoryWidget::computeSendRestriction() const {
 	const auto allWithoutPolls = Data::AllSendRestrictions()
 		& ~ChatRestriction::SendPolls;
-	const auto error = (_peer && !Data::CanSendAnyOf(_peer, allWithoutPolls))
+	return (_peer && !Data::CanSendAnyOf(_peer, allWithoutPolls))
 		? Data::RestrictionError(_peer, ChatRestriction::SendOther)
-		: std::nullopt;
-	return error ? (u"restriction:"_q + *error) : QString();
+		: Data::SendError();
 }
 
 void HistoryWidget::updateSendRestriction() {
 	const auto restriction = computeSendRestriction();
-	if (_sendRestrictionKey == restriction) {
+	if (_sendRestrictionKey == restriction.text) {
 		return;
 	}
-	_sendRestrictionKey = restriction;
-	if (restriction.isEmpty()) {
+	_sendRestrictionKey = restriction.text;
+	if (!restriction) {
 		_sendRestriction = nullptr;
-	} else if (restriction == u"premium_required"_q) {
+	} else if (restriction.premiumToLift) {
 		_sendRestriction = PremiumRequiredSendRestriction(
 			this,
 			_peer->asUser(),
 			controller());
-	} else if (restriction.startsWith(u"restriction:"_q)) {
-		const auto error = restriction.mid(12);
-		_sendRestriction = TextErrorSendRestriction(this, error);
+	} else if (const auto lifting = restriction.boostsToLift) {
+		auto button = base::make_unique_q<Ui::FlatButton>(
+			this,
+			restriction.text,
+			st::historyComposeButton);
+		const auto channel = _peer->asChannel();
+		button->setClickedCallback([=] {
+			controller()->resolveBoostState(channel, lifting);
+		});
+		_sendRestriction = std::move(button);
 	} else {
-		Unexpected("Restriction type.");
+		_sendRestriction = TextErrorSendRestriction(this, restriction.text);
 	}
 	if (_sendRestriction) {
 		_sendRestriction->show();
@@ -7151,9 +7154,8 @@ void HistoryWidget::sendInlineResult(InlineBots::ResultSelected result) {
 		return;
 	}
 
-	auto errorText = result.result->getErrorOnSend(_history);
-	if (!errorText.isEmpty()) {
-		controller()->showToast(errorText);
+	if (const auto error = result.result->getErrorOnSend(_history)) {
+		Data::ShowSendErrorToast(controller(), _peer, error);
 		return;
 	}
 
@@ -7795,9 +7797,9 @@ bool HistoryWidget::sendExistingDocument(
 		std::optional<MsgId> localId) {
 	const auto error = _peer
 		? Data::RestrictionError(_peer, ChatRestriction::SendStickers)
-		: std::nullopt;
+		: Data::SendError();
 	if (error) {
-		controller()->showToast(*error);
+		Data::ShowSendErrorToast(controller(), _peer, error);
 		return false;
 	} else if (!_peer
 		|| !_canSendMessages
@@ -7832,9 +7834,9 @@ bool HistoryWidget::sendExistingPhoto(
 		Api::SendOptions options) {
 	const auto error = _peer
 		? Data::RestrictionError(_peer, ChatRestriction::SendPhotos)
-		: std::nullopt;
+		: Data::SendError();
 	if (error) {
-		controller()->showToast(*error);
+		Data::ShowSendErrorToast(controller(), _peer, error);
 		return false;
 	} else if (!_peer || !_canSendMessages) {
 		return false;
@@ -8329,6 +8331,10 @@ void HistoryWidget::fullInfoUpdated() {
 
 		handlePeerUpdate();
 		checkSuggestToGigagroup();
+
+		if (clearMaybeSendStart() && !_history->isDisplayedEmpty()) {
+			sendBotStartCommand();
+		}
 	}
 	if (updateCmdStartShown()) {
 		refresh = true;
@@ -8444,7 +8450,11 @@ void HistoryWidget::confirmDeleteSelected() {
 
 void HistoryWidget::escape() {
 	if (_composeSearch) {
-		_composeSearch->hideAnimated();
+		if (_nonEmptySelection) {
+			clearSelected();
+		} else {
+			_composeSearch->hideAnimated();
+		}
 	} else if (_chooseForReport) {
 		controller()->clearChooseReportMessages();
 	} else if (_nonEmptySelection && _list) {
@@ -8544,7 +8554,7 @@ void HistoryWidget::updateTopBarSelection() {
 	updateHistoryGeometry();
 	if (!controller()->isLayerShown()
 		&& !Core::App().passcodeLocked()) {
-		if (isSearching()) {
+		if (isSearching() && !_nonEmptySelection) {
 			_composeSearch->setInnerFocus();
 		} else if (_nonEmptySelection
 			|| (_list && _list->wasSelectedText())
