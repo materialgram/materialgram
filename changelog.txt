@@ -1,6 +1,10 @@
-5.10.0.1 (02.01.25)
+5.10.3.1 (18.01.25)
 
 - Official changelog:
+- Fix a crash in legacy group opening.
+- Fix double verification badge in profiles.
+- Show "Boost group the send messages" information.
+- Fix several gifts bugs and glitches.
 - Collectible Gifts.
 - Reactions for Service Messages.
 - Verification from Third Parties.
