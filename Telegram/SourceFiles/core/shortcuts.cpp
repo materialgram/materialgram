@@ -103,6 +103,8 @@ const auto CommandByName = base::flat_map<QString, Command>{
 
 	{ u"read_chat"_q         , Command::ReadChat },
 
+	{ u"show_chat_menu"_q    , Command::ShowChatMenu },
+
 	// Shortcuts that have no default values.
 	{ u"message"_q                       , Command::JustSendMessage },
 	{ u"message_silently"_q              , Command::SendSilentMessage },
@@ -150,6 +152,8 @@ const auto CommandNames = base::flat_map<Command, QString>{
 	{ Command::ShowContacts   , u"show_contacts"_q },
 
 	{ Command::ReadChat       , u"read_chat"_q },
+
+	{ Command::ShowChatMenu   , u"show_chat_menu"_q },
 };
 
 [[maybe_unused]] constexpr auto kNoValue = {
@@ -438,6 +442,8 @@ void Manager::fillDefaults() {
 	set(u"ctrl+j"_q, Command::ShowContacts);
 
 	set(u"ctrl+r"_q, Command::ReadChat);
+
+	set(u"ctrl+\\"_q, Command::ShowChatMenu);
 }
 
 void Manager::writeDefaultFile() {

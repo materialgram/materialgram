@@ -28,7 +28,7 @@ public:
 	int top() override;
 	int width() override;
 	QSize size() override;
-	QString title() override;
+	TextWithEntities title() override;
 	TextWithEntities subtitle() override;
 	rpl::producer<QString> button() override;
 	bool buttonMinistars() override;
@@ -67,5 +67,7 @@ private:
 	mutable std::optional<Sticker> _sticker;
 
 };
+
+[[nodiscard]] ClickHandlerPtr OpenStarGiftLink(not_null<HistoryItem*> item);
 
 } // namespace HistoryView

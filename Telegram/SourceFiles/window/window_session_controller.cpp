@@ -1189,6 +1189,40 @@ void SessionNavigation::showByInitialId(
 	case SeparateType::Chat:
 		showThread(id.thread, msgId, instant);
 		break;
+	case SeparateType::SharedMedia: {
+		Assert(id.sharedMedia != SeparateSharedMediaType::None);
+		clearSectionStack(instant);
+		const auto type = (id.sharedMedia == SeparateSharedMediaType::Photos)
+			? Storage::SharedMediaType::Photo
+			: (id.sharedMedia == SeparateSharedMediaType::Videos)
+			? Storage::SharedMediaType::Video
+			: (id.sharedMedia == SeparateSharedMediaType::Files)
+			? Storage::SharedMediaType::File
+			: (id.sharedMedia == SeparateSharedMediaType::Audio)
+			? Storage::SharedMediaType::MusicFile
+			: (id.sharedMedia == SeparateSharedMediaType::Links)
+			? Storage::SharedMediaType::Link
+			: (id.sharedMedia == SeparateSharedMediaType::Voices)
+			? Storage::SharedMediaType::RoundVoiceFile
+			: (id.sharedMedia == SeparateSharedMediaType::GIF)
+			? Storage::SharedMediaType::GIF
+			: Storage::SharedMediaType::Photo;
+		const auto topicRootId = id.sharedMediaTopicRootId();
+		const auto peer = id.sharedMediaPeer();
+		const auto topic = topicRootId
+			? peer->forumTopicFor(topicRootId)
+			: nullptr;
+		if (topicRootId && !topic) {
+			break;
+		}
+		showSection(
+			topicRootId
+				? std::make_shared<Info::Memento>(topic, type)
+				: std::make_shared<Info::Memento>(peer, type),
+			instant);
+		parent->widget()->setMaximumWidth(st::maxWidthSharedMediaWindow);
+		break;
+	}
 	case SeparateType::SavedSublist:
 		showSection(
 			std::make_shared<HistoryView::SublistMemento>(id.sublist()),
@@ -1782,6 +1816,9 @@ const rpl::variable<Data::Forum*> &SessionController::shownForum() const {
 }
 
 void SessionController::setActiveChatEntry(Dialogs::RowDescriptor row) {
+	if (windowId().type == SeparateType::SharedMedia) {
+		return;
+	}
 	const auto was = _activeChatEntry.current().key.history();
 	const auto now = row.key.history();
 	if (was && was != now) {

@@ -118,7 +118,8 @@ Cover::Cover(
 , _badge(
 	this,
 	st::infoPeerBadge,
-	user,
+	&user->session(),
+	Info::Profile::BadgeContentForPeer(user),
 	&_emojiStatusPanel,
 	[=] {
 		return controller->isGifPausedAtLeastFor(
@@ -239,7 +240,8 @@ void Cover::refreshUsernameGeometry(int newWidth) {
 
 [[nodiscard]] not_null<Ui::SettingsButton*> AddPremiumStar(
 		not_null<Ui::SettingsButton*> button,
-		bool credits) {
+		bool credits,
+		Fn<bool()> isPaused) {
 	const auto stops = credits
 		? Ui::Premium::CreditsIconGradientStops()
 		: Ui::Premium::ButtonGradientStops();
@@ -254,8 +256,15 @@ void Cover::refreshUsernameGeometry(int newWidth) {
 		false);
 	ministars->setColorOverride(stops);
 
+	const auto isPausedValue
+		= button->lifetime().make_state<rpl::variable<bool>>(isPaused());
+	isPausedValue->value() | rpl::start_with_next([=](bool value) {
+		ministars->setPaused(value);
+	}, ministarsContainer->lifetime());
+
 	ministarsContainer->paintRequest(
 	) | rpl::start_with_next([=] {
+		(*isPausedValue) = isPaused();
 		auto p = QPainter(ministarsContainer);
 		{
 			constexpr auto kScale = 0.35;
@@ -460,12 +469,17 @@ void SetupPremium(
 	Ui::AddDivider(container);
 	Ui::AddSkip(container);
 
+	const auto isPaused = Window::PausedIn(
+		controller,
+		Window::GifPauseReason::Any);
+
 	AddPremiumStar(
 		AddButtonWithIcon(
 			container,
 			tr::lng_premium_summary_title(),
 			st::settingsButton),
-		false
+		false,
+		isPaused
 	)->addClickHandler([=] {
 		controller->setPremiumRef("settings");
 		showOther(PremiumId());
@@ -483,7 +497,8 @@ void SetupPremium(
 						: QString();
 				}),
 				st::settingsButton),
-			true
+			true,
+			isPaused
 		)->addClickHandler([=] {
 			controller->setPremiumRef("settings");
 			showOther(CreditsId());
