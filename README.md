@@ -28,6 +28,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Ability to copy the sticker set author's id and increment
 - Added admin menu and chat log buttons above the members list
 - Copy usernames as @example if possible
+- Use photos from @gamee in profile photo list (experimental, optional)
 - Removed message bubble tails and reverted old paddings
 - Removed "large emoji" outline
 - Replaced webview platform with "android"

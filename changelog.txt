@@ -1,3 +1,20 @@
+5.11.1.1 (22.02.25)
+
+- Use photos from @gamee in profile photo list (experimental)
+- Official changelog:
+- Copy video links at current time.
+- Set custom video covers when posting to channels.
+- Send paid reactions from the name of your channels.
+- Edit keyboard shortcuts in Settings > Chat Settings.
+- Hide controls in calls with incoming video.
+- Count all unread topics as a single chat in archive unread counter.
+- Fix common groups section in bots profiles.
+- Fix crash on scheduling messages from Share box.
+- Add support for 'sound-file' notification hint on Linux.
+- Add messages search in channel comments.
+- Allow sending your unique gifts to blockchain.
+- Add option for running in backround on Linux.
+
 5.10.3.1 (18.01.25)
 
 - Official changelog:
