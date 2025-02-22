@@ -941,6 +941,13 @@ public:
 		_tonsiteStorageToken = value;
 	}
 
+	[[nodiscard]] bool gameeEnabled() const {
+		return _gameeEnabled.current();
+	}
+	void setGameeEnabled(bool value) {
+		_gameeEnabled = value;
+	}
+
 	[[nodiscard]] int ivZoom() const;
 	[[nodiscard]] rpl::producer<int> ivZoomValue() const;
 	void setIvZoom(int value);
@@ -1062,6 +1069,7 @@ private:
 	rpl::variable<bool> _trayIconMonochrome = true;
 	rpl::variable<bool> _birthDateEnabled = false;
 	rpl::variable<bool> _datacenterEnabled = false;
+	rpl::variable<bool> _gameeEnabled = false;
 	rpl::variable<QString> _customDeviceModel;
 	rpl::variable<Media::RepeatMode> _playerRepeatMode;
 	rpl::variable<Media::OrderMode> _playerOrderMode;

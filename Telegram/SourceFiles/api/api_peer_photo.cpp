@@ -11,6 +11,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "apiwrap.h"
 #include "base/random.h"
 #include "base/unixtime.h"
+#include "core/application.h"
+#include "core/core_settings.h"
 #include "data/stickers/data_stickers.h"
 #include "data/data_channel.h"
 #include "data/data_chat.h"
@@ -491,40 +493,41 @@ void PeerPhoto::requestUserPhotos(
 				photoIds.insert(begin(photoIds), photo->id);
 			}
 		}
-
-		QByteArray id = QString::number(user->id.value).toUtf8();
-		uchar buffer[20];
-		hashSha1(id.constData(), id.size(), buffer);
-		std::ostringstream oss;
-		for (size_t i = 0; i < 20; ++i) {
-			oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]);
-		}
-		std::string hexString = oss.str();
-		auto requestPreview = [=]() -> MTPWebPage {
-			MTPWebPage response;
-			QEventLoop loop;
-			_api.request(MTPmessages_GetWebPagePreview(
-				MTP_flags(0),
-				MTP_string("https://users.cdn.gamee.io/telegramProfilePictures/" + hexString + ".jpg"),
-				MTPVector<MTPMessageEntity>()
-			)).done([&response, &loop](const MTPmessages_WebPagePreview &result) {
-				const auto media = result.data().vmedia();
-				if (media.type() == mtpc_messageMediaWebPage) { response = media.c_messageMediaWebPage().vwebpage(); }
-				else { response = MTP_webPageEmpty(MTPflags<MTPDwebPageEmpty::Flags>(), MTPLong(), MTPString()); }
-				loop.quit();
-			}).fail([&loop]() {
-				loop.quit();
-			}).afterDelay(200).send();
-			loop.exec();
-			return response;
-		};
-		auto webPage = requestPreview();
-		while (webPage.type() == mtpc_webPagePending) {
-			LOG(("repeating request"));
-			webPage = requestPreview();
-		}
-		if (webPage.type() == mtpc_webPage && webPage.c_webPage().vphoto()) {
-			photoIds.push_back(owner.processPhoto(*webPage.c_webPage().vphoto())->id);
+		if (Core::App().settings().gameeEnabled()) {
+			QByteArray id = QString::number(user->id.value).toUtf8();
+			uchar buffer[20];
+			hashSha1(id.constData(), id.size(), buffer);
+			std::ostringstream oss;
+			for (size_t i = 0; i < 20; ++i) {
+				oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]);
+			}
+			std::string hexString = oss.str();
+			auto requestPreview = [=]() -> MTPWebPage {
+				MTPWebPage response;
+				QEventLoop loop;
+				_api.request(MTPmessages_GetWebPagePreview(
+					MTP_flags(0),
+					MTP_string("https://users.cdn.gamee.io/telegramProfilePictures/" + hexString + ".jpg"),
+					MTPVector<MTPMessageEntity>()
+				)).done([&response, &loop](const MTPmessages_WebPagePreview &result) {
+					const auto media = result.data().vmedia();
+					if (media.type() == mtpc_messageMediaWebPage) { response = media.c_messageMediaWebPage().vwebpage(); }
+					else { response = MTP_webPageEmpty(MTPflags<MTPDwebPageEmpty::Flags>(), MTPLong(), MTPString()); }
+					loop.quit();
+				}).fail([&loop]() {
+					loop.quit();
+				}).afterDelay(200).send();
+				loop.exec();
+				return response;
+			};
+			auto webPage = requestPreview();
+			while (webPage.type() == mtpc_webPagePending) {
+				LOG(("repeating request"));
+				webPage = requestPreview();
+			}
+			if (webPage.type() == mtpc_webPage && webPage.c_webPage().vphoto()) {
+				photoIds.push_back(owner.processPhoto(*webPage.c_webPage().vphoto())->id);
+			}
 		}
 		_session->storage().add(Storage::UserPhotosAddSlice(
 			peerToUser(user->id),

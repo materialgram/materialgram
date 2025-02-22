@@ -349,7 +349,6 @@ void SetupSpellchecker(
 void SetupMaterialgram(
 	not_null<Window::SessionController*> controller,
 	not_null<Ui::VerticalLayout*> container) {
-	const auto session = &controller->session();
 	const auto settings = &Core::App().settings();
 	const auto registration = container->add(object_ptr<Button>(
 		container,
@@ -380,6 +379,22 @@ void SetupMaterialgram(
 		return (enabled != settings->datacenterEnabled());
 		}) | rpl::start_with_next([=](bool enabled) {
 			settings->setDatacenterEnabled(enabled);
+			Core::App().saveSettingsDelayed();
+			}, container->lifetime());
+
+	const auto gamee = container->add(object_ptr<Button>(
+		container,
+		tr::lng_settings_profile_photo_privacy(),
+		st::settingsButtonNoIcon
+	))->toggleOn(
+		rpl::single(settings->gameeEnabled())
+	);
+
+	gamee->toggledValue(
+	) | rpl::filter([=](bool enabled) {
+		return (enabled != settings->gameeEnabled());
+		}) | rpl::start_with_next([=](bool enabled) {
+			settings->setGameeEnabled(enabled);
 			Core::App().saveSettingsDelayed();
 			}, container->lifetime());
 }
