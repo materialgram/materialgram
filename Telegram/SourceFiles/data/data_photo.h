@@ -161,6 +161,7 @@ public:
 	[[nodiscard]] int height() const;
 
 	PhotoId id = 0;
+	int32 _dc = 0;
 
 	PeerData *peer = nullptr; // for chat and channel photos connection
 	// geo, caption
@@ -184,7 +185,6 @@ private:
 	std::array<Data::CloudFile, Data::kPhotoSizeCount> _images;
 	std::unique_ptr<VideoSizes> _videoSizes;
 
-	int32 _dc = 0;
 	uint64 _access = 0;
 	bool _hasStickers = false;
 	bool _extendedMediaPreview = false;

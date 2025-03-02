@@ -345,6 +345,15 @@ TextSelection ShiftItemSelection(
 	return ShiftItemSelection(selection, byText.length());
 }
 
+QString DcText(int dcId) {
+	return (dcId == 1) ? "DC: 1, Miami" :
+		(dcId == 2) ? "DC: 2, Amsterdam" :
+		(dcId == 3) ? "DC: 3, Miami" :
+		(dcId == 4) ? "DC: 4, Amsterdam" :
+		(dcId == 5) ? "DC: 5, Singapore" :
+		"DC: Unknown";
+}
+
 QString DateTooltipText(not_null<Element*> view) {
 	const auto locale = QLocale();
 	const auto format = QLocale::LongFormat;
@@ -381,8 +390,18 @@ QString DateTooltipText(not_null<Element*> view) {
 				msgsigned->author);
 		}
 	}
-	if (item->isScheduled() && item->isSilent()) {
+	if (item->isSilent()) {
 		dateText += '\n' + QChar(0xD83D) + QChar(0xDD15);
+	}
+	if (item->media() && item->media()->photo()) {
+		dateText += '\n' + QChar(0xD83D) + QChar(0xDDBC) + QChar(0xFE0F) + ' ' +
+			DcText(item->media()->photo()->_dc) + ", " +
+			locale.toString(base::unixtime::parse(item->media()->photo()->date()), format);
+	}
+	if (item->media() && item->media()->document()) {
+		dateText += '\n' + QChar(0xD83D) + QChar(0xDCC4) + ' ' +
+			DcText(item->media()->document()->_dc) + ", " +
+			locale.toString(base::unixtime::parse(item->media()->document()->date), format);
 	}
 	return dateText;
 }
