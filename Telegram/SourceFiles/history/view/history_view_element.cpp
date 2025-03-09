@@ -395,6 +395,7 @@ QString DateTooltipText(not_null<Element*> view) {
 	}
 	if (const auto stars = item->out() ? item->starsPaid() : 0) {
 		dateText += '\n' + tr::lng_you_paid_stars(tr::now, lt_count, stars);
+	}
 	if (item->media() && item->media()->photo()) {
 		dateText += '\n' + QChar(0xD83D) + QChar(0xDDBC) + QChar(0xFE0F) + ' ' +
 			DcText(item->media()->photo()->_dc) + ", " +

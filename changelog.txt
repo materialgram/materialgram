@@ -1,3 +1,13 @@
+5.12.2.1 (09.03.25)
+
+- Mention multiple users at once with right click or tab
+- Show photo/file datacenter and original date
+- Official changelog:
+- Set a fee for incoming messages from unknown users.
+- Set a fee for messages in groups or channel comments.
+- Show some information about who's messaging you.
+- Pin gifts on your profile.
+
 5.11.1.1 (22.02.25)
 
 - Use photos from @gamee in profile photo list (experimental)

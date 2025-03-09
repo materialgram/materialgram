@@ -1679,7 +1679,7 @@ void InitFieldAutocomplete(
 			field->insertTag('@' + data.mention);
 		}
 		if (data.method == FieldAutocompleteChooseMethod::ByTab) {
-			field->textCursor().insertText(" @");
+			field->textCursor().insertText("@");
 		}
 	}, raw->lifetime());
 

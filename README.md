@@ -6,7 +6,6 @@
   <img width='175' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.svg'/>
 </a>
 
-![Hits](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fkukuruzka165%2Fmaterialgram.json%3Fcolor%3Dlightgray)
 [![Telegram Channel](https://img.shields.io/badge/channel-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram)
 [![Telegram Group](https://img.shields.io/badge/chat-blue?logo=telegram&labelColor=gray)](https://t.me/materialgram_chat)
 [![AUR](https://img.shields.io/badge/AUR%20package-blue?logo=archlinux&labelColor=gray)](https://aur.archlinux.org/packages?K=materialgram)
@@ -28,6 +27,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Ability to copy the sticker set author's id and increment
 - Added admin menu and chat log buttons above the members list
 - Copy usernames as @example if possible
+- Mention multiple users at once with right click
 - Use photos from @gamee in profile photo list (experimental, optional)
 - Removed message bubble tails and reverted old paddings
 - Removed "large emoji" outline
@@ -47,7 +47,8 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Show more recent stickers
 - Show online counter in large groups (experimental)
 - Show the approximate date of account creation (optional)
-- Show data center (optional)
+- Show datacenter in profile (optional)
+- Show photo/file datacenter and original date
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
 
 ## For Arch Linux users [@omansh-krishn](https://github.com/omansh-krishn) made a [PKG repository](https://github.com/materialgram/arch.git)
