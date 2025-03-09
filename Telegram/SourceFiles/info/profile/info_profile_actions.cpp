@@ -897,10 +897,10 @@ rpl::producer<uint64> AddCurrencyAction(
 				.append(QChar(' '))
 				.append(Info::ChannelEarn::MajorPart(balance))
 				.append(Info::ChannelEarn::MinorPart(balance)),
-			Core::MarkedTextContext{
+			Core::TextContext({
 				.session = &user->session(),
-				.customEmojiRepaint = [=] { name->update(); },
-			});
+				.repaint = [=] { name->update(); },
+			}));
 		name->resizeToNaturalWidth(available);
 		name->moveToRight(st::settingsButtonRightSkip, st.padding.top());
 	}, name->lifetime());
@@ -970,10 +970,10 @@ rpl::producer<StarsAmount> AddCreditsAction(
 			base::duplicate(icon)
 				.append(QChar(' '))
 				.append(Lang::FormatStarsAmountDecimal(balance)),
-			Core::MarkedTextContext{
+			Core::TextContext({
 				.session = &user->session(),
-				.customEmojiRepaint = [=] { name->update(); },
-			});
+				.repaint = [=] { name->update(); },
+			}));
 		name->resizeToNaturalWidth(available);
 		name->moveToRight(st::settingsButtonRightSkip, st.padding.top());
 	}, name->lifetime());
