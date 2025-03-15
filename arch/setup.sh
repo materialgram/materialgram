@@ -11,10 +11,12 @@ mkdir -p usr/share/metainfo
 for icon_size in 16 32 48 64 128 256 512; do
 	icon_dir="usr/share/icons/hicolor/${icon_size}x${icon_size}/apps"
 	mkdir -p "$icon_dir"
-	cp "../Telegram/Resources/art/icon${icon_size}.png" "$icon_dir/materialgram.png"
+	cp "../Telegram/Resources/art/icon${icon_size}.png" "$icon_dir/io.github.kukuruzka165.materialgram.png"
 done
 
-cp ../Telegram/Resources/icons/tray_monochrome.svg usr/share/icons/hicolor/symbolic/apps/materialgram-symbolic.svg
+cp ../Telegram/Resources/icons/tray_monochrome.svg usr/share/icons/hicolor/symbolic/apps/io.github.kukuruzka165.materialgram-symbolic.svg
+cp ../Telegram/Resources/icons/tray_monochrome_attention.svg usr/share/icons/hicolor/symbolic/apps/io.github.kukuruzka165.materialgram-attention-symbolic.svg
+cp ../Telegram/Resources/icons/tray_monochrome_mute.svg usr/share/icons/hicolor/symbolic/apps/io.github.kukuruzka165.materialgram-mute-symbolic.svg
 cp ../out/Release/materialgram usr/bin/
 cp ../lib/xdg/io.github.kukuruzka165.materialgram.desktop usr/share/applications/
 cp ../lib/xdg/io.github.kukuruzka165.materialgram.metainfo.xml usr/share/metainfo/
