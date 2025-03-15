@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "base/options.h"
 #include "base/platform/base_platform_info.h"
 #include "base/platform/linux/base_linux_dbus_utilities.h"
+#include "platform/platform_specific.h"
 #include "core/application.h"
 #include "core/sandbox.h"
 #include "core/core_settings.h"
@@ -26,6 +27,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtCore/QBuffer>
 #include <QtCore/QVersionNumber>
 #include <QtGui/QGuiApplication>
+
+#include <ksandbox.h>
 
 #include <xdgnotifications/xdgnotifications.hpp>
 
@@ -423,7 +426,8 @@ void Manager::Private::init(XdgNotifications::NotificationsProxy proxy) {
 		Core::Sandbox::Instance().customEnterFromEventLoop([&] {
 			for (const auto &[key, notifications] : _notifications) {
 				for (const auto &[msgId, notification] : notifications) {
-					if (id == v::get<uint>(notification->id)) {
+					const auto &nid = notification->id;
+					if (v::is<uint>(nid) && v::get<uint>(nid) == id) {
 						if (actionName == "default") {
 							_manager->notificationActivated({ key, msgId });
 						} else if (actionName == "mail-mark-read") {
@@ -447,7 +451,8 @@ void Manager::Private::init(XdgNotifications::NotificationsProxy proxy) {
 		Core::Sandbox::Instance().customEnterFromEventLoop([&] {
 			for (const auto &[key, notifications] : _notifications) {
 				for (const auto &[msgId, notification] : notifications) {
-					if (id == v::get<uint>(notification->id)) {
+					const auto &nid = notification->id;
+					if (v::is<uint>(nid) && v::get<uint>(nid) == id) {
 						_manager->notificationReplied(
 							{ key, msgId },
 							{ QString::fromStdString(text), {} });
@@ -468,7 +473,8 @@ void Manager::Private::init(XdgNotifications::NotificationsProxy proxy) {
 			std::string token) {
 		for (const auto &[key, notifications] : _notifications) {
 			for (const auto &[msgId, notification] : notifications) {
-				if (id == v::get<uint>(notification->id)) {
+				const auto &nid = notification->id;
+				if (v::is<uint>(nid) && v::get<uint>(nid) == id) {
 					GLib::setenv("XDG_ACTIVATION_TOKEN", token, true);
 					return;
 				}
@@ -501,7 +507,8 @@ void Manager::Private::init(XdgNotifications::NotificationsProxy proxy) {
 					* In all other cases we keep the notification reference so that we may clear the notification later from history,
 					* if the message for that notification is read (e.g. chat is opened or read from another device).
 					*/
-					if (id == v::get<uint>(notification->id) && reason == 2) {
+					const auto &nid = notification->id;
+					if (v::is<uint>(nid) && v::get<uint>(nid) == id && reason == 2) {
 						clearNotification({ key, msgId });
 						return;
 					}
@@ -543,7 +550,7 @@ void Manager::Private::showNotification(
 		notification.set_body(info.message.toStdString());
 
 		notification.set_icon(
-			Gio::ThemedIcon::new_(base::IconName().toStdString()));
+			Gio::ThemedIcon::new_(ApplicationIconName().toStdString()));
 
 		// for chat messages, according to
 		// https://docs.gtk.org/gio/enum.NotificationPriority.html
@@ -757,7 +764,7 @@ void Manager::Private::showNotification(
 					AppName.data(),
 					0,
 					(!hasImage
-						? base::IconName().toStdString()
+						? ApplicationIconName().toStdString()
 						: std::string()).c_str(),
 					(hasBodyMarkup || info.subtitle.isEmpty()
 						? info.title.toStdString()
