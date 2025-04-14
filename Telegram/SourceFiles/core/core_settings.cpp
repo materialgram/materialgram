@@ -240,7 +240,7 @@ QByteArray Settings::serialize() const {
 		+ Serialize::stringSize(_customFontFamily)
 		+ sizeof(qint32) * 3
 		+ Serialize::bytearraySize(_tonsiteStorageToken)
-		+ sizeof(qint32) * 8;
+		+ sizeof(qint32) * 9;
 
 	auto result = QByteArray();
 	result.reserve(size);
@@ -404,7 +404,7 @@ QByteArray Settings::serialize() const {
 			<< SerializeVideoQuality(_videoQuality)
 			<< qint32(_ivZoom.current())
 			<< qint32(_systemDarkModeEnabled.current() ? 1 : 0)
-			<< qint32(_gameeEnabled.current() ? 1 : 0);
+			<< qint32(_gameeEnabled.current() ? 1 : 0)
 			<< qint32(_quickDialogAction);
 	}
 
