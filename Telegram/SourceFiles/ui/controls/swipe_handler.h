@@ -22,7 +22,9 @@ struct SwipeHandlerFinishData {
 	Fn<void(void)> callback;
 	int64 msgBareId = 0;
 	float64 speedRatio = 1.0;
+	crl::time reachRatioDuration = 0;
 	bool keepRatioWithinRange = false;
+	bool provideReachOutRatio = false;
 };
 
 using Scroll = std::variant<
@@ -30,13 +32,16 @@ using Scroll = std::variant<
 	not_null<Ui::ScrollArea*>,
 	not_null<Ui::ElasticScroll*>>;
 
-void SetupSwipeHandler(
-	not_null<Ui::RpWidget*> widget,
-	Scroll scroll,
-	Fn<void(SwipeContextData)> update,
-	Fn<SwipeHandlerFinishData(int, Qt::LayoutDirection)> generateFinishByTop,
-	rpl::producer<bool> dontStart = nullptr,
-	rpl::lifetime *onLifetime = nullptr);
+struct SwipeHandlerArgs {
+	not_null<Ui::RpWidget*> widget;
+	Scroll scroll;
+	Fn<void(SwipeContextData)> update;
+	Fn<SwipeHandlerFinishData(int, Qt::LayoutDirection)> init;
+	rpl::producer<bool> dontStart = nullptr;
+	rpl::lifetime *onLifetime = nullptr;
+};
+
+void SetupSwipeHandler(SwipeHandlerArgs &&args);
 
 [[nodiscard]] SwipeBackResult SetupSwipeBack(
 	not_null<Ui::RpWidget*> widget,

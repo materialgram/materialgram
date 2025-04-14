@@ -149,6 +149,8 @@ PRIVATE
     api/api_peer_colors.h
     api/api_peer_photo.cpp
     api/api_peer_photo.h
+    api/api_peer_search.cpp
+    api/api_peer_search.h
     api/api_polls.cpp
     api/api_polls.h
     api/api_premium.cpp
@@ -682,6 +684,8 @@ PRIVATE
     dialogs/dialogs_main_list.h
     dialogs/dialogs_pinned_list.cpp
     dialogs/dialogs_pinned_list.h
+    dialogs/dialogs_quick_action.cpp
+    dialogs/dialogs_quick_action.h
     dialogs/dialogs_row.cpp
     dialogs/dialogs_row.h
     dialogs/dialogs_search_from_controllers.cpp
