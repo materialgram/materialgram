@@ -218,7 +218,7 @@ parts:
   ada:
     source: https://github.com/ada-url/ada.git
     source-depth: 1
-    source-tag: v3.2.1
+    source-tag: v3.2.2
     plugin: cmake
     build-environment:
       - LDFLAGS: ${LDFLAGS:+$LDFLAGS} -s
@@ -452,7 +452,7 @@ parts:
   webrtc:
     source: https://github.com/desktop-app/tg_owt.git
     source-depth: 1
-    source-commit: 8198c4d8b91e22d68eb5c7327fd408e3b6abcc79
+    source-commit: c4192e8e2e10ccb72704daa79fa108becfa57b01
     plugin: cmake
     build-environment:
       - LDFLAGS: ${LDFLAGS:+$LDFLAGS} -s
