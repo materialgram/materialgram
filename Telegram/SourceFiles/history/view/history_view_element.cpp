@@ -1416,7 +1416,7 @@ void Element::recountDisplayDateInBlocks() {
 
 		if (const auto previous = previousDisplayedInBlocks()) {
 			const auto prev = previous->data();
-			return prev->isEmpty()
+			return prev->hideDisplayDate()
 				|| (previous->dateTime().date() != dateTime().date());
 		}
 		return true;
