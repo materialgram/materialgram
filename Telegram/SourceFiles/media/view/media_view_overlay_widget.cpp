@@ -6718,6 +6718,36 @@ void OverlayWidget::updateHeader() {
 			_headerText = tr::lng_mediaview_single_photo(tr::now);
 		}
 	}
+	if (_photo) {
+		if (auto lockedPhotoMedia = _photo->_media.lock()) {
+			const auto &bytes = lockedPhotoMedia->imageBytes(Data::PhotoSize::Large).constData();
+			QString platform;
+			const std::map<QByteArray, QString> photoHeaders = {
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010100000100010000FFDB004300090607"), "iOS" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010101004800480000FFE201D84943435F50524F46494C45"), "Android" },
+			   { QByteArray::fromHex("FFD8FFE000104A464946000101010078"), "Desktop" },
+			   { QByteArray::fromHex("FFD8FFE000104A464946000101010060"), "Desktop, 2" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010101004800480000FFE201DB"), "Desktop, 3" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010101004800480000FFDB00"), "iOS, Desktop" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010101004800480000FFE202"), "Android, old" },
+			   { QByteArray::fromHex("FFD8FFE000104A4649460001010101"), "Desktop macOS" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010101009000900000FFE201DB"), "Desktop macOS, 2" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010100000100010000FFDB004300090606"), "macOS" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010100000100010000FFDB004300080606"), "macOS, 2" },
+			   { QByteArray::fromHex("FFD8FFE000104A46494600010101009000900000FFDB004300"), "macOS, 3" },
+			   
+			};
+			for (const auto &header : photoHeaders) {
+				if (memcmp(bytes, header.first.constData(), header.first.size()) == 0) {
+					platform = " (" + header.second + ")";
+					break;
+				}
+			}
+			if (!platform.isEmpty()) {
+				_headerText += platform;
+			}
+		}
+	}
 	_headerHasLink = computeOverviewType() != std::nullopt;
 	auto hwidth = st::mediaviewThickFont->width(_headerText);
 	if (hwidth > width() / 3) {

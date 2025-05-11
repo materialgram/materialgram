@@ -162,6 +162,7 @@ public:
 
 	PhotoId id = 0;
 	int32 _dc = 0;
+	std::weak_ptr<Data::PhotoMedia> _media;
 
 	PeerData *peer = nullptr; // for chat and channel photos connection
 	// geo, caption
@@ -191,7 +192,6 @@ private:
 
 	QByteArray _fileReference;
 	std::unique_ptr<Data::ReplyPreview> _replyPreview;
-	std::weak_ptr<Data::PhotoMedia> _media;
 
 	not_null<Data::Session*> _owner;
 
