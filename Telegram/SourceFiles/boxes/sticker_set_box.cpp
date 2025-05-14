@@ -746,9 +746,13 @@ void StickerSetBox::updateButtons() {
 		const auto author = [=] {
 			auto ownerId = _inner->setId() >> 32;
 			auto increment = _inner->setId() - (ownerId << 32);
-			if (_inner->setId() >> 24 & 0xff) {  // for newer ids, see https://github.com/arynyklas/SPOwnerBot
-				increment = (ownerId << 32) + 0xff800000 - _inner->setId();
+			if (_inner->setId() >> 24 & 0xff) { // for newer ids, see https://github.com/arynyklas/SPOwnerBot
 				ownerId += 0x100000000;
+				increment = (ownerId - 0x100000000 << 32) + 0xff800000 - _inner->setId();
+			}
+			if (increment > 100000) { // there is probably a better way
+				ownerId += 0x80000000;
+				increment = (ownerId - 0x180000000 << 32) + 0xff400000 - _inner->setId();
 			}
 			QGuiApplication::clipboard()->setText(
 				QString::number(ownerId));
