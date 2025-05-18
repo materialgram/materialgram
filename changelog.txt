@@ -1,3 +1,12 @@
+5.14.3.1 (18.05.25)
+
+- Show photo platform in media viewer
+- Fix getting sticker pack author for newer ids
+- Material Design 3 styled folders
+- Official changelog:
+- Fix stale birthday suggestions removing.
+- Fix notification click opening a new window.
+
 5.14.2.1 (09.05.25)
 
 - Official changelog:
