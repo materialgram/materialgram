@@ -55,7 +55,7 @@ jobs:
           -D CMAKE_EXE_LINKER_FLAGS="-s" \
           -D TDESKTOP_API_ID=${{ secrets.API_ID }} \
           -D TDESKTOP_API_HASH=${{ secrets.API_HASH }} \
-          -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+          -D CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
           $DEFINE
 
       - name: Create Tar
