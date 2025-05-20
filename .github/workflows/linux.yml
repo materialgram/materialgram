@@ -19,23 +19,41 @@ jobs:
 
       - name: Pull docker image
         run: |
-          docker pull ghcr.io/telegramdesktop/tdesktop/centos_env
-          docker tag ghcr.io/telegramdesktop/tdesktop/centos_env materialgram:build
+          sudo apt update
+          curl -sSL https://install.python-poetry.org | python3 -
+          cd Telegram/build/docker/centos_env
+          poetry install
+          DOCKERFILE=$(DEBUG= LTO= poetry run gen_dockerfile)
+          echo "$DOCKERFILE" > Dockerfile
 
-      - name: Set Repository name & Tag name
+      - name: Free up some disk space.
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be
+        with:
+          tool-cache: true
+
+      - name: Set up Docker Buildx.
+        uses: docker/setup-buildx-action@v3
+
+      - name: Libraries.
+        uses: docker/build-push-action@v6
+        with:
+          context: Telegram/build/docker/centos_env
+          load: ${{ env.ONLY_CACHE == 'false' }}
+          tags: ${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Set tag name
         run: |
-          echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
           echo "TAGNAME=$(curl -s "${{ github.api_url }}/repos/${{ github.repository }}/tags" | jq -r '.[0].name')" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          path: ${{ env.REPO_NAME }}
 
       - name: Build materialgram
         run: |
-          cd $REPO_NAME
 
           DEFINE=""
           if [ -n "${{ matrix.defines }}" ]; then
@@ -60,7 +78,7 @@ jobs:
 
       - name: Create Tar
         run: |
-          cd $REPO_NAME/arch
+          cd arch
           bash setup.sh
           tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz usr
 
@@ -68,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: materialgram-${{ env.TAGNAME }}
-          path: ${{ env.REPO_NAME }}/arch/materialgram-${{ env.TAGNAME }}.tar.gz
+          path: arch/materialgram-${{ env.TAGNAME }}.tar.gz
 
       - name: Upload artifact to Release
         uses: softprops/action-gh-release@v2
@@ -76,7 +94,7 @@ jobs:
           name: ${{ env.TAGNAME }}
           tag_name: ${{ env.TAGNAME }}
           token: ${{ secrets.PAT }}
-          files: ${{ env.REPO_NAME }}/arch/materialgram-${{ env.TAGNAME }}.tar.gz
+          files: arch/materialgram-${{ env.TAGNAME }}.tar.gz
 
   trigger-workflow:
     runs-on: ubuntu-latest
