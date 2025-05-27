@@ -67,7 +67,7 @@ jobs:
           -u $(id -u):$(id -g) \
           -v $PWD:/usr/src/tdesktop \
           -e CONFIG=Release \
-          materialgram:build \
+          tdesktop:build \
           /usr/src/tdesktop/Telegram/build/docker/centos_env/build.sh \
           -D CMAKE_EXE_LINKER_FLAGS="-s" \
           -D TDESKTOP_API_ID=${{ secrets.API_ID }} \
