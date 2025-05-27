@@ -16,6 +16,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set tag name
+        run: |
+          echo "TAGNAME=$(curl -s "${{ github.api_url }}/repos/${{ github.repository }}/tags" | jq -r '.[0].name')" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Pull docker image
         run: |
@@ -42,15 +50,6 @@ jobs:
           tags: ${{ env.IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Set tag name
-        run: |
-          echo "TAGNAME=$(curl -s "${{ github.api_url }}/repos/${{ github.repository }}/tags" | jq -r '.[0].name')" >> $GITHUB_ENV
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Build materialgram
         run: |
