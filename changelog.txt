@@ -1,3 +1,11 @@
+5.15.2.1 (06.06.25)
+
+- Official changelog:
+- Send Direct Messages to Channels.
+- Enable New Tab Layout for Topics.
+- Create Polls with Up To 12 Options.
+- Add statistics for user stars.
+
 5.14.3.1 (18.05.25)
 
 - Show photo platform in media viewer
