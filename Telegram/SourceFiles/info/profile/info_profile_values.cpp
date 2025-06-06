@@ -265,6 +265,9 @@ rpl::producer<TextWithEntities> DataCenterValue(not_null<PeerData*> peer) {
 }
 
 rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
+	if (const auto broadcast = peer->monoforumBroadcast()) {
+		return NameValue(broadcast);
+	}
 	return peer->session().changes().peerFlagsValue(
 		peer,
 		UpdateFlag::Name
@@ -712,6 +715,7 @@ rpl::producer<int> KickedCountValue(not_null<ChannelData*> channel) {
 rpl::producer<int> SharedMediaCountValue(
 		not_null<PeerData*> peer,
 		MsgId topicRootId,
+		PeerId monoforumPeerId,
 		PeerData *migrated,
 		Storage::SharedMediaType type) {
 	auto aroundId = 0;
@@ -722,6 +726,7 @@ rpl::producer<int> SharedMediaCountValue(
 			SparseIdsMergedSlice::Key(
 				peer->id,
 				topicRootId,
+				monoforumPeerId,
 				migrated ? migrated->id : 0,
 				aroundId),
 			type),
@@ -760,8 +765,8 @@ rpl::producer<int> SavedSublistCountValue(
 		not_null<PeerData*> peer) {
 	const auto saved = &peer->owner().savedMessages();
 	const auto sublist = saved->sublist(peer);
-	if (!sublist->fullCount()) {
-		saved->loadMore(sublist);
+	if (!sublist->fullCount().has_value()) {
+		sublist->loadFullCount();
 		return rpl::single(0) | rpl::then(sublist->fullCountValue());
 	}
 	return sublist->fullCountValue();
@@ -831,6 +836,8 @@ rpl::producer<BadgeType> BadgeValueFromFlags(Peer peer) {
 			? BadgeType::Scam
 			: (value & Flag::Fake)
 			? BadgeType::Fake
+			: peer->isMonoforum()
+			? BadgeType::Direct
 			: (value & Flag::Verified)
 			? BadgeType::Verified
 			: premium
