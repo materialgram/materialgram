@@ -12,20 +12,21 @@ on:
         required: true
 
 jobs:
-  build:
+  linux:
+    name: Rocky Linux 8
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Set tag name
-        run: |
-          echo "TAGNAME=$(curl -s "${{ github.api_url }}/repos/${{ github.repository }}/tags" | jq -r '.[0].name')" >> $GITHUB_ENV
+    env:
+      ONLY_CACHE: "false"
+      IMAGE_TAG: tdesktop:centos_env
 
-      - name: Checkout
+    steps:
+      - name: Clone.
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Pull docker image
+      - name: First set up.
         run: |
           sudo apt update
           curl -sSL https://install.python-poetry.org | python3 -
@@ -33,6 +34,7 @@ jobs:
           poetry install
           DOCKERFILE=$(DEBUG= LTO= poetry run gen_dockerfile)
           echo "$DOCKERFILE" > Dockerfile
+          echo "TAGNAME=$(curl -s "${{ github.api_url }}/repos/${{ github.repository }}/tags" | jq -r '.[0].name')" >> $GITHUB_ENV
 
       - name: Free up some disk space.
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be
@@ -63,9 +65,9 @@ jobs:
           rm -rf ${{ runner.temp }}/.buildx-cache
           mv ${{ runner.temp }}/.buildx-cache{-new,}
 
-      - name: Build materialgram
+      - name: materialgram build.
+        if: env.ONLY_CACHE == 'false'
         run: |
-
           DEFINE=""
           if [ -n "${{ matrix.defines }}" ]; then
             DEFINE="-D ${{ matrix.defines }}=ON"
@@ -76,11 +78,12 @@ jobs:
           fi
 
           docker run --rm \
-          -u $(id -u):$(id -g) \
-          -v $PWD:/usr/src/materialgram \
-          -D CMAKE_CONFIGURATION_TYPES=Debug \
-          materialgram:build \
-          /usr/src/materialgram/Telegram/build/docker/centos_env/build.sh \
+          -u $(id -u) \
+          -v $PWD:/usr/src/tdesktop \
+          -e CONFIG=Release \
+          $IMAGE_TAG \
+          /usr/src/tdesktop/Telegram/build/docker/centos_env/build.sh \
+          -D CMAKE_CONFIGURATION_TYPES=Release \
           -D CMAKE_EXE_LINKER_FLAGS="-s" \
           -D TDESKTOP_API_ID=${{ secrets.API_ID }} \
           -D TDESKTOP_API_HASH=${{ secrets.API_HASH }} \
@@ -109,7 +112,7 @@ jobs:
 
   trigger-workflow:
     runs-on: ubuntu-latest
-    needs: build
+    needs: linux
     steps:
      
       - name: Set PKGREL & TAGNAME
@@ -129,4 +132,3 @@ jobs:
           repository: materialgram/materialgram-bin
           event-type: new-release
           client-payload: '{"tagname": "${{ env.TAGNAME }}", "pkgrel": "${{ env.PKGREL }}"}'
-
