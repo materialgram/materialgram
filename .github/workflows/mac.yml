@@ -37,8 +37,6 @@ jobs:
           brew update
           brew upgrade || true
           brew install automake meson nasm ninja pkg-config
-          brew install cmake@4.0.1
-          brew link --force cmake@4.0.1
 
           # Disable spotlight.
           sudo mdutil -a -i off
