@@ -28,6 +28,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "storage/file_upload.h"
 #include "storage/localimageloader.h"
 #include "storage/storage_user_photos.h"
+#include <sstream>
 
 #include <QtCore/QBuffer>
 
