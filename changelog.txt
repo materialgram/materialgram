@@ -1,3 +1,13 @@
+5.16.0.1 (02.07.25)
+
+- Improved voice messages bitrate (32 to 128)
+- Removed delay when recording voice messages
+- Reduced chat preview delay
+- Official changelog:
+- Create private and group checklists.
+- Suggest Posts in Channels.
+- Monetizing via Suggested Posts.
+
 5.15.2.1 (06.06.25)
 
 - Official changelog:

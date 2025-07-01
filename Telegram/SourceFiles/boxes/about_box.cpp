@@ -46,8 +46,8 @@ rpl::producer<TextWithEntities> Text2() {
 		Ui::Text::WithEntities);
 }
 
-rpl::producer<QString> Text3() {
-	return tr::materialgram_about_text3();
+rpl::producer<TextWithEntities> Text3() {
+	return tr::materialgram_about_text3(Ui::Text::WithEntities);
 }
 
 } // namespace

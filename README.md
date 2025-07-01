@@ -25,30 +25,33 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Ability to seek round videos (experimental)
 - Ability to delete more than 100 messages at once (experimental)
 - Ability to copy the sticker set author's id and increment
+- Ability to mention multiple users at once with right click
 - Added admin menu and chat log buttons above the members list
 - Copy usernames as @example if possible
-- Mention multiple users at once with right click
 - Use photos from @gamee in profile photo list (experimental, optional)
 - Removed message bubble tails and reverted old paddings
 - Removed "large emoji" outline
+- Removed delay when recording voice messages
 - Replaced webview platform with "android"
 - Replaced all sounds
 - Reduced jpeg compression (94% on photos, 100% on wallpapers)
 - Reduced minimum window size
 - Reduced minimum brush thickness in the photo editor
 - Reduced use of uppercase in the interface
-- Reduced some timeouts
+- Reduced some timeouts (like when opening a chat preview)
 - Increased upload speed
-- Increased max accounts limit from 3/6 to 10/20
+- Increased max accounts limit (3/6 to 10/20)
 - Improved spoiler animation
 - Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers"
 - Improved chat export. 10000 messages in one html document and faster file downloads
+- Improved voice messages bitrate (32 to 128)
 - Hide your phone number in profile and settings (except "My account" screen)
 - Show more recent stickers
 - Show online counter in large groups (experimental)
 - Show the approximate date of account creation (optional)
 - Show datacenter in profile (optional)
 - Show photo/file datacenter and original date
+- Show photo platform in media viewer
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
 
 ## For Arch Linux users [@omansh-krishn](https://github.com/omansh-krishn) made a [PKG repository](https://github.com/materialgram/arch.git)
