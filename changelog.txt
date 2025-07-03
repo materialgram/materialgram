@@ -1,3 +1,10 @@
+5.16.1.1 (03.07.25)
+
+- Official changelog:
+- Fix inline keyboard updating in bot messages.
+- Fix possible crash in fast chat switching.
+- Different minor fixes.
+
 5.16.0.1 (02.07.25)
 
 - Improved voice messages bitrate (32 to 128)
