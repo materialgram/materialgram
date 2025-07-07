@@ -520,7 +520,7 @@ void GiftButton::paintEvent(QPaintEvent *e) {
 			return GiftBadge{
 				.text = (onsale
 					? tr::lng_gift_stars_on_sale(tr::now)
-					: (unique && (data.resale || pinned))
+					: (unique)
 					? ('#' + QString::number(unique->number))
 					: data.resale
 					? tr::lng_gift_stars_resale(tr::now)

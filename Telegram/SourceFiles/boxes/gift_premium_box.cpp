@@ -1437,21 +1437,21 @@ void AddStarGiftTable(
 			MakeHiddenPeerTableValue(table),
 			st::giveawayGiftCodePeerMargin);
 	}
-	if (!unique && !entry.firstSaleDate.isNull()) {
+	if (!entry.firstSaleDate.isNull()) {
 		AddTableRow(
 			table,
 			tr::lng_gift_link_label_first_sale(),
 			rpl::single(Ui::Text::WithEntities(
 				langDateTime(entry.firstSaleDate))));
 	}
-	if (!unique && !entry.lastSaleDate.isNull()) {
+	if (!entry.lastSaleDate.isNull()) {
 		AddTableRow(
 			table,
 			tr::lng_gift_link_label_last_sale(),
 			rpl::single(Ui::Text::WithEntities(
 				langDateTime(entry.lastSaleDate))));
 	}
-	if (!unique && !entry.date.isNull()) {
+	if (!entry.date.isNull()) {
 		AddTableRow(
 			table,
 			tr::lng_gift_link_label_date(),
