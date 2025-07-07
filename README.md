@@ -44,7 +44,7 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Improved spoiler animation
 - Improved sticker pack menu. "Share stickers" button replaced with "Remove" + show the amount of stickers near "Add stickers"
 - Improved chat export. 10000 messages in one html document and faster file downloads
-- Improved voice messages bitrate (32 to 128)
+- Improved voice messages bitrate (32 to 256)
 - Hide your phone number in profile and settings (except "My account" screen)
 - Show more recent stickers
 - Show online counter in large groups (experimental)
