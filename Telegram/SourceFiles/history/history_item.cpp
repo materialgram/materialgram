@@ -6087,7 +6087,11 @@ void HistoryItem::setServiceMessageByAction(const MTPmessageAction &action) {
 	};
 
 	auto prepareSuggestedPostApproval = [&](const MTPDmessageActionSuggestedPostApproval &data) {
-		return PreparedServiceText{ { tr::lng_suggest_action_agreement(tr::now) } };
+		return PreparedServiceText{ { data.is_rejected()
+			? tr::lng_action_post_rejected(tr::now)
+			: data.is_balance_too_low()
+			? tr::lng_action_not_enough_funds(tr::now)
+			: tr::lng_suggest_action_agreement(tr::now) } };
 	};
 
 	auto prepareSuggestedPostSuccess = [&](const MTPDmessageActionSuggestedPostSuccess &data) {
@@ -6345,6 +6349,7 @@ void HistoryItem::applyAction(const MTPMessageAction &action) {
 			fields.stargiftId = gift->id;
 			fields.starsToUpgrade = gift->starsToUpgrade;
 			fields.document = gift->document;
+			fields.stargiftReleasedBy = gift->releasedBy;
 			fields.limitedCount = gift->limitedCount;
 			fields.limitedLeft = gift->limitedLeft;
 			fields.count = gift->stars;
@@ -6380,6 +6385,7 @@ void HistoryItem::applyAction(const MTPMessageAction &action) {
 		if (auto gift = Api::FromTL(&history()->session(), data.vgift())) {
 			fields.stargiftId = gift->id;
 			fields.document = gift->document;
+			fields.stargiftReleasedBy = gift->releasedBy;
 			fields.limitedCount = gift->limitedCount;
 			fields.limitedLeft = gift->limitedLeft;
 			fields.count = gift->stars;
