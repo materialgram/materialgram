@@ -46,12 +46,14 @@ The source code is published under GPLv3 with OpenSSL exception, the license is 
 - Improved chat export. 10000 messages in one html document and faster file downloads
 - Improved voice messages bitrate (32 to 256)
 - Hide your phone number in profile and settings (except "My account" screen)
+- Hide phone number for non-contacts in top bar
 - Show more recent stickers
 - Show online counter in large groups (experimental)
 - Show the approximate date of account creation (optional)
 - Show datacenter in profile (optional)
 - Show photo/file datacenter and original date
 - Show photo platform in media viewer
+- Show more info for unique gifts
 - If you would like to see a new feature in this list, please tell me in the [chat](https://t.me/materialgram_chat)
 
 ## For Arch Linux users [@omansh-krishn](https://github.com/omansh-krishn) made a [PKG repository](https://github.com/materialgram/arch.git)
