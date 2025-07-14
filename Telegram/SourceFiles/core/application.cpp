@@ -1296,6 +1296,8 @@ bool Application::savingPositionFor(
 bool Application::hasActiveWindow(not_null<Main::Session*> session) const {
 	if (Quitting() || !_lastActiveWindow) {
 		return false;
+	} else if (Main::Session::debugFocus) {
+		return false;
 	} else if (_calls->hasActivePanel(session)) {
 		return true;
 	} else if (_iv->hasActiveWindow(session)) {
