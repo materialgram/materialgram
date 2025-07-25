@@ -1076,7 +1076,7 @@ void EditCaptionBox::save() {
 }
 
 void EditCaptionBox::closeAfterSave() {
-	const auto weak = MakeWeak(this);
+	const auto weak = base::make_weak(this);
 	if (_saved) {
 		_saved();
 	}

@@ -1686,6 +1686,13 @@ int PeerData::starsPerMessageChecked() const {
 	return starsPerMessage();
 }
 
+Data::StarsRating PeerData::starsRating() const {
+	if (const auto user = asUser()) {
+		return user->starsRating();
+	}
+	return {};
+}
+
 Data::GroupCall *PeerData::groupCall() const {
 	if (const auto chat = asChat()) {
 		return chat->groupCall();
