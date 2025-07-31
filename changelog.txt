@@ -1,3 +1,11 @@
+6.0.0.1 (31.07.25)
+
+- Official changelog:
+- Public Post Search.
+- Story Albums.
+- Gift Collections.
+- Profile Rating.
+
 5.16.6.1 (25.07.25)
 
 - Official changelog:

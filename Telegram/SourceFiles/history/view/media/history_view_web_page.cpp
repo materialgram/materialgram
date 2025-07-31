@@ -236,7 +236,7 @@ constexpr auto kSponsoredUserpicLines = 2;
 		? tr::lng_view_button_storyalbum(tr::now)
 		: (type == WebPageType::GiftCollection)
 		? tr::lng_view_button_collection(tr::now)
-		: QString());
+		: QString();
 	if (page->iv) {
 		const auto manager = &page->owner().customEmojiManager();
 		const auto &icon = st::historyIvIcon;
