@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "apiwrap.h"
 #include "boxes/share_box.h"
 #include "data/data_peer.h"
+#include "data/data_saved_music.h"
 #include "data/data_session.h"
 #include "data/data_stories.h"
 #include "data/data_user.h"
@@ -132,7 +133,7 @@ void EditAlbumBox::prepare() {
 	auto text = _changes.value(
 	) | rpl::map([=](const Data::StoryAlbumUpdate &update) {
 		return (!update.added.empty() && update.removed.empty())
-			? tr::lng_stories_album_add_title()
+			? tr::lng_stories_album_add_button()
 			: tr::lng_settings_save();
 	}) | rpl::flatten_latest();
 	addButton(std::move(text), [=] {
@@ -530,10 +531,6 @@ void InnerWidget::setupList() {
 		_controller);
 	const auto raw = _list.data();
 
-	raw->heightValue(
-	) | rpl::start_with_next([=] {
-		refreshHeight();
-	}, raw->lifetime());
 	using namespace rpl::mappers;
 	raw->scrollToRequests(
 	) | rpl::map([=](int to) {
@@ -549,6 +546,8 @@ void InnerWidget::setupList() {
 }
 
 void InnerWidget::setupEmpty() {
+	_list->resizeToWidth(width());
+
 	const auto stories = &_controller->session().data().stories();
 	const auto key = Data::StoryAlbumIdsKey{ _peer->id, _albumId.current() };
 	rpl::combine(
@@ -566,9 +565,13 @@ void InnerWidget::setupEmpty() {
 			raw->hide();
 			raw->deleteLater();
 		}
+		_emptyLoading = false;
 		if (listHeight <= padding.bottom() + padding.top()) {
 			refreshEmpty();
+		} else {
+			_albumEmpty = false;
 		}
+		refreshHeight();
 	}, _list->lifetime());
 }
 
@@ -580,34 +583,32 @@ void InnerWidget::refreshEmpty() {
 		&& albumId
 		&& (albumId != Data::kStoriesAlbumIdArchive)
 		&& _peer->canEditStories();
+	_albumEmpty = albumCanAdd;
 	if (albumCanAdd) {
 		auto empty = object_ptr<Ui::VerticalLayout>(this);
 		empty->add(
-			object_ptr<Ui::CenterWrap<>>(
+			object_ptr<Ui::FlatLabel>(
 				empty.get(),
-				object_ptr<Ui::FlatLabel>(
-					empty.get(),
-					tr::lng_stories_album_empty_title(),
-					st::collectionEmptyTitle)),
-			st::collectionEmptyTitleMargin);
+				tr::lng_stories_album_empty_title(),
+				st::collectionEmptyTitle),
+			st::collectionEmptyTitleMargin,
+			style::al_top);
 		empty->add(
-			object_ptr<Ui::CenterWrap<>>(
+			object_ptr<Ui::FlatLabel>(
 				empty.get(),
-				object_ptr<Ui::FlatLabel>(
-					empty.get(),
-					tr::lng_stories_album_empty_text(),
-					st::collectionEmptyText)),
-			st::collectionEmptyTextMargin);
+				tr::lng_stories_album_empty_text(),
+				st::collectionEmptyText),
+			st::collectionEmptyTextMargin,
+			style::al_top);
 
 		const auto button = empty->add(
-			object_ptr<Ui::CenterWrap<Ui::RoundButton>>(
+			object_ptr<Ui::RoundButton>(
 				empty.get(),
-				object_ptr<Ui::RoundButton>(
-					empty.get(),
-					rpl::single(QString()),
-					st::collectionEmptyButton)),
-			st::collectionEmptyAddMargin)->entity();
-		button->setText(tr::lng_stories_album_add_title(
+				rpl::single(QString()),
+				st::collectionEmptyButton),
+			st::collectionEmptyAddMargin,
+			style::al_top);
+		button->setText(tr::lng_stories_album_add_button(
 		) | rpl::map([](const QString &text) {
 			return Ui::Text::IconEmoji(&st::collectionAddIcon).append(text);
 		}));
@@ -629,6 +630,7 @@ void InnerWidget::refreshEmpty() {
 			st::giftListAbout);
 		_empty->show();
 	}
+	_emptyLoading = !albumCanAdd && !knownEmpty;
 	resizeToWidth(width());
 }
 
@@ -737,7 +739,7 @@ void InnerWidget::showMenuForAlbum(int id) {
 	_menu = base::make_unique_q<Ui::PopupMenu>(this, st::popupMenuWithIcons);
 	const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
 	if (_peer->canEditStories()) {
-		addAction(tr::lng_stories_album_add_title(tr::now), [=] {
+		addAction(tr::lng_stories_album_add_button(tr::now), [=] {
 			editAlbumStories(id);
 		}, &st::menuIconStoriesSave);
 	}
@@ -893,6 +895,7 @@ int InnerWidget::resizeGetHeight(int newWidth) {
 		const auto margin = st::giftListAboutMargin;
 		empty->resizeToWidth(newWidth - margin.left() - margin.right());
 	}
+
 	return recountHeight();
 }
 
@@ -919,6 +922,11 @@ int InnerWidget::recountHeight() {
 		const auto margin = st::giftListAboutMargin;
 		empty->moveToLeft(margin.left(), top + margin.top());
 		top += margin.top() + empty->height() + margin.bottom();
+	}
+	if (_emptyLoading) {
+		top = std::max(top, _lastNonLoadingHeight);
+	} else {
+		_lastNonLoadingHeight = top;
 	}
 	return top;
 }

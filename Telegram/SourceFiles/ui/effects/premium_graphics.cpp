@@ -202,8 +202,8 @@ Line::Line(
 : Line(
 	parent,
 	st,
-	max ? textFactory(max) : QString(),
-	min ? textFactory(min) : QString(),
+	max ? textFactory(max).counter : QString(),
+	min ? textFactory(min).counter : QString(),
 	ratio) {
 }
 
@@ -372,7 +372,6 @@ void Line::recache(const QSize &s) {
 		}
 	};
 	const auto textPadding = st::premiumLineTextSkip;
-	const auto textTop = (s.height() - _leftLabel.minHeight()) / 2;
 	const auto rwidth = _rightLabel.maxWidth();
 	const auto pen = [&](bool gradient) {
 		return gradient ? st::activeButtonFg : _st.nonPremiumFg;
@@ -385,8 +384,10 @@ void Line::recache(const QSize &s) {
 		if (_dynamic) {
 			p.setFont(st::normalFont);
 			p.setPen(pen(_st.gradientFromLeft));
-			_leftLabel.drawLeft(p, textPadding, textTop, width, width);
-			_rightLabel.drawRight(p, textPadding, textTop, rwidth, width);
+			const auto leftTop = (s.height() - _leftLabel.minHeight()) / 2;
+			_leftLabel.drawLeft(p, textPadding, leftTop, width, width);
+			const auto rightTop = (s.height() - _rightLabel.minHeight()) / 2;
+			_rightLabel.drawRight(p, textPadding, rightTop, rwidth, width);
 		}
 		_leftPixmap = std::move(leftPixmap);
 	}
@@ -398,8 +399,10 @@ void Line::recache(const QSize &s) {
 		if (_dynamic) {
 			p.setFont(st::normalFont);
 			p.setPen(pen(!_st.gradientFromLeft));
-			_leftLabel.drawLeft(p, textPadding, textTop, width, width);
-			_rightLabel.drawRight(p, textPadding, textTop, rwidth, width);
+			const auto leftTop = (s.height() - _leftLabel.minHeight()) / 2;
+			_leftLabel.drawLeft(p, textPadding, leftTop, width, width);
+			const auto rightTop = (s.height() - _rightLabel.minHeight()) / 2;
+			_rightLabel.drawRight(p, textPadding, rightTop, rwidth, width);
 		}
 		_rightPixmap = std::move(rightPixmap);
 	}
@@ -493,8 +496,8 @@ void AddLimitRow(
 	AddLimitRow(
 		parent,
 		st,
-		max ? factory(max) : QString(),
-		min ? factory(min) : QString(),
+		max ? factory(max).counter : QString(),
+		min ? factory(min).counter : QString(),
 		ratio);
 }
 
@@ -782,9 +785,9 @@ void ShowListBox(
 		if (entry.leftNumber || entry.rightNumber) {
 			auto factory = [=, text = ProcessTextFactory({})](int n) {
 				if (entry.customRightText && (n == entry.rightNumber)) {
-					return *entry.customRightText;
+					return Ui::Premium::BubbleText{ *entry.customRightText };
 				} else {
-					return text(n);
+					return Ui::Premium::BubbleText{ text(n) };
 				}
 			};
 			const auto limitRow = content->add(

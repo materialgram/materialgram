@@ -12,6 +12,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "info/media/info_media_provider.h"
 #include "info/media/info_media_list_section.h"
 #include "info/downloads/info_downloads_provider.h"
+#include "info/saved/info_saved_music_provider.h"
 #include "info/stories/info_stories_provider.h"
 #include "info/info_controller.h"
 #include "layout/layout_mosaic.h"
@@ -29,15 +30,18 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/data_download_manager.h"
 #include "data/data_forum_topic.h"
 #include "data/data_saved_sublist.h"
-#include "history/history_item.h"
-#include "history/history_item_helpers.h"
-#include "history/history.h"
+#include "history/view/media/history_view_save_document_action.h"
 #include "history/view/history_view_cursor_state.h"
 #include "history/view/history_view_service_message.h"
+#include "history/history.h"
+#include "history/history_item.h"
+#include "history/history_item_helpers.h"
 #include "media/stories/media_stories_controller.h" // ...TogglePinnedToast.
 #include "media/stories/media_stories_share.h" // PrepareShareBox.
 #include "window/window_session_controller.h"
 #include "window/window_peer_menu.h"
+#include "ui/widgets/menu/menu_add_action_callback.h"
+#include "ui/widgets/menu/menu_add_action_callback_factory.h"
 #include "ui/widgets/popup_menu.h"
 #include "ui/boxes/confirm_box.h"
 #include "ui/controls/delete_message_context_action.h"
@@ -98,6 +102,8 @@ struct ListWidget::DateBadge {
 		not_null<AbstractController*> controller) {
 	if (controller->isDownloads()) {
 		return std::make_unique<Downloads::Provider>(controller);
+	} else if (controller->musicPeer()) {
+		return std::make_unique<Saved::MusicProvider>(controller);
 	} else if (controller->storiesPeer()) {
 		return std::make_unique<Stories::Provider>(controller);
 	} else if (controller->section().type() == Section::Type::GlobalMedia) {
@@ -154,6 +160,7 @@ ListWidget::ListWidget(
 	_provider->type(),
 	[=] { scrollDateCheck(); },
 	[=] { scrollDateHide(); }))
+, _selectedLimit(MaxSelectedItems)
 , _storiesAddToAlbumId(controller->storiesAddToAlbumId())
 , _hiddenMark(std::make_unique<StickerPremiumMark>(
 		&_controller->session(),
@@ -193,6 +200,9 @@ void ListWidget::start() {
 		}, lifetime());
 	} else if (_controller->storiesPeer()) {
 		setupStoriesTrackIds();
+		trackSession(&session());
+		restart();
+	} else if (_controller->musicPeer()) {
 		trackSession(&session());
 		restart();
 	} else {
@@ -275,6 +285,7 @@ void ListWidget::setupStoriesTrackIds() {
 	}
 	const auto peerId = _controller->storiesPeer()->id;
 	const auto stories = &session().data().stories();
+
 	constexpr auto kArchive = Data::kStoriesAlbumIdArchive;
 	const auto key = Data::StoryAlbumIdsKey{ peerId, kArchive };
 	rpl::single(rpl::empty) | rpl::then(
@@ -301,6 +312,32 @@ void ListWidget::setupStoriesTrackIds() {
 				}
 			}
 		}
+	}, lifetime());
+
+	if (!stories->albumIdsCountKnown(peerId, _storiesAddToAlbumId)) {
+		stories->albumIdsLoadMore(peerId, _storiesAddToAlbumId);
+	}
+
+	const auto akey = Data::StoryAlbumIdsKey{ peerId, _storiesAddToAlbumId };
+	rpl::single(rpl::empty) | rpl::then(
+		stories->albumIdsChanged() | rpl::filter(
+			rpl::mappers::_1 == akey
+		) | rpl::to_empty
+	) | rpl::start_with_next([=] {
+		_storiesAddToAlbumTotal = stories->albumIdsCount(
+			peerId,
+			_storiesAddToAlbumId);
+
+		const auto albumId = _storiesAddToAlbumId;
+		const auto &ids = stories->albumKnownInArchive(peerId, albumId);
+		const auto loadedCount = int(ids.size());
+		const auto total = std::max(_storiesAddToAlbumTotal, loadedCount);
+		const auto nonLoadedInAlbum = total - loadedCount;
+
+		const auto appConfig = &_controller->session().appConfig();
+		const auto totalLimit = appConfig->storiesAlbumLimit();
+
+		_selectedLimit = std::max(totalLimit - nonLoadedInAlbum, 0);
 	}, lifetime());
 }
 
@@ -603,8 +640,6 @@ void ListWidget::markStoryMsgsSelected() {
 			pushSelectedItems();
 		}
 	});
-	const auto &appConfig = _controller->session().appConfig();
-	const auto selectLimit = appConfig.storiesAlbumLimit();
 	const auto selection = FullSelection;
 	for (const auto &section : _sections) {
 		for (const auto &entry : section.items()) {
@@ -616,7 +651,7 @@ void ListWidget::markStoryMsgsSelected() {
 					_selected,
 					item,
 					_provider->computeSelectionData(item, selection),
-					selectLimit);
+					_selectedLimit);
 				repaintItem(item);
 				_storyMsgsToMarkSelected.erase(i);
 				if (_storyMsgsToMarkSelected.empty()) {
@@ -1118,16 +1153,11 @@ void ListWidget::showContextMenu(
 							DocumentSaveClickHandler::Mode::ToNewFile);
 					});
 				if (_provider->allowSaveFileAs(item, lnkDocument)) {
-					_contextMenu->addAction(
-						(isVideo
-							? tr::lng_context_save_video(tr::now)
-							: isVoice
-							? tr::lng_context_save_audio(tr::now)
-							: isAudio
-							? tr::lng_context_save_audio_file(tr::now)
-							: tr::lng_context_save_file(tr::now)),
-						std::move(handler),
-						&st::menuIconDownload);
+					HistoryView::AddSaveDocumentAction(
+						Ui::Menu::CreateAddActionCallback(_contextMenu),
+						item,
+						lnkDocument,
+						_controller->parentController());
 				}
 			}
 		}
@@ -1263,7 +1293,7 @@ void ListWidget::showContextMenu(
 				crl::guard(this, [=] {
 					if (hasSelectedText()) {
 						clearSelected();
-					} else if (_selected.size() == MaxSelectedItems) {
+					} else if (_selected.size() == _selectedLimit) {
 						return;
 					} else if (_selected.empty()) {
 						update();
@@ -1276,6 +1306,10 @@ void ListWidget::showContextMenu(
 		}
 	}
 
+	if (_contextMenu->empty()) {
+		_contextMenu = nullptr;
+		return;
+	}
 	_contextMenu->setDestroyedCallback(crl::guard(
 		this,
 		[=] {
@@ -1583,15 +1617,12 @@ void ListWidget::switchToWordSelection() {
 void ListWidget::applyItemSelection(
 		HistoryItem *item,
 		TextSelection selection) {
-	const auto selectLimit = _storiesAddToAlbumId
-		? _controller->session().appConfig().storiesAlbumLimit()
-		: MaxSelectedItems;
 	if (item
 		&& ChangeItemSelection(
 			_selected,
 			item,
 			_provider->computeSelectionData(item, selection),
-			selectLimit)) {
+			_selectedLimit)) {
 		repaintItem(item);
 		pushSelectedItems();
 	}
@@ -2133,15 +2164,12 @@ void ListWidget::applyDragSelection() {
 
 void ListWidget::applyDragSelection(SelectedMap &applyTo) const {
 	if (_dragSelectAction == DragSelectAction::Selecting) {
-		const auto selectLimit = _storiesAddToAlbumId
-			? _controller->session().appConfig().storiesAlbumLimit()
-			: MaxSelectedItems;
 		for (auto &[item, data] : _dragSelected) {
 			ChangeItemSelection(
 				applyTo,
 				item,
 				_provider->computeSelectionData(item, FullSelection),
-				selectLimit);
+				_selectedLimit);
 		}
 	} else if (_dragSelectAction == DragSelectAction::Deselecting) {
 		for (auto &[item, data] : _dragSelected) {

@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "ui/controls/stars_rating.h"
 
+#include "base/unixtime.h"
 #include "info/profile/info_profile_icon.h"
 #include "lang/lang_keys.h"
 #include "ui/effects/premium_bubble.h"
@@ -14,6 +15,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/layers/generic_box.h"
 #include "ui/layers/show.h"
 #include "ui/text/custom_emoji_helper.h"
+#include "ui/text/custom_emoji_text_badge.h"
 #include "ui/text/text_utilities.h"
 #include "ui/toast/toast.h"
 #include "ui/widgets/buttons.h"
@@ -22,7 +24,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/painter.h"
 #include "ui/rp_widget.h"
 #include "ui/ui_utility.h"
+#include "styles/style_chat.h" // textMoreIconEmoji
 #include "styles/style_info.h"
+#include "styles/style_info_levels.h"
 #include "styles/style_layers.h"
 #include "styles/style_premium.h"
 #include "styles/style_settings.h"
@@ -84,42 +88,10 @@ struct Feature {
 	return result;
 }
 
-[[nodiscard]] Fn<QImage()> CustomEmojiBadgeFactory(
-		const QString &text,
-		const style::color &bg,
-		const style::color &fg) {
-	return [=] {
-		auto string = Ui::Text::String(
-			st::settingsPremiumNewBadge.style,
-			text.toUpper());
-		const auto size = QSize(string.maxWidth(), string.minHeight());
-		const auto padding = st::settingsPremiumNewBadgePadding;
-		const auto full = size.grownBy(padding);
-		const auto ratio = style::DevicePixelRatio();
-
-		auto result = QImage(
-			full * ratio,
-			QImage::Format_ARGB32_Premultiplied);
-		result.setDevicePixelRatio(ratio);
-		result.fill(Qt::transparent);
-
-		auto p = QPainter(&result);
-		auto hq = PainterHighQualityEnabler(p);
-		p.setPen(Qt::NoPen);
-		p.setBrush(bg);
-
-		const auto r = padding.left();
-		p.drawRoundedRect(0, 0, full.width(), full.height(), r, r);
-
-		p.setPen(fg);
-		string.draw(p, { .position = { padding.left(), padding.top() } });
-
-		p.end();
-		return result;
-	};
-}
-
 [[nodiscard]] Counters AdjustByReached(Counters data) {
+	if (data.stars < 0) {
+		return data;
+	}
 	const auto reached = !data.nextLevelStars;
 	if (reached) {
 		--data.level;
@@ -138,13 +110,23 @@ struct Feature {
 	return data;
 }
 
-[[nodiscard]] Fn<QString(int)> BubbleTextFactory(int countForScale) {
+[[nodiscard]] Fn<Ui::Premium::BubbleText(int)> BubbleTextFactory(
+		int countForScale,
+		int nextLevelCounter) {
 	return [=](int count) {
-		return (countForScale < 10'000)
-			? QString::number(count)
-			: (countForScale < 10'000'000)
-			? (QString::number((count / 100) / 10.) + 'K')
-			: (QString::number((count / 100'000) / 10.) + 'M');
+		const auto counter = [&](int count) {
+			return (countForScale < 10'000)
+				? Lang::FormatCountDecimal(count)
+				: (countForScale < 10'000'000)
+				? (Lang::FormatCountDecimal((count / 100) / 10.) + 'K')
+				: (Lang::FormatCountDecimal((count / 100'000) / 10.) + 'M');
+		};
+		return Ui::Premium::BubbleText{
+			.counter = counter(count),
+			.additional = (nextLevelCounter
+				? (u"/"_q + counter(nextLevelCounter))
+				: QString()),
+		};
 	};
 }
 
@@ -152,13 +134,20 @@ void FillRatingLimit(
 		rpl::producer<> showFinished,
 		not_null<VerticalLayout*> container,
 		rpl::producer<Counters> data,
+		Premium::BubbleType type,
 		style::margins limitLinePadding,
-		int starsForScale) {
+		int starsForScale,
+		int nextLevelStars,
+		bool hideCount) {
 	const auto addSkip = [&](int skip) {
 		container->add(object_ptr<Ui::FixedHeightWidget>(container, skip));
 	};
 
+	const auto negative = (type == Premium::BubbleType::NegativeRating);
 	const auto ratio = [=](Counters rating) {
+		if (negative) {
+			return 0.5;
+		}
 		const auto min = rating.thisLevelStars;
 		const auto max = rating.nextLevelStars;
 
@@ -208,12 +197,14 @@ void FillRatingLimit(
 	});
 	Premium::AddBubbleRow(
 		container,
-		st::boostBubble,
+		(hideCount ? st::iconOnlyPremiumBubble : st::starRatingBubble),
 		std::move(showFinished),
 		rpl::duplicate(bubbleRowState),
-		Premium::BubbleType::StarRating,
-		BubbleTextFactory(starsForScale),
-		&st::infoStarsCrown,
+		type,
+		(hideCount
+			? [](int) { return Ui::Premium::BubbleText(); }
+			: BubbleTextFactory(starsForScale, nextLevelStars)),
+		negative ? &st::levelNegativeBubble : &st::infoStarsCrown,
 		limitLinePadding);
 	addSkip(st::premiumLineTextSkip);
 
@@ -222,30 +213,35 @@ void FillRatingLimit(
 	};
 	auto limitState = std::move(
 		bubbleRowState
-	) | rpl::map([](const Premium::BubbleRowState &state) {
+	) | rpl::map([negative](const Premium::BubbleRowState &state) {
 		return Premium::LimitRowState{
-			.ratio = state.ratio,
-			.animateFromZero = state.animateFromZero,
+			.ratio = negative ? 0.5 : state.ratio,
+			.animateFromZero = !negative && state.animateFromZero,
 			.dynamic = state.dynamic
 		};
 	});
 	auto left = rpl::duplicate(
 		adjustedData
 	) | rpl::map([=](Counters counters) {
-		return level(counters.level);
+		return (counters.level < 0) ? QString() : level(counters.level);
 	});
 	auto right = rpl::duplicate(
 		adjustedData
 	) | rpl::map([=](Counters counters) {
-		return level(counters.level + 1);
+		return (counters.level < 0)
+			? tr::lng_stars_rating_negative_label(tr::now)
+			: level(counters.level + 1);
 	});
 	Premium::AddLimitRow(
 		container,
-		st::boostLimits,
+		(negative ? st::negativeStarsLimits : st::boostLimits),
 		Premium::LimitRowLabels{
 			.leftLabel = std::move(left),
 			.rightLabel = std::move(right),
-			.activeLineBg = [=] { return st::windowBgActive->b; },
+			.activeLineBg = [=] { return negative
+				? st::attentionButtonFg->b
+				: st::windowBgActive->b;
+			},
 		},
 		std::move(limitState),
 		limitLinePadding);
@@ -254,30 +250,37 @@ void FillRatingLimit(
 void AboutRatingBox(
 		not_null<GenericBox*> box,
 		const QString &name,
-		Counters data) {
+		Counters data,
+		Data::StarsRatingPending pending) {
 	box->setWidth(st::boxWideWidth);
 	box->setStyle(st::boostBox);
 
 	struct State {
 		rpl::variable<Counters> data;
+		rpl::variable<bool> pending;
 		rpl::variable<bool> full;
 	};
 	const auto state = box->lifetime().make_state<State>();
-	state->data = std::move(data);
+	state->data = data;
 
 	FillRatingLimit(
 		BoxShowFinishes(box),
 		box->verticalLayout(),
 		state->data.value(),
+		(data.level < 0
+			? Premium::BubbleType::NegativeRating
+			: Premium::BubbleType::StarRating),
 		st::boxRowPadding,
-		data.stars);
+		data.stars,
+		data.nextLevelStars,
+		(data.level < 0 && !data.stars));
 
 	box->setMaxHeight(st::boostBoxMaxHeight);
-	const auto close = box->addTopButton(
-		st::boxTitleClose,
-		[=] { box->closeBox(); });
 
-	auto title = tr::lng_stars_rating_title();;
+	auto title = rpl::conditional(
+		state->pending.value(),
+		tr::lng_stars_rating_future(),
+		tr::lng_stars_rating_title());
 
 	auto text = !name.isEmpty()
 		? tr::lng_stars_rating_about(
@@ -287,33 +290,96 @@ void AboutRatingBox(
 		: tr::lng_stars_rating_about_your(
 			Ui::Text::RichLangValue) | rpl::type_erased();
 
+	if (data.level < 0) {
+		auto text = (data.stars < 0)
+			? tr::lng_stars_rating_negative_your(
+				lt_count_decimal,
+				rpl::single(-data.stars * 1.),
+				Ui::Text::RichLangValue)
+			: tr::lng_stars_rating_negative(
+				lt_name,
+				rpl::single(TextWithEntities{ name }),
+				Ui::Text::RichLangValue);
+		box->addRow(
+			object_ptr<Ui::FlatLabel>(
+				box,
+				std::move(text),
+				st::boostTextNegative),
+			(st::boxRowPadding
+				+ QMargins(0, st::boostTextSkip, 0, st::boostBottomSkip)),
+			style::al_top
+		)->setTryMakeSimilarLines(true);
+	}
+
 	box->addRow(
 		object_ptr<Ui::FlatLabel>(box, std::move(title), st::infoStarsTitle),
-		st::boxRowPadding + QMargins(0, st::boostTitleSkip / 2, 0, 0));
+		st::boxRowPadding + QMargins(0, st::boostTitleSkip / 2, 0, 0),
+		style::al_top);
 
-	const auto aboutLabel = box->addRow(
+	if (pending) {
+		const auto now = base::unixtime::now();
+		const auto days = std::max((pending.date - now + 43200) / 86400, 1);
+		auto text = state->pending.value(
+		) | rpl::map([=](bool value) {
+			return tr::lng_stars_rating_pending(
+				tr::now,
+				lt_count_decimal,
+				pending.value.stars - data.stars,
+				lt_when,
+				TextWithEntities{
+					tr::lng_stars_rating_updates(tr::now, lt_count, days),
+				},
+				lt_link,
+				Ui::Text::Link((value
+					? tr::lng_stars_rating_pending_back
+					: tr::lng_stars_rating_pending_preview)(
+						tr::now,
+						lt_arrow,
+						Ui::Text::IconEmoji(&st::textMoreIconEmoji),
+						Ui::Text::WithEntities)),
+				Ui::Text::RichLangValue);
+		});
+		const auto aboutPending = box->addRow(
+			object_ptr<Ui::FlatLabel>(
+				box,
+				std::move(text),
+				st::boostTextPending),
+			(st::boxRowPadding
+				+ QMargins(0, st::boostTextSkip, 0, st::boostBottomSkip)),
+			style::al_top);
+		aboutPending->setTryMakeSimilarLines(true);
+		aboutPending->setClickHandlerFilter([=](const auto &...) {
+			state->pending = !state->pending.current();
+			state->data = state->pending.current()
+				? pending.value
+				: data;
+			box->verticalLayout()->resizeToWidth(box->width());
+			return false;
+		});
+	}
+
+	box->addRow(
 		object_ptr<Ui::FlatLabel>(
 			box,
 			std::move(text),
 			st::boostText),
 		(st::boxRowPadding
-			+ QMargins(0, st::boostTextSkip, 0, st::boostBottomSkip)));
-	aboutLabel->setTryMakeSimilarLines(true);
+			+ QMargins(0, st::boostTextSkip, 0, st::boostBottomSkip)),
+		style::al_top
+	)->setTryMakeSimilarLines(true);
 
 	auto helper = Ui::Text::CustomEmojiHelper();
 	const auto makeBadge = [&](
 			const QString &text,
-			const style::color &bg,
-			const style::color &fg) {
+			const style::RoundButton &st) {
 		return helper.paletteDependent(
-			CustomEmojiBadgeFactory(text, bg, fg),
-			st::badgeEmojiMargin);
+			Ui::Text::CustomEmojiTextBadge(text, st));
 	};
 	const auto makeActive = [&](const QString &text) {
-		return makeBadge(text, st::windowBgActive, st::windowFgActive);
+		return makeBadge(text, st::customEmojiTextBadge);
 	};
 	const auto makeInactive = [&](const QString &text) {
-		return makeBadge(text, st::windowSubTextFg, st::windowFgActive);
+		return makeBadge(text, st::infoRatingDeductedBadge);
 	};
 	const auto features = std::vector<Feature>{
 		{
@@ -355,19 +421,55 @@ void AboutRatingBox(
 	).append(' ').append(tr::lng_stars_rating_understood(tr::now))));
 }
 
+[[nodiscard]] not_null<const style::LevelShape*> SelectShape(int level) {
+	if (level < 0) {
+		return &st::levelNegative;
+	}
+	struct Shape {
+		int level = 0;
+		not_null<const style::LevelShape*> shape;
+	};
+	const auto list = std::vector<Shape>{
+		{ 1, &st::level1 },
+		{ 2, &st::level2 },
+		{ 3, &st::level3 },
+		{ 4, &st::level4 },
+		{ 5, &st::level5 },
+		{ 6, &st::level6 },
+		{ 7, &st::level7 },
+		{ 8, &st::level8 },
+		{ 9, &st::level9 },
+		{ 10, &st::level10 },
+		{ 20, &st::level20 },
+		{ 30, &st::level30 },
+		{ 40, &st::level40 },
+		{ 50, &st::level50 },
+		{ 60, &st::level60 },
+		{ 70, &st::level70 },
+		{ 80, &st::level80 },
+		{ 90, &st::level90 },
+	};
+	const auto i = ranges::lower_bound(
+		list,
+		level + 1,
+		ranges::less(),
+		&Shape::level);
+	return (i != begin(list)) ? (i - 1)->shape : list.front().shape;
+}
+
 } // namespace
 
 StarsRating::StarsRating(
 	QWidget *parent,
-	const style::StarsRating &st,
 	std::shared_ptr<Ui::Show> show,
 	const QString &name,
-	rpl::producer<Counters> value)
+	rpl::producer<Counters> value,
+	Fn<Data::StarsRatingPending()> pending)
 : _widget(std::make_unique<Ui::AbstractButton>(parent))
-, _st(st)
 , _show(std::move(show))
 , _name(name)
-, _value(std::move(value)) {
+, _value(std::move(value))
+, _pending(std::move(pending)) {
 	init();
 }
 
@@ -385,43 +487,43 @@ void StarsRating::init() {
 		if (!_value.current()) {
 			return;
 		}
-		_show->show(Box(AboutRatingBox, _name, _value.current()));
+		_show->show(Box(AboutRatingBox, _name, _value.current(), _pending
+			? _pending()
+			: Data::StarsRatingPending()));
 	});
 
-	const auto added = _st.margin + _st.padding;
-	const auto fontHeight = _st.style.font->height;
-	const auto height = added.top() + fontHeight + added.bottom();
-	_widget->resize(_widget->width(), height);
+	_widget->resize(_widget->width(), st::level1.icon.height());
 
 	_value.value() | rpl::start_with_next([=](Counters rating) {
-		if (!rating) {
-			_widget->resize(0, _widget->height());
-			_collapsedWidthValue = 0;
-			return;
-		}
-		updateTexts(rating);
+		updateData(rating);
 	}, lifetime());
 }
 
-void StarsRating::updateTexts(Counters rating) {
-	_collapsedText.setText(
-		_st.style,
-		Lang::FormatCountDecimal(rating.level));
-
-	const auto added = _st.padding;
-	const auto add = added.left() + added.right();
-	const auto height = _widget->height();
-	_collapsedWidthValue = _st.margin.right()
-		+ std::max(
-			add + _collapsedText.maxWidth(),
-			height - _st.margin.top() - _st.margin.bottom());
+void StarsRating::updateData(Data::StarsRating rating) {
+	if (!rating) {
+		_shape = nullptr;
+		_widthValue = 0;
+	} else {
+		_shape = SelectShape(rating.level);
+		_collapsedText.setText(
+			st::levelStyle,
+			(rating.level < 0
+				? QString()
+				: Lang::FormatCountDecimal(rating.level)));
+		const auto &margin = st::levelMargin;
+		_widthValue = _shape->icon.width() + margin.right() - margin.left();
+	}
 	updateWidth();
 }
 
 void StarsRating::updateWidth() {
-	const auto widthToRight = _collapsedWidthValue.current();
-	_widget->resize(_st.margin.left() + widthToRight, _widget->height());
-	_widget->update();
+	if (const auto widthToRight = _widthValue.current()) {
+		const auto &margin = st::levelMargin;
+		_widget->resize(margin.left() + widthToRight, _widget->height());
+		_widget->update();
+	} else {
+		_widget->resize(0, _widget->height());
+	}
 }
 
 void StarsRating::raise() {
@@ -429,32 +531,25 @@ void StarsRating::raise() {
 }
 
 void StarsRating::moveTo(int x, int y) {
-	_widget->move(x - _st.margin.left(), y - _st.margin.top());
+	_widget->move(x - st::levelMargin.left(), y - st::levelMargin.top());
 }
 
 void StarsRating::paint(QPainter &p) {
-	const auto outer = _widget->rect().marginsRemoved(_st.margin);
-	if (outer.isEmpty()) {
+	if (!_shape) {
 		return;
 	}
-	const auto inner = outer.marginsRemoved(_st.padding);
+	_shape->icon.paint(p, 0, 0, _widget->width());
 
-	auto hq = PainterHighQualityEnabler(p);
-	p.setPen(Qt::NoPen);
-	p.setBrush(_st.activeBg);
-
-	const auto radius = outer.height() / 2.;
-	p.drawRoundedRect(outer, radius, radius);
-	p.setPen(_st.activeFg);
-	const auto skip = (inner.width() - _collapsedText.maxWidth()) / 2;
+	const auto x = (_widget->width() - _collapsedText.maxWidth()) / 2;
+	p.setPen(st::levelTextFg);
 	_collapsedText.draw(p, {
-		.position = inner.topLeft() + QPoint(skip, 0),
+		.position = QPoint(x, 0) + _shape->position,
 		.availableWidth = _collapsedText.maxWidth(),
 	});
 }
 
-rpl::producer<int> StarsRating::collapsedWidthValue() const {
-	return _collapsedWidthValue.value();
+rpl::producer<int> StarsRating::widthValue() const {
+	return _widthValue.value();
 }
 
 rpl::lifetime &StarsRating::lifetime() {
