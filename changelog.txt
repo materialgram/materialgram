@@ -1,3 +1,11 @@
+6.1.0.1 (01.09.25)
+
+- Official changelog:
+- Music on Profiles.
+- Gift Themes.
+- Gift Value Information.
+- Upgrading Gifts for Other Users.
+
 6.0.0.1 (31.07.25)
 
 - Official changelog:
