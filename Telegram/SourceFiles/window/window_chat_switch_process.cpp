@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "window/window_chat_switch_process.h"
 
+#include "core/application.h"
 #include "core/shortcuts.h"
 #include "data/components/recent_peers.h"
 #include "data/data_forum_topic.h"
@@ -20,6 +21,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/controls/userpic_button.h"
 #include "ui/painter.h"
 #include "ui/rp_widget.h"
+#include "window/window_separate_id.h"
+#include "window/window_session_controller.h"
 #include "styles/style_boxes.h"
 #include "styles/style_layers.h"
 #include "styles/style_window.h"
@@ -53,6 +56,29 @@ private:
 	bool _selected = false;
 
 };
+
+void CloseInWindows(not_null<Data::Thread*> thread) {
+	using WindowPointer = base::weak_ptr<Window::SessionController>;
+	auto closing = std::vector<WindowPointer>();
+	auto clearing = std::vector<WindowPointer>();
+	for (const auto window : thread->session().windows()) {
+		if (window->windowId().chat() == thread) {
+			closing.push_back(base::make_weak(window));
+		} else if (window->activeChatCurrent().thread() == thread) {
+			clearing.push_back(base::make_weak(window));
+		}
+	}
+	for (const auto &window : closing) {
+		if (const auto strong = window.get()) {
+			Core::App().closeWindow(&strong->window());
+		}
+	}
+	for (const auto &window : clearing) {
+		if (const auto strong = window.get()) {
+			strong->clearSectionStack();
+		}
+	}
+}
 
 Button::Button(
 	QWidget *parent,
@@ -88,6 +114,7 @@ void Button::setup(
 			this,
 			sublistPeer,
 			st::chatSwitchUserpicSublist);
+		userpic->showMyNotesOnSelf(true);
 		userpic->show();
 		userpic->move(
 			((width() - userpicSize.width()) / 2),
@@ -102,6 +129,7 @@ void Button::setup(
 		this,
 		peer,
 		*userpicSt);
+	userpic->showSavedMessagesOnSelf(true);
 	userpic->show();
 	userpic->move(
 		(((width() - userpicSize.width()) / 2)
@@ -178,6 +206,7 @@ void Button::mouseMoveEvent(QMouseEvent *e) {
 } // namespace
 
 struct ChatSwitchProcess::Entry {
+	not_null<Data::Thread*> thread;
 	std::unique_ptr<Button> button;
 };
 
@@ -188,7 +217,7 @@ ChatSwitchProcess::ChatSwitchProcess(
 : _session(session)
 , _widget(std::make_unique<Ui::RpWidget>(
 	geometry->parentWidget() ? geometry->parentWidget() : geometry))
-, _view(Ui::CreateChild<Ui::RpWidget>(_widget.get()))\
+, _view(Ui::CreateChild<Ui::RpWidget>(_widget.get()))
 , _bg(st::boxRadius, st::boxBg) {
 	setupWidget(geometry);
 	setupContent(opened);
@@ -208,9 +237,8 @@ rpl::producer<> ChatSwitchProcess::closeRequests() const {
 }
 
 void ChatSwitchProcess::process(const Request &request) {
-	Expects(_selected < int(_list.size()));
+	Expects(_selected < _shownCount);
 
-	const auto count = int(_list.size());
 	if (request.action == Qt::Key_Escape) {
 		_closeRequests.fire({});
 	} else if (request.action == Qt::Key_Enter) {
@@ -219,23 +247,40 @@ void ChatSwitchProcess::process(const Request &request) {
 		} else {
 			_closeRequests.fire({});
 		}
-	} else if (request.action == Qt::Key_Tab) {
-		if (_selected < 0 || _selected + 1 >= count) {
+	} else if (request.action == Qt::Key_Tab
+		|| request.action == Qt::Key_Right) {
+		if (_selected < 0 || _selected + 1 >= _shownCount) {
 			setSelected(0);
 		} else {
 			setSelected(_selected + 1);
 		}
-	} else if (request.action == Qt::Key_Backtab) {
+	} else if (request.action == Qt::Key_Backtab
+		|| request.action == Qt::Key_Left) {
 		if (_selected <= 0) {
-			setSelected(count - 1);
+			setSelected(_shownCount - 1);
 		} else {
 			setSelected(_selected - 1);
+		}
+	} else if (request.action == Qt::Key_Up) {
+		const auto now = std::max(_selected, 0) - _shownPerRow;
+		const auto bound = (now < 0) ? (_shownCount + now) : now;
+		setSelected(bound);
+	} else if (request.action == Qt::Key_Down) {
+		const auto now = std::max(_selected, 0) + _shownPerRow;
+		const auto bound = (now >= _shownCount) ? (now - _shownCount) : now;
+		setSelected(bound);
+	} else if (request.action == Qt::Key_Q) {
+		if (_selected >= 0) {
+			const auto thread = _list[_selected];
+			thread->session().recentPeers().chatOpenRemove(thread);
+			remove(thread);
+			CloseInWindows(thread);
 		}
 	}
 }
 
 void ChatSwitchProcess::setSelected(int index) {
-	if (_selected == index || _list.empty()) {
+	if (_selected == index || _list.size() < 2) {
 		return;
 	}
 	if (_selected >= 0) {
@@ -258,7 +303,9 @@ void ChatSwitchProcess::setupWidget(not_null<Ui::RpWidget*> geometry) {
 
 	_widget->events() | rpl::start_with_next([=](not_null<QEvent*> e) {
 		if (e->type() == QEvent::MouseButtonPress) {
-			_closeRequests.fire({});
+			crl::on_main(_widget.get(), [=] {
+				_closeRequests.fire({});
+			});
 		}
 	}, _widget->lifetime());
 
@@ -267,6 +314,9 @@ void ChatSwitchProcess::setupWidget(not_null<Ui::RpWidget*> geometry) {
 
 void ChatSwitchProcess::setupContent(Data::Thread *opened) {
 	_list = _session->recentPeers().collectChatOpenHistory();
+	if (_list.size() < 2) {
+		return;
+	}
 
 	if (opened) {
 		const auto i = ranges::find(_list, not_null(opened));
@@ -299,7 +349,7 @@ void ChatSwitchProcess::setupContent(Data::Thread *opened) {
 			_chosen.fire_copy(thread);
 		});
 
-		_entries.push_back({ .button = std::move(button) });
+		_entries.push_back({ thread, std::move(button) });
 
 		auto destroyed = thread->asTopic()
 			? thread->asTopic()->destroyed()
@@ -310,19 +360,34 @@ void ChatSwitchProcess::setupContent(Data::Thread *opened) {
 			continue;
 		}
 		std::move(destroyed) | rpl::start_with_next([=] {
-			_list.erase(ranges::remove(_list, thread), end(_list));
-			if (const auto i = find(raw); i != end(_entries)) {
-				const auto index = int(i - begin(_entries));
-				if (_selected > index) {
-					--_selected;
-				} else if (_selected == index) {
-					_selected = -1;
-				}
-
-				_entries.erase(i);
-				layout(_widget->size());
-			}
+			remove(thread);
 		}, raw->lifetime());
+	}
+}
+
+void ChatSwitchProcess::remove(not_null<Data::Thread*> thread) {
+	_list.erase(ranges::remove(_list, thread), end(_list));
+
+	const auto i = ranges::find(_entries, thread, &Entry::thread);
+	if (i != end(_entries)) {
+		const auto selected = _selected;
+		const auto index = int(i - begin(_entries));
+		if (_selected > index) {
+			--_selected;
+		} else if (_selected == index) {
+			_selected = -1;
+		}
+
+		_entries.erase(i);
+		const auto weak = base::make_weak(_widget.get());
+		layout(_widget->size());
+		if (weak && _selected < 0 && selected > 0) {
+			if (_entries.empty()) {
+				_closeRequests.fire({});
+			} else {
+				setSelected(std::min(selected - 1, _shownCount - 1));
+			}
+		}
 	}
 }
 
@@ -355,17 +420,41 @@ void ChatSwitchProcess::layout(QSize size) {
 	auto inner = outer.marginsRemoved(st::chatSwitchPadding);
 	const auto available = inner.width();
 	const auto canPerRow = (available / st::chatSwitchSize.width());
-	if (canPerRow < 1 || _list.empty()) {
+	const auto canRows = (canPerRow > 2 * 7)
+		? 1
+		: (canPerRow > 3 * 4)
+		? 2
+		: 3;
+	if (canPerRow < 1) {
+		return;
+	} else if (_list.size() < 2) {
+		_closeRequests.fire({});
 		return;
 	}
 	const auto count = int(_list.size());
-	const auto rows = (count + canPerRow - 1) / canPerRow;
-	const auto minPerRow = count / rows;
-	const auto wideRows = (count - (minPerRow * rows));
-	const auto maxPerRow = wideRows ? (minPerRow + 1) : minPerRow;
-	const auto narrowShift = wideRows ? (st::chatSwitchSize.width() / 2) : 0;
-	const auto width = maxPerRow * st::chatSwitchSize.width();
-	const auto height = rows * st::chatSwitchSize.height();
+	_shownRows = std::min(canRows, (count + canPerRow - 1) / canPerRow);
+	_shownPerRow = std::min(count / _shownRows, canPerRow);
+	if (_shownRows > 2) {
+		if (_shownPerRow * 2 > _shownRows * 4) {
+			_shownRows = 2;
+		} else if (_shownPerRow > 4) {
+			_shownPerRow = 4;
+		}
+	}
+	if (_shownRows > 1) {
+		if (_shownPerRow > _shownRows * 7) {
+			_shownRows = 1;
+		} else if (_shownPerRow > 7) {
+			_shownPerRow = 7;
+		}
+	}
+	_shownCount = _shownPerRow * _shownRows;
+	if (_selected >= _shownCount) {
+		_selected = -1;
+	}
+
+	const auto width = _shownPerRow * st::chatSwitchSize.width();
+	const auto height = _shownRows * st::chatSwitchSize.height();
 
 	size = QSize(width, height);
 	_inner = QRect(
@@ -379,15 +468,18 @@ void ChatSwitchProcess::layout(QSize size) {
 
 	auto index = 0;
 	auto top = padding.top();
-	for (auto row = 0; row != rows; ++row) {
-		const auto columns = (row < wideRows) ? maxPerRow : minPerRow;
-		auto left = padding.left() + ((row < wideRows) ? 0 : narrowShift);
-		for (auto column = 0; column != columns; ++column) {
+	for (auto row = 0; row != _shownRows; ++row) {
+		auto left = padding.left();
+		for (auto column = 0; column != _shownPerRow; ++column) {
 			auto &entry = _entries[index++];
 			entry.button->moveToLeft(left, top, _inner.width());
+			entry.button->show();
 			left += st::chatSwitchSize.width();
 		}
 		top += st::chatSwitchSize.height();
+	}
+	for (auto i = _shownRows * _shownPerRow; i < count; ++i) {
+		_entries[i].button->hide();
 	}
 
 	_shadowed = _outer.marginsAdded(st::boxRoundShadow.extend);

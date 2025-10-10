@@ -648,6 +648,8 @@ bool Application::eventFilter(QObject *object, QEvent *e) {
 		if (base::Platform::GlobalShortcuts::IsToggleFullScreenKey(event)
 			&& toggleActiveWindowFullScreen()) {
 			return true;
+		} else if (Shortcuts::HandlePossibleChatSwitch(event)) {
+			return true;
 		}
 	} break;
 	case QEvent::MouseButtonPress:
@@ -1392,7 +1394,7 @@ Window::Controller *Application::windowForShowingHistory(
 
 Window::Controller *Application::windowForShowingForum(
 		not_null<Data::Forum*> forum) const {
-	const auto tabs = forum->channel()->useSubsectionTabs();
+	const auto tabs = forum->bot() || forum->peer()->useSubsectionTabs();
 	const auto id = Window::SeparateId(
 		tabs ? Window::SeparateType::Chat : Window::SeparateType::Forum,
 		forum->history());

@@ -37,13 +37,6 @@ constexpr auto kPreloadedScreensCount = 4;
 constexpr auto kPreloadedScreensCountFull
 	= kPreloadedScreensCount + 1 + kPreloadedScreensCount;
 
-[[nodiscard]] int MinStoryHeight(int width) {
-	auto itemsLeft = st::infoMediaSkip;
-	auto itemsInRow = (width - itemsLeft)
-		/ (st::infoMediaMinGridSize + st::infoMediaSkip);
-	return (st::infoMediaMinGridSize + st::infoMediaSkip) / itemsInRow;
-}
-
 } // namespace
 
 MusicProvider::MusicProvider(not_null<AbstractController*> controller)
@@ -120,7 +113,9 @@ void MusicProvider::checkPreload(
 	const auto visibleWidth = viewport.width();
 	const auto visibleHeight = viewport.height();
 	const auto preloadedHeight = kPreloadedScreensCountFull * visibleHeight;
-	const auto minItemHeight = MinStoryHeight(visibleWidth);
+	const auto minItemHeight = MinItemHeight(
+		Type::MusicFile,
+		visibleWidth);
 	const auto preloadedCount = preloadedHeight / minItemHeight;
 	const auto preloadIdsLimitMin = (preloadedCount / 2) + 1;
 	const auto preloadIdsLimit = preloadIdsLimitMin
@@ -165,7 +160,7 @@ void MusicProvider::setSearchQuery(QString query) {
 void MusicProvider::refreshViewer() {
 	_viewerLifetime.destroy();
 	const auto aroundId = _aroundId;
-	auto ids = Data::SavedMusicList(_peer, aroundId, _idsLimit);
+ 	auto ids = Data::SavedMusicList(_peer, aroundId, _idsLimit);
 	std::move(
 		ids
 	) | rpl::start_with_next([=](Data::SavedMusicSlice &&slice) {
@@ -245,7 +240,7 @@ BaseLayout *MusicProvider::lookupLayout(const HistoryItem *item) {
 }
 
 bool MusicProvider::isMyItem(not_null<const HistoryItem*> item) {
-	return IsStoryMsgId(item->id) && (item->history()->peer == _peer);
+	return item->isSavedMusicItem() && (item->history()->peer == _peer);
 }
 
 bool MusicProvider::isAfter(
@@ -273,12 +268,7 @@ BaseLayout *MusicProvider::getLayout(
 std::unique_ptr<BaseLayout> MusicProvider::createLayout(
 		not_null<HistoryItem*> item,
 		not_null<Overview::Layout::Delegate*> delegate) {
-	const auto peer = item->history()->peer;
-
 	using namespace Overview::Layout;
-	const auto options = MediaOptions{
-	};
-
 	if (const auto media = item->media()) {
 		if (const auto file = media->document()) {
 			return std::make_unique<Document>(
@@ -340,7 +330,7 @@ QString MusicProvider::showInFolderPath(
 }
 
 int64 MusicProvider::scrollTopStatePosition(not_null<HistoryItem*> item) {
-	return StoryIdFromMsgId(item->id);
+	return item->id.bare;
 }
 
 HistoryItem *MusicProvider::scrollTopStateItem(ListScrollTopState state) {

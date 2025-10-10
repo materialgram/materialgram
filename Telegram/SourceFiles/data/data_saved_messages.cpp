@@ -176,6 +176,14 @@ void SavedMessages::requestSomeStale() {
 		for (const auto &peer : peers) {
 			finishSublistRequest(peer);
 		}
+		for (const auto &peer : peers) {
+			if (const auto sublist = sublistLoaded(peer)) {
+				if (!sublist->lastMessage()
+					&& !sublist->lastServerMessage()) {
+					applySublistDeleted(peer);
+				}
+			}
+		}
 	};
 	auto &histories = owner().histories();
 	_staleRequestId = histories.sendRequest(_owningHistory, type, [=](
@@ -453,7 +461,7 @@ void SavedMessages::applySublistDeleted(not_null<PeerData*> sublistPeer) {
 	}
 
 	_sublistDestroyed.fire(raw);
-	_owner->session().recentPeers().chatOpenDestroyed(raw);
+	_owner->session().recentPeers().chatOpenRemove(raw);
 	session().changes().sublistUpdated(
 		raw,
 		Data::SublistUpdate::Flag::Destroyed);

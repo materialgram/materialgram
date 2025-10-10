@@ -446,7 +446,9 @@ QSize Document::countOptimalSize() {
 			auto descriptor = pending
 				? Lottie::IconDescriptor{
 					.name = u"transcribe_loading"_q,
+					.color = &st::historyTextInFg,
 					.sizeOverride = Size(st::historyTranscribeLoadingSize),
+					.colorizeUsingAlpha = true,
 				}
 				: Lottie::IconDescriptor();
 			auto text = (entry.requestId || !entry.shown)
@@ -455,7 +457,7 @@ QSize Document::countOptimalSize() {
 				? Ui::Text::Italic(tr::lng_audio_transcribe_long(tr::now))
 				: entry.failed
 				? Ui::Text::Italic(tr::lng_attach_failed(tr::now))
-				: TextWithEntities(entry.result).append(
+				: TextWithEntities{ entry.result }.append(
 					pending
 						? Ui::Text::LottieEmoji(descriptor)
 						: TextWithEntities());
@@ -953,13 +955,16 @@ void Document::draw(
 	if (const auto captioned = Get<HistoryDocumentCaptioned>()) {
 		p.setPen(stm->historyTextFg);
 		_parent->prepareCustomEmojiPaint(p, context, captioned->caption);
+
 		auto highlightRequest = context.computeHighlightCache();
 		captioned->caption.draw(p, {
 			.position = { st::msgPadding.left(), captiontop },
 			.availableWidth = captionw,
 			.palette = &stm->textPalette,
 			.pre = stm->preCache.get(),
-			.blockquote = context.quoteCache(parent()->contentColorIndex()),
+			.blockquote = context.quoteCache(
+				parent()->contentColorCollectible(),
+				parent()->contentColorIndex()),
 			.colors = context.st->highlightColors(),
 			.spoiler = Ui::Text::DefaultSpoilerCache(),
 			.now = context.now,
