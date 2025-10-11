@@ -22,6 +22,9 @@
     "capAdd": [
         "SYS_PTRACE"
     ],
+    "runArgs": [
+        "--security-opt=label=disable"
+    ],
     "securityOpt": [
         "seccomp=unconfined"
     ],

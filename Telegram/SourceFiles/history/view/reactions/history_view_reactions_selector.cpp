@@ -648,7 +648,7 @@ int Selector::skipYBubbleUpShift() const {
 	if (!_bubbleUp) {
 		return 0;
 	}
-	return -_st.icons.stripBubble.height() + marginsForShadow().bottom();
+	return marginsForShadow().bottom();
 }
 
 void Selector::paintCollapsed(QPainter &p) {
