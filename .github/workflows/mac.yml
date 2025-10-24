@@ -10,7 +10,7 @@ jobs:
 
   macos:
     name: macOS
-    runs-on: macos-15-intel
+    runs-on: macos-15
 
     strategy:
       matrix:
@@ -69,45 +69,29 @@ jobs:
           find . -iname "*.dir" -exec rm -rf {} || true \;
 
       - name: Configure.
+        if: env.ONLY_CACHE == 'false'
         run: |
           cd $REPO_NAME/Telegram
+          echo "ARTIFACT_NAME=materialgram" >> $GITHUB_ENV
+
           ./configure.sh \
+          -D CMAKE_CONFIGURATION_TYPES=Release \
           -D CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
           -D TDESKTOP_API_ID=${{ secrets.API_ID }} \
           -D TDESKTOP_API_HASH=${{ secrets.API_HASH }} \
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=OFF \
           -D CMAKE_EXE_LINKER_FLAGS="-Wl,-x"
 
-      - name: materialgram build.
-        if: env.ONLY_CACHE == 'false'
-        run: |
-          cd $REPO_NAME/out
-          xcodebuild build -project Telegram.xcodeproj -scheme Telegram -destination "platform=macOS,name=Any Mac" -configuration Release
+          cmake --build ../out --config Release --parallel
 
-      - name: Move Intel artifact.
+      - name: Move artifact.
         run: |
-          echo "ARTIFACT_NAME=materialgram_intel" >> $GITHUB_ENV
           cd $REPO_NAME/out/Release
-          mkdir -p artifact_intel
-          lipo -thin x86_64 materialgram.app/Contents/MacOS/materialgram -output materialgram_intel
-          cp -R materialgram.app artifact_intel/
-          mv materialgram_intel artifact_intel/materialgram.app/Contents/MacOS/materialgram
+          mkdir artifact
+          mv materialgram.app artifact/
+          mv Updater artifact/
       - uses: actions/upload-artifact@v4
-        name: Upload Intel artifact.
+        name: Upload artifact.
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.REPO_NAME }}/out/Release/artifact_intel/
-
-      - name: Move Apple Silicon artifact.
-        run: |
-          echo "ARTIFACT_NAME=materialgram_applesilicon" >> $GITHUB_ENV
-          cd $REPO_NAME/out/Release
-          mkdir -p artifact_applesilicon
-          lipo -thin x86_64 materialgram.app/Contents/MacOS/materialgram -output materialgram_applesilicon
-          cp -R materialgram.app artifact_applesilicon/
-          mv materialgram_applesilicon artifact_applesilicon/materialgram.app/Contents/MacOS/materialgram
-      - uses: actions/upload-artifact@v4
-        name: Upload Apple Silicon artifact.
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.REPO_NAME }}/out/Release/artifact_applesilicon/
+          path: ${{ env.REPO_NAME }}/out/Release/artifact/
