@@ -92,7 +92,7 @@ jobs:
           lipo -thin x86_64 materialgram.app/Contents/MacOS/materialgram -output materialgram_intel
           cp -R materialgram.app artifact_intel/
           mv materialgram_intel artifact_intel/materialgram.app/Contents/MacOS/materialgram
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         name: Upload Intel artifact.
         with:
           name: ${{ env.ARTIFACT_NAME }}
@@ -106,7 +106,7 @@ jobs:
           lipo -thin x86_64 materialgram.app/Contents/MacOS/materialgram -output materialgram_applesilicon
           cp -R materialgram.app artifact_applesilicon/
           mv materialgram_applesilicon artifact_applesilicon/materialgram.app/Contents/MacOS/materialgram
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         name: Upload Apple Silicon artifact.
         with:
           name: ${{ env.ARTIFACT_NAME }}
