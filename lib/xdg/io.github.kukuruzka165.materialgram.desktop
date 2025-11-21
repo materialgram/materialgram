@@ -2,7 +2,7 @@
 Name=materialgram
 Comment=Unofficial Telegram Desktop with Material Design
 TryExec=materialgram
-Exec=materialgram -- %u
+Exec=materialgram -- %U
 Icon=io.github.kukuruzka165.materialgram
 Terminal=false
 StartupWMClass=materialgram
