@@ -10,7 +10,7 @@ jobs:
 
   macos:
     name: macOS
-    runs-on: macos-15
+    runs-on: macos-latest
 
     strategy:
       matrix:
@@ -90,7 +90,7 @@ jobs:
           mkdir artifact
           mv materialgram.app artifact/
           mv Updater artifact/
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         name: Upload artifact.
         with:
           name: ${{ env.ARTIFACT_NAME }}

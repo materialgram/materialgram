@@ -104,6 +104,7 @@ settingsPremiumIconPrivacy: icon {{ "settings/premium/privacy", windowFgActive }
 settingsPremiumIconBusiness: icon {{ "settings/premium/market", windowFgActive }};
 settingsPremiumIconEffects: icon {{ "settings/premium/effects", windowFgActive }};
 settingsPremiumIconChecklist: icon {{ "settings/premium/checklist", windowFgActive }};
+settingsPremiumIconPeerColors: icon {{ "settings/premium/peer_colors-24x24", windowFgActive }};
 
 settingsStoriesIconOrder: icon {{ "settings/premium/stories_order", premiumButtonBg1 }};
 settingsStoriesIconStealth: icon {{ "menu/stealth", premiumButtonBg1 }};
@@ -595,6 +596,8 @@ filterLinkChatsList: PeerList(peerListBox) {
 	padding: margins(0px, 0px, 0px, membersMarginBottom);
 }
 
+settingsColorSampleCutout: 3px;
+settingsColorProfileSampleShift: 5px;
 settingsColorSampleSize: 20px;
 settingsColorSampleCenter: 6px;
 settingsColorSampleCenterRadius: 2px;
