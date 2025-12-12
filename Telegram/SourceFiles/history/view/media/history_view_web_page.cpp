@@ -242,7 +242,7 @@ constexpr auto kSponsoredUserpicLines = 2;
 			&& page->auction->endDate <= base::unixtime::now())
 			? tr::lng_auction_preview_view_results(tr::now)
 			: tr::lng_auction_preview_join(tr::now)
-		: QString());
+		: QString();
 	if (page->iv) {
 		return Ui::Text::IconEmoji(&st::historyIvIcon).append(text);
 	}

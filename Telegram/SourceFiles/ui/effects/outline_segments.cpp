@@ -90,7 +90,7 @@ QLinearGradient UnreadStoryOutlineGradient(
 		const QColor &c1,
 		const QColor &c2) {
 	auto result = QLinearGradient(rect.topRight(), rect.bottomLeft());
-	result.setStops({ { 0., st::windowBgActive->c1 }, { 1., st::windowBgActive->c2 } });
+	result.setStops({ { 0., c1 }, { 1., c2 } });
 	return result;
 }
 
