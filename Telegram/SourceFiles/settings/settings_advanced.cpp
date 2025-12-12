@@ -361,10 +361,10 @@ void SetupMaterialgram(
 	registration->toggledValue(
 	) | rpl::filter([=](bool enabled) {
 		return (enabled != settings->birthDateEnabled());
-		}) | rpl::start_with_next([=](bool enabled) {
-			settings->setBirthDateEnabled(enabled);
-			Core::App().saveSettingsDelayed();
-			}, container->lifetime());
+	}) | rpl::on_next([=](bool enabled) {
+		settings->setBirthDateEnabled(enabled);
+		Core::App().saveSettingsDelayed();
+	}, container->lifetime());
     
 	const auto datacenter = container->add(object_ptr<Button>(
 		container,
@@ -377,10 +377,10 @@ void SetupMaterialgram(
 	datacenter->toggledValue(
 	) | rpl::filter([=](bool enabled) {
 		return (enabled != settings->datacenterEnabled());
-		}) | rpl::start_with_next([=](bool enabled) {
-			settings->setDatacenterEnabled(enabled);
-			Core::App().saveSettingsDelayed();
-			}, container->lifetime());
+	}) | rpl::on_next([=](bool enabled) {
+		settings->setDatacenterEnabled(enabled);
+		Core::App().saveSettingsDelayed();
+	}, container->lifetime());
 
 	const auto gamee = container->add(object_ptr<Button>(
 		container,
@@ -393,10 +393,10 @@ void SetupMaterialgram(
 	gamee->toggledValue(
 	) | rpl::filter([=](bool enabled) {
 		return (enabled != settings->gameeEnabled());
-		}) | rpl::start_with_next([=](bool enabled) {
-			settings->setGameeEnabled(enabled);
-			Core::App().saveSettingsDelayed();
-			}, container->lifetime());
+	}) | rpl::on_next([=](bool enabled) {
+		settings->setGameeEnabled(enabled);
+		Core::App().saveSettingsDelayed();
+	}, container->lifetime());
 }
 
 void SetupWindowTitleContent(
