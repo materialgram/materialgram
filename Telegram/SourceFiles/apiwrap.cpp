@@ -199,7 +199,7 @@ ApiWrap::ApiWrap(not_null<Main::Session*> session)
 		_session->data().chatsFilters().changed(
 		) | rpl::filter([=] {
 			return _session->data().chatsFilters().archiveNeeded();
-		}) | rpl::start_with_next([=] {
+		}) | rpl::on_next([=] {
 			requestMoreDialogsIfNeeded();
 		}, _session->lifetime());
 
@@ -248,7 +248,7 @@ void ApiWrap::setupSupportMode() {
 	}
 
 	_session->settings().supportChatsTimeSliceValue(
-	) | rpl::start_with_next([=](int seconds) {
+	) | rpl::on_next([=](int seconds) {
 		_dialogsLoadTill = seconds ? std::max(base::unixtime::now() - seconds, 0) : 0;
 		refreshDialogsLoadBlocked();
 	}, _session->lifetime());
@@ -1902,7 +1902,7 @@ void ApiWrap::updateNotifySettingsDelayed(
 	}
 	if (_updateNotifyTopics.emplace(topic).second) {
 		topic->destroyed(
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			_updateNotifyTopics.remove(topic);
 		}, _updateNotifyQueueLifetime);
 		_updateNotifyTimer.callOnce(kNotifySettingSaveTimeout);
@@ -3483,6 +3483,9 @@ void ApiWrap::forwardMessages(
 		flags |= MessageFlag::ShortcutMessage;
 		sendFlags |= SendFlag::f_quick_reply_shortcut;
 	}
+	if (action.options.effectId) {
+		sendFlags |= SendFlag::f_effect;
+	}
 	if (draft.options != Data::ForwardOptions::PreserveInfo) {
 		sendFlags |= SendFlag::f_drop_author;
 	}
@@ -3548,6 +3551,7 @@ void ApiWrap::forwardMessages(
 				MTP_int(action.options.scheduleRepeatPeriod),
 				(sendAs ? sendAs->input : MTP_inputPeerEmpty()),
 				Data::ShortcutIdToMTP(_session, action.options.shortcutId),
+				MTP_long(action.options.effectId),
 				MTPint(), // video_timestamp
 				MTP_long(starsPaid),
 				Api::SuggestToMTP(action.options.suggest)
@@ -4772,7 +4776,7 @@ rpl::producer<bool> ApiWrap::contactSignupSilent() const {
 	return _contactSignupSilent
 		? _contactSignupSilentChanges.events_starting_with_copy(
 			*_contactSignupSilent)
-		: (_contactSignupSilentChanges.events() | rpl::type_erased());
+		: (_contactSignupSilentChanges.events() | rpl::type_erased);
 }
 
 std::optional<bool> ApiWrap::contactSignupSilentCurrent() const {

@@ -131,7 +131,7 @@ TopBarWidget::TopBarWidget(
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
 	Lang::Updated(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		refreshLang();
 	}, lifetime());
 
@@ -166,7 +166,7 @@ TopBarWidget::TopBarWidget(
 		const auto activeChanged = (active != std::get<0>(previous));
 		const auto searchInChat = search && (active == search);
 		return std::make_tuple(searchInChat, activeChanged);
-	}) | rpl::start_with_next([=](
+	}) | rpl::on_next([=](
 			bool searchInActiveChat,
 			bool activeChanged) {
 		auto animated = activeChanged
@@ -176,7 +176,7 @@ TopBarWidget::TopBarWidget(
 	}, lifetime());
 
 	controller->adaptive().changes(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		updateAdaptiveLayout();
 	}, lifetime());
 
@@ -186,7 +186,7 @@ TopBarWidget::TopBarWidget(
 		session().data().sendActionManager().animationUpdated(
 		) | rpl::filter([=](const AnimationUpdate &update) {
 			return (update.thread == _activeChat.key.thread());
-		}) | rpl::start_with_next([=] {
+		}) | rpl::on_next([=] {
 			update();
 		}, lifetime());
 	}
@@ -199,7 +199,7 @@ TopBarWidget::TopBarWidget(
 		| UpdateFlag::SupportInfo
 		| UpdateFlag::Rights
 		| UpdateFlag::EmojiStatus
-	) | rpl::start_with_next([=](const Data::PeerUpdate &update) {
+	) | rpl::on_next([=](const Data::PeerUpdate &update) {
 		if (update.flags & UpdateFlag::HasCalls) {
 			if (update.peer->isUser()
 				&& (update.peer->isSelf()
@@ -229,12 +229,12 @@ TopBarWidget::TopBarWidget(
 	rpl::combine(
 		Core::App().settings().thirdSectionInfoEnabledValue(),
 		Core::App().settings().tabbedReplacedWithInfoValue()
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		updateInfoToggleActive();
 	}, lifetime());
 
 	Core::App().settings().proxy().connectionTypeValue(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		updateConnectingState();
 	}, lifetime());
 
@@ -528,7 +528,9 @@ void TopBarWidget::paintTopBar(Painter &p) {
 			p.drawTextLeft(nameleft, statustop, width(), _customTitleText);
 		}
 	} else if (folder
-		|| (peer && (peer->sharedMediaInfo() || peer->isVerifyCodes()))
+		|| (peer
+			&& (peer->sharedMediaInfo() || peer->isVerifyCodes())
+			&& _activeChat.section != Section::SavedSublist)
 		|| (_activeChat.section == Section::Scheduled)
 		|| (_activeChat.section == Section::Pinned)) {
 		auto text = (_activeChat.section == Section::Scheduled)
@@ -819,7 +821,7 @@ void TopBarWidget::setActiveChat(
 			) | rpl::map([](int count) {
 				return (count == 0);
 			}) | rpl::distinct_until_changed(
-			) | rpl::start_with_next([=] {
+			) | rpl::on_next([=] {
 				updateControlsVisibility();
 				updateControlsGeometry();
 			}, _activeChatLifetime);
@@ -841,7 +843,7 @@ void TopBarWidget::setActiveChat(
 			_controller->emojiInteractions().seen(
 			) | rpl::filter([=](const InteractionSeen &seen) {
 				return (seen.peer == history->peer);
-			}) | rpl::start_with_next([=](const InteractionSeen &seen) {
+			}) | rpl::on_next([=](const InteractionSeen &seen) {
 				handleEmojiInteractionSeen(seen.emoticon);
 			}, _activeChatLifetime);
 		}
@@ -849,7 +851,7 @@ void TopBarWidget::setActiveChat(
 		if (const auto topic = _activeChat.key.topic()) {
 			Info::Profile::NameValue(
 				topic->peer()
-			) | rpl::start_with_next([=](const QString &name) {
+			) | rpl::on_next([=](const QString &name) {
 				_titlePeerText.setText(st::dialogsTextStyle, name);
 				_titlePeerTextOnline = false;
 				update();
@@ -858,7 +860,7 @@ void TopBarWidget::setActiveChat(
 			// _menuToggle visibility depends on "View topic info",
 			// "View topic info" visibility depends on activeChatCurrent.
 			_controller->activeChatChanges(
-			) | rpl::start_with_next([=] {
+			) | rpl::on_next([=] {
 				updateControlsVisibility();
 			}, _activeChatLifetime);
 		}
@@ -1351,11 +1353,11 @@ bool TopBarWidget::toggleSearch(bool shown, anim::type animated) {
 		_searchCancel->show(anim::type::instant);
 		_searchCancel->setClickedCallback([=] { _searchCancelled.fire({}); });
 		_searchField->submits(
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			_searchSubmitted.fire({});
 		}, _searchField->lifetime());
 		_searchField->changes(
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			const auto was = _searchQuery.current();
 			const auto now = _searchField->getLastText();
 			if (_jumpToDate && was.isEmpty() != now.isEmpty()) {
@@ -1553,7 +1555,7 @@ void TopBarWidget::refreshUnreadBadge() {
 	rpl::combine(
 		_back->geometryValue(),
 		_unreadBadge->widthValue()
-	) | rpl::start_with_next([=](QRect geometry, int width) {
+	) | rpl::on_next([=](QRect geometry, int width) {
 		_unreadBadge->move(
 			geometry.x() + geometry.width() - width,
 			geometry.y() + st::titleUnreadCounterTop);
@@ -1562,7 +1564,7 @@ void TopBarWidget::refreshUnreadBadge() {
 	_unreadBadge->setVisible(!rootChatsListBar());
 	_unreadBadge->setAttribute(Qt::WA_TransparentForMouseEvents);
 	_controller->session().data().unreadBadgeChanges(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		updateUnreadBadge();
 	}, _unreadBadge->lifetime());
 	updateUnreadBadge();
@@ -1610,7 +1612,7 @@ void TopBarWidget::setupDragOnBackButton() {
 	_back->events(
 	) | rpl::filter([=](not_null<QEvent*> e) {
 		return e->type() == QEvent::DragEnter;
-	}) | rpl::start_with_next([=](not_null<QEvent*> e) {
+	}) | rpl::on_next([=](not_null<QEvent*> e) {
 		using namespace Storage;
 		const auto d = static_cast<QDragEnterEvent*>(e.get());
 		const auto data = d->mimeData();
@@ -1627,7 +1629,7 @@ void TopBarWidget::setupDragOnBackButton() {
 		) | rpl::filter([=](not_null<QEvent*> e) {
 			return e->type() == QEvent::DragMove
 				|| e->type() == QEvent::DragLeave;
-		}) | rpl::start_with_next([=](not_null<QEvent*> e) {
+		}) | rpl::on_next([=](not_null<QEvent*> e) {
 			if (e->type() == QEvent::DragMove) {
 				timer->callOnce(ChoosePeerByDragTimeout);
 			} else if (e->type() == QEvent::DragLeave) {

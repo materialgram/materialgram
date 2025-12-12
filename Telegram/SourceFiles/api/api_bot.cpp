@@ -227,7 +227,7 @@ void SendBotCallbackDataWithPassword(
 			api->cloudPassword().state(
 			) | rpl::take(
 				1
-			) | rpl::start_with_next([=](const Core::CloudPasswordState &state) mutable {
+			) | rpl::on_next([=](const Core::CloudPasswordState &state) mutable {
 				if (lifetime) {
 					base::take(lifetime)->destroy();
 				}
@@ -400,7 +400,7 @@ void ActivateBotCommand(ClickHandlerContext context, int row, int column) {
 			}
 		}
 		const auto replyTo = FullReplyTo();
-		const auto suggest = SuggestPostOptions();
+		const auto suggest = SuggestOptions();
 		Window::PeerMenuCreatePoll(
 			controller,
 			item->history()->peer,

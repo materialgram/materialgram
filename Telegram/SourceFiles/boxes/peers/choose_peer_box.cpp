@@ -97,6 +97,7 @@ using RightsMap = std::vector<std::pair<ChatAdminRight, tr::phrase<>>>;
 		{ Flag::ManageCall, tr::lng_request_channel_manage_livestreams },
 		{ Flag::ManageDirect, tr::lng_request_channel_manage_direct },
 		{ Flag::AddAdmins, tr::lng_request_channel_add_admins },
+		{ Flag::BanUsers, tr::lng_request_group_ban_users },
 	};
 }
 
@@ -372,7 +373,7 @@ void ChoosePeerBoxController::prepareRestrictions() {
 			st,
 			QPoint());
 		button->heightValue(
-		) | rpl::start_with_next([=](int height) {
+		) | rpl::on_next([=](int height) {
 			icon->moveToLeft(
 				st::choosePeerCreateIconLeft,
 				(height - st::inviteViaLinkIcon.height()) / 2);
@@ -386,7 +387,7 @@ void ChoosePeerBoxController::prepareRestrictions() {
 		button->events(
 		) | rpl::filter([=](not_null<QEvent*> e) {
 			return (e->type() == QEvent::Enter);
-		}) | rpl::start_with_next([=] {
+		}) | rpl::on_next([=] {
 			delegate()->peerListMouseLeftGeometry();
 		}, button->lifetime());
 		return button;
@@ -521,7 +522,7 @@ void ShowChoosePeerBox(
 		query,
 		std::move(callback));
 	auto initBox = [=, ptr = controller.get()](not_null<PeerListBox*> box) {
-		ptr->selectedCountValue() | rpl::start_with_next([=](int count) {
+		ptr->selectedCountValue() | rpl::on_next([=](int count) {
 			box->clearButtons();
 			if (limit > 1) {
 				box->setAdditionalTitle(rpl::single(u"%1 / %2"_q.arg(count).arg(limit)));

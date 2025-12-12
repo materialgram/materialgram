@@ -151,7 +151,7 @@ using Ui::TableRowTooltipData;
 	auto result = object_ptr<Ui::RpWidget>(parent);
 	const auto raw = result.data();
 
-	raw->paintRequest() | rpl::start_with_next([=] {
+	raw->paintRequest() | rpl::on_next([=] {
 		auto p = QPainter(raw);
 		const auto &icon = st::giveawayGiftCodeLinkCopy;
 		const auto left = (raw->width() - icon.width()) / 2;
@@ -371,6 +371,7 @@ void AddUniqueGiftPropertyRows(
 	const auto handler = [=](not_null<Ui::RpWidget*> button) {
 		if (value->initialPriceStars) {
 			show->show(Box(Settings::UniqueGiftValueBox, show, entry, st));
+			return;
 		} else if (*loading) {
 			return;
 		}
@@ -459,7 +460,7 @@ void AddTable(
 					? tr::lng_gift_link_reason_giveaway
 					: tr::lng_gift_link_reason_unclaimed)(
 						Ui::Text::WithEntities
-					) | rpl::type_erased())
+					) | rpl::type_erased)
 				: tr::lng_gift_link_reason_chosen(Ui::Text::WithEntities)));
 		reason->setClickHandlerFilter([=](const auto &...) {
 			if (const auto window = show->resolveWindow()) {
@@ -640,7 +641,7 @@ void GiftCodeBox(
 		box->closeBox();
 	});
 	box->widthValue(
-	) | rpl::start_with_next([=](int width) {
+	) | rpl::on_next([=](int width) {
 		close->moveToRight(0, 0);
 	}, box->lifetime());
 
@@ -727,7 +728,7 @@ void GiftCodePendingBox(
 			spoiler->update();
 		})->start();
 		linkLabel->sizeValue(
-		) | rpl::start_with_next([=](const QSize &s) {
+		) | rpl::on_next([=](const QSize &s) {
 			spoiler->setGeometry(Rect(s));
 		}, spoiler->lifetime());
 		const auto spoilerCached = Ui::SpoilerMessCached(
@@ -735,7 +736,7 @@ void GiftCodePendingBox(
 			st::giveawayGiftCodeLink.textFg->c);
 		const auto textHeight = st::giveawayGiftCodeLink.style.font->height;
 		spoiler->paintRequest(
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			auto p = QPainter(spoiler);
 			const auto rect = spoiler->rect();
 			const auto r = rect
@@ -769,7 +770,7 @@ void GiftCodePendingBox(
 	const auto closeCallback = [=] { box->closeBox(); };
 	close->setClickedCallback(closeCallback);
 	box->widthValue(
-	) | rpl::start_with_next([=](int width) {
+	) | rpl::on_next([=](int width) {
 		close->moveToRight(0, 0);
 	}, box->lifetime());
 
@@ -862,7 +863,7 @@ void GiveawayInfoBox(
 				std::move(label),
 				QMargins(0, skip, 0, skip)),
 			style::al_justify);
-		result->paintRequest() | rpl::start_with_next([=] {
+		result->paintRequest() | rpl::on_next([=] {
 			auto p = QPainter(result);
 			p.setPen(Qt::NoPen);
 			p.setBrush(st::boxDividerBg);
@@ -1059,7 +1060,7 @@ void GiveawayInfoBox(
 		const auto bg = wrap->lifetime().make_state<Ui::RoundRect>(
 			st::boxRadius,
 			st::attentionBoxButton.textBgOver);
-		wrap->paintRequest() | rpl::start_with_next([=] {
+		wrap->paintRequest() | rpl::on_next([=] {
 			auto p = QPainter(wrap);
 			bg->paint(p, wrap->rect());
 		}, wrap->lifetime());
@@ -1141,7 +1142,7 @@ struct AddedUniqueDetails {
 	const auto icon = Ui::CreateChild<Ui::IconButton>(
 		raw,
 		st::giveawayGiftMessageRemove);
-	raw->widthValue() | rpl::start_with_next([=](int outer) {
+	raw->widthValue() | rpl::on_next([=](int outer) {
 		label->resizeToWidth(outer - icon->width());
 		const auto height = std::max(label->height(), icon->height());
 
@@ -1616,11 +1617,30 @@ void AddCreditsHistoryEntryTable(
 			: entry.giftUpgraded
 			? tr::lng_credits_box_history_entry_gift_from()
 			: tr::lng_credits_box_history_entry_peer();
+		const auto targetId = actorId ? actorId : peerId;
+		const auto isPeerDefault = !entry.starrefCommission
+			&& !entry.in
+			&& !entry.giftResale
+			&& !entry.giftUpgraded;
+		const auto user = isPeerDefault
+			? session->data().peer(targetId)->asUser()
+			: nullptr;
+		const auto withSendButton = user
+			&& !user->isInaccessible()
+			&& !user->isBot();
+		auto send = withSendButton ? tr::lng_gift_send_small() : nullptr;
+		auto handler = send
+			? Fn<void()>([=] {
+				if (const auto window = show->resolveWindow()) {
+					Ui::ShowStarGiftBox(window, user);
+				}
+			})
+			: nullptr;
 		AddTableRow(
 			table,
 			std::move(text),
-			show,
-			actorId ? actorId : peerId);
+			MakePeerTableValue(table, show, targetId, send, handler),
+			st::giveawayGiftCodePeerMargin);
 	}
 	if (const auto msgId = MsgId(peerId ? entry.bareMsgId : 0)) {
 		const auto peer = session->data().peer(peerId);
@@ -1779,6 +1799,19 @@ void AddCreditsHistoryEntryTable(
 			tr::lng_credits_box_history_entry_success_url(),
 			rpl::single(
 				Ui::Text::Link(entry.successLink, entry.successLink)));
+	}
+	if (entry.limitedCount > 0 && entry.limitedLeft >= 0) {
+		AddTableRow(
+			table,
+			tr::lng_gift_availability(),
+			tr::lng_gift_availability_left(
+				lt_count_decimal,
+				rpl::single(entry.limitedLeft) | tr::to_count(),
+				lt_amount,
+				rpl::single(TextWithEntities{
+					Lang::FormatCountDecimal(entry.limitedCount)
+				}),
+				Ui::Text::WithEntities));
 	}
 }
 

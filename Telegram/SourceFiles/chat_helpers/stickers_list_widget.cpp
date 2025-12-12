@@ -247,7 +247,7 @@ StickersListWidget::StickersListWidget(
 	});
 
 	session().downloaderTaskFinished(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		if (isVisible()) {
 			updateItems();
 			readVisibleFeatured(getVisibleTop(), getVisibleBottom());
@@ -258,7 +258,7 @@ StickersListWidget::StickersListWidget(
 		Data::PeerUpdate::Flag::StickersSet
 	) | rpl::filter([=](const Data::PeerUpdate &update) {
 		return (update.peer.get() == _megagroupSet);
-	}) | rpl::start_with_next([=] {
+	}) | rpl::on_next([=] {
 		refreshStickers();
 	}, lifetime());
 
@@ -266,7 +266,7 @@ StickersListWidget::StickersListWidget(
 		session().data().stickers().recentUpdated(_isMasks
 			? Data::StickersType::Masks
 			: Data::StickersType::Stickers
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			refreshRecent();
 		}, lifetime());
 	}
@@ -282,7 +282,7 @@ StickersListWidget::StickersListWidget(
 		rpl::merge(
 			Data::AmPremiumValue(&session()) | rpl::to_empty,
 			session().api().premium().cloudSetUpdated()
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			refreshStickers();
 		}, lifetime());
 	}
@@ -319,12 +319,12 @@ object_ptr<TabbedSelector::InnerFooter> StickersListWidget::createFooter() {
 	_footer = result;
 
 	_footer->setChosen(
-	) | rpl::start_with_next([=](uint64 setId) {
+	) | rpl::on_next([=](uint64 setId) {
 		showStickerSet(setId);
 	}, _footer->lifetime());
 
 	_footer->openSettingsRequests(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		const auto onlyFeatured = !_isMasks && _mySets.empty();
 		_show->showBox(Box<StickersBox>(
 			_show,
@@ -1254,7 +1254,7 @@ void StickersListWidget::ensureLottiePlayer(Set &set) {
 	const auto raw = set.lottiePlayer.get();
 
 	raw->updates(
-	) | rpl::start_with_next([=] {
+	) | rpl::on_next([=] {
 		auto &sets = shownSets();
 		enumerateSections([&](const SectionInfo &info) {
 			if (sets[info.section].lottiePlayer.get() != raw) {
@@ -1735,13 +1735,13 @@ void StickersListWidget::showStickerSetBox(
 			base::timer_once(kTimeout),
 			document->owner().stickers().updated(
 				Data::StickersType::Stickers)
-		) | rpl::start_with_next([=, weak = base::make_weak(this)] {
+		) | rpl::on_next([=, weak = base::make_weak(this)] {
 			if (weak.get()) {
 				showStickerSetBox(document, setId);
 			}
 			lifetime->destroy();
 		}, *lifetime);
-		document->owner().session().api().requestSpecialStickersForce(
+		document->session().api().requestSpecialStickersForce(
 			setId == Data::Stickers::FavedSetId,
 			setId == Data::Stickers::RecentSetId,
 			false);

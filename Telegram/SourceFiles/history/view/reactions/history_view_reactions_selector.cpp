@@ -1089,7 +1089,7 @@ void Selector::createList() {
 		(_stickers
 			? _stickers->chosen()
 			: rpl::never<ChatHelpers::FileChosen>())
-	) | rpl::start_with_next([=](ChatHelpers::FileChosen data) {
+	) | rpl::on_next([=](ChatHelpers::FileChosen data) {
 		_chosen.fire({
 			.id = _unifiedFactoryOwner->lookupReactionId(data.document->id),
 			.icon = data.messageSendingFrom.frame,
@@ -1098,7 +1098,7 @@ void Selector::createList() {
 	}, _list->lifetime());
 
 	_list->jumpedToPremium(
-	) | rpl::start_with_next(_jumpedToPremium, _list->lifetime());
+	) | rpl::on_next(_jumpedToPremium, _list->lifetime());
 
 	const auto inner = rect().marginsRemoved(marginsForShadow());
 	const auto footer = _reactions.customAllowed
@@ -1118,7 +1118,7 @@ void Selector::createList() {
 		rpl::combine(
 			_shadowTop.value(),
 			_shadowSkip.value()
-		) | rpl::start_with_next([=](int top, int skip) {
+		) | rpl::on_next([=](int top, int skip) {
 			_shadow->setGeometry(
 				inner.x() + skip,
 				top,
@@ -1139,10 +1139,10 @@ void Selector::createList() {
 		lists->setVisibleTopBottom(scrollTop, scrollBottom);
 	};
 	_scroll->scrollTopChanges(
-	) | rpl::start_with_next(updateVisibleTopBottom, lists->lifetime());
+	) | rpl::on_next(updateVisibleTopBottom, lists->lifetime());
 
 	_list->scrollToRequests(
-	) | rpl::start_with_next([=](int y) {
+	) | rpl::on_next([=](int y) {
 		_scroll->scrollToY(y);
 		if (_shadow) {
 			_shadow->update();
@@ -1160,28 +1160,28 @@ void Selector::createList() {
 		_stickers->setMinimalHeight(geometry.width(), 0);
 
 		_list->searchQueries(
-		) | rpl::start_with_next([=](std::vector<QString> &&query) {
+		) | rpl::on_next([=](std::vector<QString> &&query) {
 			_stickers->applySearchQuery(std::move(query));
 		}, _stickers->lifetime());
 
 		rpl::combine(
 			_list->heightValue(),
 			_stickers->heightValue()
-		) | rpl::start_with_next([=] {
+		) | rpl::on_next([=] {
 			InvokeQueued(lists, updateVisibleTopBottom);
 		}, _stickers->lifetime());
 
 		rpl::combine(
 			_list->recentShownCount(),
 			_stickers->recentShownCount()
-		) | rpl::start_with_next([=](int emoji, int stickers) {
+		) | rpl::on_next([=](int emoji, int stickers) {
 			_showEmptySearch = !emoji && !stickers;
 			_scroll->update();
 		}, _scroll->lifetime());
 
 		_scroll->paintRequest() | rpl::filter([=] {
 			return _showEmptySearch;
-		}) | rpl::start_with_next([=] {
+		}) | rpl::on_next([=] {
 			auto p = QPainter(_scroll);
 			p.setPen(st::windowSubTextFg);
 			p.setFont(st::normalFont);
@@ -1309,7 +1309,7 @@ AttachSelectorResult MakeJustSelectorMenu(
 	const auto selectorInnerTop = menu->preparedPadding().top()
 		- st::reactStripExtend.top();
 	menu->animatePhaseValue(
-	) | rpl::start_with_next([=](Ui::PopupMenu::AnimatePhase phase) {
+	) | rpl::on_next([=](Ui::PopupMenu::AnimatePhase phase) {
 		if (phase == Ui::PopupMenu::AnimatePhase::StartHide) {
 			selector->beforeDestroy();
 		}
@@ -1317,14 +1317,14 @@ AttachSelectorResult MakeJustSelectorMenu(
 	selector->initGeometry(selectorInnerTop);
 	selector->show();
 
-	selector->chosen() | rpl::start_with_next([=](ChosenReaction reaction) {
+	selector->chosen() | rpl::on_next([=](ChosenReaction reaction) {
 		menu->hideMenu();
 		chosen(std::move(reaction));
 	}, selector->lifetime());
 
 	const auto correctTop = selector->y();
 	menu->showStateValue(
-	) | rpl::start_with_next([=](Ui::PopupMenu::ShowState state) {
+	) | rpl::on_next([=](Ui::PopupMenu::ShowState state) {
 		const auto origin = menu->preparedOrigin();
 		using Origin = Ui::PanelAnimation::Origin;
 		if (origin == Origin::BottomLeft || origin == Origin::BottomRight) {
@@ -1378,13 +1378,13 @@ AttachSelectorResult AttachSelectorToMenu(
 	const auto selector = *result;
 	const auto itemId = item->fullId();
 
-	selector->chosen() | rpl::start_with_next([=](ChosenReaction reaction) {
+	selector->chosen() | rpl::on_next([=](ChosenReaction reaction) {
 		menu->hideMenu();
 		reaction.context = itemId;
 		chosen(std::move(reaction));
 	}, selector->lifetime());
 
-	selector->escapes() | rpl::start_with_next([=] {
+	selector->escapes() | rpl::on_next([=] {
 		menu->hideMenu();
 	}, selector->lifetime());
 
@@ -1435,7 +1435,7 @@ auto AttachSelectorToMenu(
 		? (menu->preparedPadding().top() - st::reactStripExtend.top())
 		: st::lineWidth;
 	menu->animatePhaseValue(
-	) | rpl::start_with_next([=](Ui::PopupMenu::AnimatePhase phase) {
+	) | rpl::on_next([=](Ui::PopupMenu::AnimatePhase phase) {
 		if (phase == Ui::PopupMenu::AnimatePhase::StartHide) {
 			selector->beforeDestroy();
 		}
@@ -1445,7 +1445,7 @@ auto AttachSelectorToMenu(
 
 	const auto correctTop = selector->y();
 	menu->showStateValue(
-	) | rpl::start_with_next([=](Ui::PopupMenu::ShowState state) {
+	) | rpl::on_next([=](Ui::PopupMenu::ShowState state) {
 		const auto origin = menu->preparedOrigin();
 		using Origin = Ui::PanelAnimation::Origin;
 		if (origin == Origin::BottomLeft || origin == Origin::BottomRight) {

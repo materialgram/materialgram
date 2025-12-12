@@ -127,6 +127,7 @@ VerticalButton::VerticalButton(
 
 void VerticalButton::dataUpdatedHook() {
 	_text.setMarkedText(_st.nameStyle, _data.text, kDefaultTextOptions);
+	_subscribed = false;
 	updateSize();
 }
 
@@ -477,7 +478,10 @@ SubsectionButton::SubsectionButton(
 SubsectionButton::~SubsectionButton() = default;
 
 void SubsectionButton::setData(SubsectionTab &&data) {
+	Expects(_data.userpic.get() == data.userpic.get());
+
 	_data = std::move(data);
+	RippleButton::finishAnimating();
 	dataUpdatedHook();
 	update();
 }
@@ -550,7 +554,7 @@ SubsectionSlider::~SubsectionSlider() = default;
 
 void SubsectionSlider::setupBar() {
 	_bar->setAttribute(Qt::WA_TransparentForMouseEvents);
-	sizeValue() | rpl::start_with_next([=](QSize size) {
+	sizeValue() | rpl::on_next([=](QSize size) {
 		const auto thickness = _barSt.stroke - (_barSt.stroke / 2);
 		_bar->setGeometry(
 			0,
@@ -558,7 +562,7 @@ void SubsectionSlider::setupBar() {
 			_vertical ? thickness : size.width(),
 			_vertical ? size.height() : thickness);
 	}, _bar->lifetime());
-	_bar->paintRequest() | rpl::start_with_next([=](QRect clip) {
+	_bar->paintRequest() | rpl::on_next([=](QRect clip) {
 		const auto start = -_barSt.stroke / 2;
 		const auto currentRange = getCurrentActiveRange();
 		const auto from = currentRange.from + _barSt.skip;
