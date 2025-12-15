@@ -150,7 +150,7 @@ constexpr auto kBackdropSpinDuration = crl::time(300);
 constexpr auto kBackdropStopsAt = crl::time(2.5 * 1000);
 constexpr auto kPatternSpinDuration = crl::time(600);
 constexpr auto kPatternStopsAt = crl::time(4 * 1000);
-constexpr auto kModelSpinDuration = crl::time(300);
+constexpr auto kModelSpinDuration = crl::time(160);
 constexpr auto kModelStopsAt = crl::time(5.5 * 1000);
 constexpr auto kModelScaleFrom = 0.7;
 
@@ -1292,9 +1292,6 @@ void SendGift(
 		const auto &action = message.vaction();
 		action.match([&](const MTPDmessageActionStarGiftUnique &data) {
 			if (const auto gift = Api::FromTL(session, data.vgift())) {
-				const auto from = data.vfrom_id()
-					? peerFromMTP(*data.vfrom_id())
-					: PeerId();
 				const auto to = data.vpeer()
 					? peerFromMTP(*data.vpeer())
 					: PeerId();
@@ -4221,6 +4218,7 @@ void UniqueGiftSellBox(
 		.starsMax = appConfig.giftResaleStarsMax(),
 		.nanoTonMin = nanoTonMin,
 		.nanoTonMax = appConfig.giftResaleNanoTonMax(),
+		.allowEmpty = true,
 	});
 	state->price = std::move(priceInput.result);
 	state->computePrice = std::move(priceInput.computeResult);
@@ -5351,7 +5349,9 @@ void UpgradeBox(
 				rpl::single(tr::marked()),
 				costText()),
 			rpl::conditional(
-				showPrices ? state->upgrading.value() : rpl::single(true),
+				(showPrices
+					? state->upgrading.value()
+					: (rpl::single(true) | rpl::type_erased)),
 				rpl::single(tr::marked()),
 				std::move(subtext)),
 			st::resaleButtonTitle,

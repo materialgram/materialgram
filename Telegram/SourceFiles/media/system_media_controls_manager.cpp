@@ -71,7 +71,6 @@ SystemMediaControlsManager::SystemMediaControlsManager()
 
 	mediaPlayer->updatedNotifier(
 	) | trackFilter | rpl::map([=](const TrackState &state) {
-		const auto type = state.id.type();
 		using namespace Media::Player;
 		if (_streamed) {
 			const auto &player = _streamed->player();
@@ -96,10 +95,9 @@ SystemMediaControlsManager::SystemMediaControlsManager()
 		mediaPlayer->stops(AudioMsgId::Type::Voice) | rpl::map_to(false),
 		mediaPlayer->startsPlay(AudioMsgId::Type::Voice) | rpl::map_to(true)
 	) | rpl::distinct_until_changed() | rpl::on_next([=](bool audio) {
-		const auto current = mediaPlayer->current(AudioMsgId::Type::Song)
+		const auto type = mediaPlayer->current(AudioMsgId::Type::Song)
 			? AudioMsgId::Type::Song
 			: AudioMsgId::Type::Voice;
-		const auto type = current;
 		_controls->setEnabled(audio);
 		if (audio) {
 			_controls->setIsNextEnabled(mediaPlayer->nextAvailable(type));
