@@ -51,10 +51,6 @@
     <file alias="show_or_premium_lastseen.tgs">../../animations/show_or_premium_lastseen.tgs</file>
     <file alias="show_or_premium_readtime.tgs">../../animations/show_or_premium_readtime.tgs</file>
     <file alias="passkeys.tgs">../../animations/passkeys.tgs</file>
-
-    <file alias="profile_muting.tgs">../../animations/profile/profile_muting.tgs</file>
-    <file alias="profile_unmuting.tgs">../../animations/profile/profile_unmuting.tgs</file>
-
     <file alias="dice_idle.tgs">../../animations/dice/dice_idle.tgs</file>
     <file alias="dart_idle.tgs">../../animations/dice/dart_idle.tgs</file>
     <file alias="bball_idle.tgs">../../animations/dice/bball_idle.tgs</file>

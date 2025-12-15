@@ -774,8 +774,8 @@ void TopBar::setupActions(not_null<Window::SessionController*> controller) {
 		notifications->convertToToggle(
 			st::infoProfileTopBarActionUnmute,
 			st::infoProfileTopBarActionMute,
-			u"profile_muting"_q,
-			u"profile_unmuting"_q);
+			QString(),
+			QString());
 
 		const auto topicRootId = topic ? topic->rootId() : MsgId();
 		const auto makeThread = [=] {

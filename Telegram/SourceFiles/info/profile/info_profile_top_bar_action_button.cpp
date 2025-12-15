@@ -71,6 +71,12 @@ void TopBarActionButton::toggle(bool state) {
 	}
 	_toggleState = state;
 	const auto &lottie = _toggleState ? _onLottie : _offLottie;
+	if (lottie.isEmpty()) {
+		_icon = _toggleState ? _onIcon : _offIcon;
+		_lottie = nullptr;
+		update();
+		return;
+	}
 	setupLottie(lottie);
 	_lottie->animate([=] {
 		update();
