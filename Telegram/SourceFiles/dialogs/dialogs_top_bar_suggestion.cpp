@@ -90,8 +90,8 @@ void ShowAuthToast(
 		auto text = tr::lng_unconfirmed_auth_confirmed_message(
 			tr::now,
 			lt_link,
-			Ui::Text::Link(tr::lng_settings_sessions_title(tr::now)),
-			Ui::Text::RichLangValue);
+			tr::link(tr::lng_settings_sessions_title(tr::now)),
+			tr::rich);
 		auto filter = [=](
 				ClickHandlerPtr handler,
 				Qt::MouseButton button) {
@@ -130,21 +130,7 @@ void ShowAuthToast(
 		}
 		if (const auto controller = FindSessionController(parent)) {
 			const auto count = float64(list.size());
-			controller->show(Box([=](not_null<Ui::GenericBox*> box) {
-				box->setTitle(tr::lng_unconfirmed_auth_denied_title(
-					lt_count,
-					rpl::single(count)));
-				Ui::InformBox(box, {
-					.text = TextWithEntities()
-						.append(messageText)
-						.append('\n')
-						.append(
-							tr::lng_unconfirmed_auth_denied_warning(
-								tr::now,
-								Ui::Text::Bold)),
-					.confirmText = tr::lng_archive_hint_button(tr::now),
-				});
-			}));
+			controller->show(Box(ShowAuthDeniedBox, count, messageText));
 		}
 	}
 }
@@ -365,7 +351,7 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 				content->setContent(
 					tr::lng_dialogs_suggestions_premium_grace_title(
 						tr::now,
-						Ui::Text::Bold),
+						tr::bold),
 					tr::lng_dialogs_suggestions_premium_grace_about(
 						tr::now,
 						TextWithEntities::Simple));
@@ -413,7 +399,7 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 							Ui::MakeCreditsIconEntity(),
 							lt_channels,
 							{ peers },
-							Ui::Text::Bold),
+							tr::bold),
 						tr::lng_dialogs_suggestions_credits_sub_low_about(
 							tr::now,
 							TextWithEntities::Simple),
@@ -483,12 +469,12 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 							tr::now,
 							lt_text,
 							{ first->shortName() },
-							Ui::Text::RichLangValue)
+							tr::rich)
 						: tr::lng_dialogs_suggestions_birthday_contacts_title(
 							tr::now,
 							lt_count,
 							users.size(),
-							Ui::Text::RichLangValue);
+							tr::rich);
 					auto text = isSingle
 						? tr::lng_dialogs_suggestions_birthday_contact_about(
 							tr::now,
@@ -616,7 +602,7 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 				content->setContent(
 					tr::lng_dialogs_suggestions_birthday_title(
 						tr::now,
-						Ui::Text::Bold),
+						tr::bold),
 					tr::lng_dialogs_suggestions_birthday_about(
 						tr::now,
 						TextWithEntities::Simple));
@@ -648,7 +634,7 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 							tr::now,
 							lt_text,
 							{ discount.replace(kMinus, QChar()) },
-							Ui::Text::Bold),
+							tr::bold),
 						description(tr::now, TextWithEntities::Simple));
 					content->setClickedCallback([=] {
 						const auto controller = FindSessionController(parent);
@@ -742,7 +728,7 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 				content->setContent(
 					tr::lng_dialogs_suggestions_userpics_title(
 						tr::now,
-						Ui::Text::Bold),
+						tr::bold),
 					tr::lng_dialogs_suggestions_userpics_about(
 						tr::now,
 						TextWithEntities::Simple));

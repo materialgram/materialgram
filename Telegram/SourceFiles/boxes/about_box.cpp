@@ -35,27 +35,26 @@ namespace {
 
 rpl::producer<TextWithEntities> Text1() {
 	return tr::materialgram_about_text1(
-		lt_features_link,
-		tr::materialgram_about_github(
-		) | Ui::Text::ToLink("https://github.com/kukuruzka165/materialgram#features"),
-		Ui::Text::WithEntities);
+		lt_api_link,
+		tr::materialgram_about_github(tr::url(u"https://github.com/kukuruzka165/materialgram#features"_q)),
+		tr::marked);
 }
 
 rpl::producer<TextWithEntities> Text2() {
 	return tr::lng_about_text2(
 		lt_gpl_link,
-		rpl::single(Ui::Text::Link(
+		rpl::single(tr::link(
 			"GNU GPL",
 			"https://github.com/telegramdesktop/tdesktop/blob/master/LICENSE")),
 		lt_github_link,
-		rpl::single(Ui::Text::Link(
+		rpl::single(tr::link(
 			"GitHub",
 			"https://github.com/kukuruzka165/materialgram")),
-		Ui::Text::WithEntities);
+			tr::marked);
 }
 
 rpl::producer<TextWithEntities> Text3() {
-	return tr::materialgram_about_text3(Ui::Text::WithEntities);
+	return tr::materialgram_about_text3(tr::marked);
 }
 
 } // namespace
@@ -214,11 +213,11 @@ void ArchiveHintBox(
 						lt_emoji,
 						rpl::single(
 							Ui::Text::IconEmoji(&st::textMoreIconEmoji)),
-						Ui::Text::RichLangValue
+						tr::rich
 					) | rpl::map([](TextWithEntities text) {
-						return Ui::Text::Link(std::move(text), 1);
+						return tr::link(std::move(text), 1);
 					}),
-					Ui::Text::RichLangValue),
+					tr::rich),
 				st::channelEarnHistoryRecipientLabel));
 		label->resizeToWidth(box->width()
 			- rect::m::sum::h(st::boxRowPadding));

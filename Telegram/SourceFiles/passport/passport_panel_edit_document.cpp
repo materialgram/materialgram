@@ -22,7 +22,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "countries/countries_instance.h"
 #include "data/data_user.h" // ->bot()->session()
 #include "main/main_session.h" // ->session().user()
-#include "ui/text/text_utilities.h" // Ui::Text::ToUpper
 #include "boxes/abstract_box.h"
 #include "ui/boxes/confirm_box.h"
 #include "lang/lang_keys.h"

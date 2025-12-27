@@ -161,7 +161,7 @@ void StartRtmpProcess::requestUrl(bool revoke) {
 	const auto session = &_request->peer->session();
 	_request->id = session->api().request(MTPphone_GetGroupCallStreamRtmpUrl(
 		MTP_flags(0),
-		_request->peer->input,
+		_request->peer->input(),
 		MTP_bool(revoke)
 	)).done([=](const MTPphone_GroupCallStreamRtmpUrl &result) {
 		auto data = result.match([&](
@@ -335,7 +335,7 @@ void StartRtmpProcess::FillRtmpRows(
 		if (button == Qt::LeftButton) {
 			show->showBox(Ui::MakeConfirmBox({
 				.text = tr::lng_group_call_rtmp_key_warning(
-					Ui::Text::RichLangValue),
+					tr::rich),
 				.confirmed = [=](Fn<void()> &&close) {
 					handler->onClick({});
 					close();

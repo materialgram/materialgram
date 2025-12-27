@@ -66,7 +66,7 @@ void SendApproval(
 	suggestion->requestId = session->api().request(
 		MTPmessages_ToggleSuggestedPostApproval(
 			MTP_flags(scheduleDate ? Flag::f_schedule_date : Flag()),
-			item->history()->peer->input,
+			item->history()->peer->input(),
 			MTP_int(item->id.bare),
 			MTP_int(scheduleDate),
 			MTPstring()) // reject_comment
@@ -154,13 +154,13 @@ void ConfirmApproval(
 			? tr::lng_suggest_accept_text(
 				tr::now,
 				lt_from,
-				Ui::Text::Bold(item->from()->shortName()),
-				Ui::Text::WithEntities)
+				tr::bold(item->from()->shortName()),
+				tr::marked)
 			: tr::lng_suggest_accept_text_to(
 				tr::now,
 				lt_channel,
-				Ui::Text::Bold(channelName),
-				Ui::Text::WithEntities);
+				tr::bold(channelName),
+				tr::marked);
 		if (price) {
 			text.append("\n\n").append(admin
 				? (scheduleDate
@@ -171,12 +171,12 @@ void ConfirmApproval(
 							lt_count_decimal,
 							amount.value(),
 							lt_channel,
-							Ui::Text::Bold(channelName),
+							tr::bold(channelName),
 							lt_percent,
 							TextWithEntities{ commission },
 							lt_date,
-							Ui::Text::Bold(date),
-							Ui::Text::RichLangValue)
+							tr::bold(date),
+							tr::rich)
 					: (amount.stars()
 						? tr::lng_suggest_accept_receive_now_stars
 						: tr::lng_suggest_accept_receive_now_ton)(
@@ -184,10 +184,10 @@ void ConfirmApproval(
 							lt_count_decimal,
 							amount.value(),
 							lt_channel,
-							Ui::Text::Bold(channelName),
+							tr::bold(channelName),
 							lt_percent,
 							TextWithEntities{ commission },
-							Ui::Text::RichLangValue))
+							tr::rich))
 				: (scheduleDate
 					? (amount.stars()
 						? tr::lng_suggest_accept_pay_stars
@@ -196,25 +196,25 @@ void ConfirmApproval(
 							lt_count_decimal,
 							amount.value(),
 							lt_date,
-							Ui::Text::Bold(date),
-							Ui::Text::RichLangValue)
+							tr::bold(date),
+							tr::rich)
 					: (amount.stars()
 						? tr::lng_suggest_accept_pay_now_stars
 						: tr::lng_suggest_accept_pay_now_ton)(
 							tr::now,
 							lt_count_decimal,
 							amount.value(),
-							Ui::Text::RichLangValue)));
+							tr::rich)));
 			if (admin) {
 				text.append(' ').append(
 					tr::lng_suggest_accept_receive_if(
 						tr::now,
-						Ui::Text::RichLangValue));
+						tr::rich));
 				if (price.stars()) {
 					text.append("\n\n").append(
 						tr::lng_suggest_options_stars_warning(
 							tr::now,
-							Ui::Text::RichLangValue));
+							tr::rich));
 				}
 			}
 		}
@@ -267,7 +267,7 @@ void SendDecline(
 		MTPmessages_ToggleSuggestedPostApproval(
 			MTP_flags(Flag::f_reject
 				| (comment.isEmpty() ? Flag() : Flag::f_reject_comment)),
-			item->history()->peer->input,
+			item->history()->peer->input(),
 			MTP_int(item->id.bare),
 			MTPint(), // schedule_date
 			MTP_string(comment))
@@ -321,12 +321,12 @@ void RequestDeclineComment(
 			.text = (admin
 				? tr::lng_suggest_decline_text(
 					lt_from,
-					rpl::single(Ui::Text::Bold(item->from()->shortName())),
-					Ui::Text::WithEntities)
+					rpl::single(tr::bold(item->from()->shortName())),
+					tr::marked)
 				: tr::lng_suggest_decline_text_to(
 					lt_channel,
-					rpl::single(Ui::Text::Bold(channelName)),
-					Ui::Text::WithEntities)),
+					rpl::single(tr::bold(channelName)),
+					tr::marked)),
 			.confirmed = [=](Fn<void()> close) { (*callback)(); close(); },
 			.confirmText = tr::lng_suggest_action_decline(),
 			.confirmStyle = &st::attentionBoxButton,

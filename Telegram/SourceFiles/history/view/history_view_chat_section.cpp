@@ -105,7 +105,7 @@ rpl::producer<Ui::MessageBarContent> RootViewContent(
 	) | rpl::map([=](Ui::MessageBarContent &&content) {
 		const auto item = history->owner().message(history->peer, rootId);
 		if (!item) {
-			content.text = Ui::Text::Link(tr::lng_deleted_message(tr::now));
+			content.text = tr::link(tr::lng_deleted_message(tr::now));
 		}
 		const auto sender = (item && item->discussionPostOriginalSender())
 			? item->discussionPostOriginalSender()
@@ -463,9 +463,6 @@ ChatWidget::ChatWidget(
 
 ChatWidget::~ChatWidget() {
 	base::take(_sendAction);
-	if (_repliesRootId || _sublist) {
-		session().api().saveCurrentDraftToCloud();
-	}
 	if (_repliesRootId) {
 		controller()->sendingAnimation().clear();
 	}

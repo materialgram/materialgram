@@ -798,6 +798,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_channel_label" = "Personal channel";
 "lng_settings_channel_add" = "Add";
 "lng_settings_channel_remove" = "Remove";
+"lng_settings_channel_menu_remove" = "Remove Personal Channel";
 "lng_settings_channel_no_yet" = "You don't have any public channels yet.";
 "lng_settings_channel_start" = "Start a Channel";
 "lng_settings_channel_saved" = "Your personal channel was updated.";
@@ -2667,6 +2668,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_forwarded_story" = "Story from {user}";
 "lng_forwarded_story_expired" = "This story has expired.";
 "lng_forwarded_date" = "Original: {date}";
+"lng_forwarded_saved_date" = "Saved date: {date}";
 "lng_forwarded_channel" = "Forwarded from {channel}";
 "lng_forwarded_psa_default" = "Forwarded from {channel}";
 "lng_forwarded_via" = "Forwarded from {user} via {inline_bot}";
@@ -3839,6 +3841,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_gift_unique_backdrop" = "Backdrop";
 "lng_gift_unique_symbol" = "Symbol";
 "lng_gift_unique_rarity" = "Only {percent} of such collectibles have this attribute.";
+"lng_gift_unique_sender" = "{from} sent you this gift on {date}";
+"lng_gift_unique_sender_you" = "You bought this gift on {date}";
 "lng_gift_unique_availability_label" = "Quantity";
 "lng_gift_unique_availability#one" = "{count} of {amount} issued";
 "lng_gift_unique_availability#other" = "{count} of {amount} issued";
@@ -5183,6 +5187,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_edit_channel_status_about" = "Choose a status that will be shown next to the channel's name.";
 "lng_edit_channel_status_group" = "Set Group Emoji Status";
 "lng_edit_channel_status_about_group" = "Choose a status that will be shown next to the group's name.";
+"lng_edit_channel_personal_channel" = "Set as Personal Channel";
 "lng_edit_self_title" = "Edit your name";
 "lng_confirm_contact_data" = "New Contact";
 "lng_add_contact" = "Create";
@@ -7438,6 +7443,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_mac_menu_player_resume" = "Resume";
 "lng_mac_menu_player_next" = "Next";
 "lng_mac_menu_player_previous" = "Previous";
+"lng_mac_menu_profiles" = "Profiles";
 
 "lng_mac_touchbar_favorite_stickers" = "Favorite stickers";
 

@@ -222,7 +222,7 @@ TopicIconDescriptor ParseTopicIconEmojiEntity(QStringView entity) {
 		const auto parts = entity.mid(normal.size()).split(' ');
 		if (parts.size() == 2) {
 			return {
-				.title = parts[1].toString(),
+				.title = parts[1].isEmpty() ? u" "_q : parts[1].toString(),
 				.colorId = int32(parts[0].toUInt()),
 			};
 		}
@@ -477,7 +477,7 @@ void ForumTopic::setClosedAndSave(bool closed) {
 	const auto weak = base::make_weak(this);
 	api->request(MTPmessages_EditForumTopic(
 		MTP_flags(MTPmessages_EditForumTopic::Flag::f_closed),
-		peer()->input,
+		peer()->input(),
 		MTP_int(_rootId),
 		MTPstring(), // title
 		MTPlong(), // icon_emoji_id

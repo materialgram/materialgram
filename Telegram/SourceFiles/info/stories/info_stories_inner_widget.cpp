@@ -168,7 +168,7 @@ void EditAlbumBox::prepare() {
 					| (remove.isEmpty()
 						? Flag()
 						: Flag::f_delete_stories)),
-				changes.peer->input,
+				changes.peer->input(),
 				MTP_int(changes.albumId),
 				MTPstring(),
 				MTP_vector<MTPint>(remove),
@@ -718,10 +718,10 @@ void InnerWidget::refreshEmpty() {
 		_empty = object_ptr<Ui::FlatLabel>(
 			this,
 			(!knownEmpty
-				? tr::lng_contacts_loading(Ui::Text::WithEntities)
+				? tr::lng_contacts_loading(tr::marked)
 				: _peer->isSelf()
-				? tr::lng_stories_empty(Ui::Text::RichLangValue)
-				: tr::lng_stories_empty_channel(Ui::Text::RichLangValue)),
+				? tr::lng_stories_empty(tr::rich)
+				: tr::lng_stories_empty_channel(tr::rich)),
 			st::giftListAbout);
 		_empty->show();
 	}
@@ -750,7 +750,7 @@ void InnerWidget::refreshAlbumsTabs() {
 			.id = u"all"_q,
 			.text = tr::lng_stories_album_all(
 				tr::now,
-				Ui::Text::WithEntities),
+				tr::marked),
 		});
 		for (const auto &album : _albums) {
 			auto title = TextWithEntities();
@@ -1118,7 +1118,7 @@ void InnerWidget::flushAlbumReorder() {
 	}
 
 	_reorderRequestId = _api->request(MTPstories_ReorderAlbums(
-		_peer->input,
+		_peer->input(),
 		MTP_vector<MTPint>(order)
 	)).done([=] {
 		_reorderRequestId = 0;

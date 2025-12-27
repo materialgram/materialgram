@@ -546,7 +546,7 @@ void SetupEmptyView(
 		(query ? Icon::NoResults : Icon::Search),
 		(query
 			? tr::lng_maps_no_places
-			: tr::lng_maps_choose_to_search)(Text::WithEntities));
+			: tr::lng_maps_choose_to_search)(tr::marked));
 	view->setMinimalHeight(st::recentPeersEmptyHeightMin);
 	view->show();
 
@@ -1178,8 +1178,8 @@ void LocationPicker::venuesSendRequest() {
 	}
 	_venuesRequestId = _api.request(MTPmessages_GetInlineBotResults(
 		MTP_flags(MTPmessages_GetInlineBotResults::Flag::f_geo_point),
-		_venuesBot->inputUser,
-		(_venueRecipient ? _venueRecipient->input : MTP_inputPeerEmpty()),
+		_venuesBot->inputUser(),
+		(_venueRecipient ? _venueRecipient->input() : MTP_inputPeerEmpty()),
 		MTP_inputGeoPoint(
 			MTP_flags(0),
 			MTP_double(_venuesRequestLocation.point.x()),

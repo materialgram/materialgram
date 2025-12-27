@@ -103,10 +103,10 @@ object_ptr<Ui::RpWidget> AntiSpamValidator::createButton() const {
 				tr::now,
 				lt_count,
 				EnableAntiSpamMinMembers(channel),
-				Ui::Text::RichLangValue));
+				tr::rich));
 		} else {
 			channel->session().api().request(MTPchannels_ToggleAntiSpam(
-				channel->inputChannel,
+				channel->inputChannel(),
 				MTP_bool(toggled)
 			)).done([=](const MTPUpdates &result) {
 				channel->session().api().applyUpdates(result);
@@ -157,11 +157,11 @@ void AntiSpamValidator::addAction(
 		const auto text = tr::lng_admin_log_antispam_menu_report_toast(
 			tr::now,
 			lt_link,
-			Ui::Text::Link(
+			tr::link(
 				tr::lng_admin_log_antispam_menu_report_toast_link(
 					tr::now),
 				"internal:show"),
-			Ui::Text::RichLangValue);
+			tr::rich);
 		const auto showToast = [=,
 				window = _controller,
 				channel = _channel] {
@@ -184,7 +184,7 @@ void AntiSpamValidator::addAction(
 			[=, channel = _channel] {
 				_channel->session().api().request(
 					MTPchannels_ReportAntiSpamFalsePositive(
-						channel->inputChannel,
+						channel->inputChannel(),
 						MTP_int(eventId)
 				)).done(showToast).send();
 			},

@@ -541,13 +541,13 @@ void LinkController::addHeader(not_null<Ui::VerticalLayout*> container) {
 		object_ptr<Ui::FlatLabel>(
 			verticalLayout,
 			(_data.url.isEmpty()
-				? tr::lng_filters_link_no_about(Ui::Text::WithEntities)
+				? tr::lng_filters_link_no_about(tr::marked)
 				: tr::lng_filters_link_share_about(
 					lt_folder,
 					rpl::single(Ui::Text::Wrapped(
 						_filterTitle.text,
 						EntityType::Bold)),
-					Ui::Text::WithEntities)),
+					tr::marked)),
 			st::settingsFilterDividerLabel,
 			st::defaultPopupMenu,
 			Core::TextContext({
@@ -1015,7 +1015,7 @@ void ExportFilterLink(
 	const auto front = peers.front();
 	const auto session = &front->session();
 	auto mtpPeers = peers | ranges::views::transform(
-		[](not_null<PeerData*> peer) { return MTPInputPeer(peer->input); }
+		[](not_null<PeerData*> peer) { return MTPInputPeer(peer->input()); }
 	) | ranges::to<QVector<MTPInputPeer>>();
 	session->api().request(MTPchatlists_ExportChatlistInvite(
 		MTP_inputChatlistDialogFilter(MTP_int(id)),
@@ -1048,7 +1048,7 @@ void EditLinkChats(
 	const auto front = peers.front();
 	const auto session = &front->session();
 	auto mtpPeers = peers | ranges::views::transform(
-		[](not_null<PeerData*> peer) { return MTPInputPeer(peer->input); }
+		[](not_null<PeerData*> peer) { return MTPInputPeer(peer->input()); }
 	) | ranges::to<QVector<MTPInputPeer>>();
 	session->api().request(MTPchatlists_EditExportedInvite(
 		MTP_flags(MTPchatlists_EditExportedInvite::Flag::f_peers),

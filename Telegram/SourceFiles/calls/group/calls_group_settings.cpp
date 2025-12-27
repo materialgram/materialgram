@@ -457,8 +457,8 @@ void SettingsBox(
 									? tr::lng_group_call_mac_input()
 									: tr::lng_group_call_mac_accessibility())
 							) | rpl::map([](QString a, QString b) {
-								auto result = Ui::Text::RichLangValue(a);
-								result.append("\n\n").append(Ui::Text::RichLangValue(b));
+								auto result = tr::rich(a);
+								result.append("\n\n").append(tr::rich(b));
 								return result;
 							}),
 							st::groupCallBoxLabel),
@@ -694,7 +694,7 @@ void SettingsBox(
 			state->requestId = session->api().request(
 				MTPphone_GetGroupCallStreamRtmpUrl(
 					MTP_flags(0),
-					peer->input,
+					peer->input(),
 					MTP_bool(true)
 			)).done([=](const MTPphone_GroupCallStreamRtmpUrl &result) {
 				auto data = result.match([&](

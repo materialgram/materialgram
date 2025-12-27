@@ -621,15 +621,26 @@ void TopBar::updateCollectibleStatus() {
 		_animatedPoints.clear();
 		_pinnedToTopGifts.clear();
 	}
-	if (colorProfile && !colorProfile->palette.empty()) {
+	const auto verifiedFg = [&]() -> std::optional<QColor> {
+		if (collectible) {
+			return Ui::BlendColors(
+				collectible->edgeColor,
+				collectible->centerColor,
+				0.2);
+		}
+		if (colorProfile && !colorProfile->palette.empty()) {
+			return Ui::BlendColors(
+				colorProfile->palette.back(),
+				colorProfile->palette.size() == 1 ? Qt::white : Qt::black,
+				0.2);
+		}
+		return std::nullopt;
+	}();
+	if (verifiedFg) {
 		const auto copyStVerified = [&](const style::InfoPeerBadge &st) {
 			auto result = std::make_unique<style::InfoPeerBadge>(
 				base::duplicate(st));
-			auto fg = std::make_shared<style::owned_color>(
-				Ui::BlendColors(
-					colorProfile->palette.back(),
-					colorProfile->palette.size() == 1 ? Qt::white : Qt::black,
-					0.2));
+			auto fg = std::make_shared<style::owned_color>(*verifiedFg);
 			result->premiumFg = fg->color();
 			return std::shared_ptr<style::InfoPeerBadge>(
 				result.release(),
@@ -1115,8 +1126,8 @@ void TopBar::setupUserpicButton(
 			.about = (*phrase)(
 				tr::now,
 				lt_user,
-				Ui::Text::Bold(name),
-				Ui::Text::WithEntities),
+				tr::bold(name),
+				tr::marked),
 			.confirm = ((type == ChosenType::Suggest)
 				? tr::lng_profile_suggest_button(tr::now)
 				: tr::lng_profile_set_photo_button(tr::now)),
@@ -1262,8 +1273,8 @@ void TopBar::setupUserpicButton(
 						const auto text = tr::lng_profile_topic_toast(
 							tr::now,
 							lt_name,
-							Ui::Text::Link(packName, u"internal:"_q),
-							Ui::Text::WithEntities);
+							tr::link(packName, u"internal:"_q),
+							tr::marked);
 						const auto weak = base::make_weak(controller);
 						controller->showToast(Ui::Toast::Config{
 							.text = text,

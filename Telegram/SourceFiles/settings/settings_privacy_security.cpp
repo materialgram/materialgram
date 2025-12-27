@@ -311,15 +311,15 @@ void AddPremiumPrivacyButton(
 	}
 
 	const auto showToast = [=] {
-		auto link = Ui::Text::Link(
-			Ui::Text::Semibold(
+		auto link = tr::link(
+			tr::semibold(
 				tr::lng_settings_privacy_premium_link(tr::now)));
 		(*toast) = controller->showToast({
 			.text = tr::lng_settings_privacy_premium(
 				tr::now,
 				lt_link,
 				link,
-				Ui::Text::WithEntities),
+				tr::marked),
 			.duration = Ui::Toast::kDefaultDuration * 2,
 			.filter = crl::guard(&controller->session(), [=](
 					const ClickHandlerPtr &,
@@ -597,6 +597,8 @@ void SetupPasskeys(
 	) | rpl::map([=](const QString &loading, int count) {
 		return !session->passkeys().listKnown()
 			? loading
+			: count == 1
+			? session->passkeys().list().front().name
 			: count
 			? QString::number(count)
 			: tr::lng_settings_cloud_password_off(tr::now);

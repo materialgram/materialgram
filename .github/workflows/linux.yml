@@ -35,8 +35,13 @@ jobs:
           echo "TAGNAME=$TAGNAME" >> $GITHUB_ENV
           echo "tagname=$TAGNAME" >> $GITHUB_OUTPUT
 
+      - name: Free up some disk space.
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be
+        with:
+          tool-cache: true
+
       - name: Clone.
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           ref: ${{ env.TAGNAME }}
@@ -81,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-     
+
       - name: Set PKGREL & TAGNAME
         run: |
           if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then

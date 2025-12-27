@@ -73,6 +73,7 @@ constexpr auto kFirstPage = 20;
 constexpr auto kPerPage = 100;
 // constexpr auto kShareQrSize = 768;
 // constexpr auto kShareQrPadding = 16;
+constexpr auto kMaxShownJoined = 3;
 
 using LinkData = Api::InviteLink;
 
@@ -739,14 +740,14 @@ void Controller::setupAboveJoinedWidget() {
 					TextWithEntities{ .text = QString(QChar(0x00D7)) },
 					lt_total,
 					{ QString::number(current.usage) },
-					Ui::Text::WithEntities)
+					tr::marked)
 				: tr::lng_group_invite_subscription_info_title_none(
 					tr::now,
 					lt_emoji,
 					_creditsEmoji,
 					lt_price,
 					{ QString::number(current.subscription.credits) },
-					Ui::Text::WithEntities),
+					tr::marked),
 			kMarkupTextOptions,
 			_emojiHelper.context([=] { widget->update(); }));
 		auto &lifetime = widget->lifetime();
@@ -902,11 +903,11 @@ void Controller::loadMoreRows() {
 	_requestId = _api.request(MTPmessages_GetChatInviteImporters(
 		MTP_flags(Flag::f_link
 			| (_role == Role::Requested ? Flag::f_requested : Flag(0))),
-		_peer->input,
+		_peer->input(),
 		MTP_string(_link),
 		MTPstring(), // q
 		MTP_int(_lastUser ? _lastUser->date : 0),
-		_lastUser ? _lastUser->user->inputUser : MTP_inputUserEmpty(),
+		_lastUser ? _lastUser->user->inputUser() : MTP_inputUserEmpty(),
 		MTP_int(_lastUser ? kPerPage : kFirstPage)
 	)).done([=](const MTPmessages_ChatInviteImporters &result) {
 		_requestId = 0;
@@ -997,7 +998,7 @@ void Controller::rowClicked(not_null<PeerListRow*> row) {
 				_creditsEmoji,
 				lt_cost,
 				{ QString::number(data.subscription.credits) },
-				Ui::Text::WithEntities),
+				tr::marked),
 			_emojiHelper.context());
 		const auto subtitle2 = box->addRow(
 			object_ptr<Ui::FlatLabel>(
@@ -1030,10 +1031,9 @@ void Controller::rowClicked(not_null<PeerListRow*> row) {
 				box,
 				tr::lng_credits_box_out_about(
 					lt_link,
-					tr::lng_payments_terms_link(
-					) | Ui::Text::ToLink(
-						tr::lng_credits_box_out_about_link(tr::now)),
-					Ui::Text::WithEntities),
+					tr::lng_payments_terms_link(tr::url(
+						tr::lng_credits_box_out_about_link(tr::now))),
+					tr::marked),
 				st::creditsBoxAboutDivider),
 			style::al_top);
 
@@ -1103,8 +1103,8 @@ void Controller::processRequest(
 				: tr::lng_group_requests_was_added)(
 					tr::now,
 					lt_user,
-					Ui::Text::Bold(user->name()),
-					Ui::Text::WithEntities));
+					tr::bold(user->name()),
+					tr::marked));
 		}
 	});
 	const auto fail = crl::guard(this, [=] {
@@ -1390,7 +1390,8 @@ void AddPermanentLinkBlock(
 	}) | rpl::flatten_latest(
 	) | rpl::on_next([=](const Api::JoinedByLinkSlice &slice) {
 		auto list = std::vector<HistoryView::UserpicInRow>();
-		list.reserve(slice.users.size());
+		const auto take = std::min(int(slice.users.size()), kMaxShownJoined);
+		list.reserve(take);
 		for (const auto &item : slice.users) {
 			const auto i = ranges::find(
 				state->list,
@@ -1400,6 +1401,9 @@ void AddPermanentLinkBlock(
 				list.push_back(std::move(*i));
 			} else {
 				list.push_back({ item.user });
+			}
+			if (list.size() == take) {
+				break;
 			}
 		}
 		state->count = slice.count;

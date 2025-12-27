@@ -597,14 +597,14 @@ QSize WebPage::countOptimalSize() {
 		_siteNameLines = 1;
 		_siteName.setMarkedText(
 			st::webPageTitleStyle,
-			Ui::Text::Link(siteName, _data->url),
+			tr::link(siteName, _data->url),
 			Ui::WebpageTextTitleOptions());
 	}
 	if (_title.isEmpty() && !title.isEmpty()) {
 		if (!_siteNameLines && !_data->url.isEmpty()) {
 			_title.setMarkedText(
 				st::webPageTitleStyle,
-				Ui::Text::Link(title, _data->url),
+				tr::link(title, _data->url),
 				Ui::WebpageTextTitleOptions());
 
 		} else {
