@@ -98,7 +98,7 @@ QLinearGradient UnreadStoryOutlineGradient(QRectF rect) {
 	return UnreadStoryOutlineGradient(
 		std::move(rect),
 		st::groupCallLive1->c,
-		st::groupCallMuted1->c);
+		st::groupCallLive1->c);
 }
 
 } // namespace Ui
