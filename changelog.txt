@@ -1,3 +1,22 @@
+6.3.10.1 (29.12.25)
+
+- Official changelog:
+- Show who sent your unique collectible gifts.
+- Offer stars or TON for unique gifts.
+- Support passkey login on Windows.
+- Export separate topics message history.
+- Export audio files saved to profile.
+- Reorder stories in stories albums in My Profile.
+- Add your Saved Music to data export.
+- Reorder saved music in My Profile.
+- Support for Gift auctions.
+- Support for Live stories.
+- New profile pages design.
+- Highlight links in contact notes.
+- Show menu with screen share controls in wide group call mode.
+- Fix possible crash in saved music removing.
+- Fix crash in theme editor.
+
 6.2.3.1 (12.10.25)
 
 - Official changelog:

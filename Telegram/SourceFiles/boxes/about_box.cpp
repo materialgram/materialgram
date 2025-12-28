@@ -35,7 +35,7 @@ namespace {
 
 rpl::producer<TextWithEntities> Text1() {
 	return tr::materialgram_about_text1(
-		lt_api_link,
+		lt_features_link,
 		tr::materialgram_about_github(tr::url(u"https://github.com/kukuruzka165/materialgram#features"_q)),
 		tr::marked);
 }

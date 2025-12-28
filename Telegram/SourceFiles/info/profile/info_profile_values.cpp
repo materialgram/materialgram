@@ -250,7 +250,7 @@ QString findRegistrationTime(long long userId) {
 
 rpl::producer<TextWithEntities> RegistrationValue(not_null<PeerData*> peer) {
 	auto userId = peer->id.to<UserId>().bare;
-	return rpl::single(findRegistrationTime(userId)) | Ui::Text::ToWithEntities();
+	return rpl::single(findRegistrationTime(userId)) | rpl::map(Ui::Text::WithEntities);
 }
 
 rpl::producer<TextWithEntities> DataCenterValue(not_null<PeerData*> peer) {
@@ -261,7 +261,7 @@ rpl::producer<TextWithEntities> DataCenterValue(not_null<PeerData*> peer) {
 		(dcId == 4) ? "4, Amsterdam" :
 		(dcId == 5) ? "5, Singapore" :
 		"Unknown";
-	return rpl::single(dcName) | Ui::Text::ToWithEntities();
+	return rpl::single(QString(dcName)) | rpl::map(Ui::Text::WithEntities);
 }
 
 rpl::producer<QString> NameValue(not_null<PeerData*> peer) {

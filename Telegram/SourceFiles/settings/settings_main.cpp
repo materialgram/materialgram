@@ -201,13 +201,6 @@ void Cover::initViewers() {
 		refreshNameGeometry(width());
 	}, lifetime());
 
-	Info::Profile::PhoneValue(
-		_user
-	) | rpl::on_next([=](const TextWithEntities &value) {
-		_phone->setText(value.text);
-		refreshPhoneGeometry(width());
-	}, lifetime());
-
 	Info::Profile::UsernameValue(
 		_user
 	) | rpl::on_next([=](const TextWithEntities &value) {

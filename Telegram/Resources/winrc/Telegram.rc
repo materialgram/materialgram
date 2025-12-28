@@ -44,8 +44,8 @@ IDI_ICON1               ICON                    "..\\art\\icon256.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 6,2,3,1
- PRODUCTVERSION 6,2,3,1
+ FILEVERSION 6,3,10,1
+ PRODUCTVERSION 6,3,10,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -62,10 +62,10 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "kukuruzka"
             VALUE "FileDescription", "materialgram"
-            VALUE "FileVersion", "6.2.3.1"
+            VALUE "FileVersion", "6.3.10.1"
             VALUE "LegalCopyright", "github.com/kukuruzka165/materialgram"
             VALUE "ProductName", "materialgram"
-            VALUE "ProductVersion", "6.2.3.1"
+            VALUE "ProductVersion", "6.3.10.1"
         END
     END
     BLOCK "VarFileInfo"
