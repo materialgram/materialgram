@@ -1,6 +1,8 @@
-6.3.10.1 (29.12.25)
+6.4.0.1 (04.01.26)
 
+- Enhance platform detection for photos
 - Official changelog:
+- AI Summaries for posts in channels.
 - Show who sent your unique collectible gifts.
 - Offer stars or TON for unique gifts.
 - Support passkey login on Windows.
