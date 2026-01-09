@@ -69,7 +69,7 @@ jobs:
           tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz usr
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: materialgram-${{ env.TAGNAME }}
           path: out/install/materialgram-${{ env.TAGNAME }}.tar.gz
